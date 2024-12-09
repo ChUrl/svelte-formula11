@@ -109,6 +109,7 @@
 
         packages = with pkgs; [
           f1python
+          pocketbase
 
           nodejs_23
           # nodePackages.autoprefixer
