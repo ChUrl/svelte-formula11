@@ -111,10 +111,12 @@
           f1python
 
           nodejs_23
-          nodePackages.autoprefixer
-          nodePackages.postcss-cli
-          nodePackages.sass
-          nodePackages.svelte-check
+          # nodePackages.autoprefixer
+          # nodePackages.postcss
+          # nodePackages.postcss-cli
+          # nodePackages.sass
+          # nodePackages.svelte-check
+          # nodePackages.tailwindcss
 
           sqlitebrowser
         ];
