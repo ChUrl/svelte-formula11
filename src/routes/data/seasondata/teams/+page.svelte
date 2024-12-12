@@ -10,17 +10,6 @@
   <title>F11 - Teams</title>
 </svelte:head>
 
-<!-- TODO: Move this + the tablist into the +layout.svelte and select the correct tab dynamically -->
-<!--       This would also allow it to be animated? Maybe? -->
-<h1>Season Data</h1>
-
-<div role="tablist" class="tabs-boxed tabs">
-  <a href="teams" role="tab" class="tab tab-active">Teams</a>
-  <a href="drivers" role="tab" class="tab">Drivers</a>
-  <a href="races" role="tab" class="tab">Races</a>
-</div>
-<!-- TODO: End -->
-
 <div
   class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6"
 >
