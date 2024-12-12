@@ -125,14 +125,19 @@
         # Use $1 for positional args
         commands = [
           {
-            name = "pycharm";
-            help = "Launch PyCharm Professional";
-            command = "pycharm-professional . &>/dev/null &";
+            name = "db";
+            help = "Serve PocketBase";
+            command = "pocketbase serve --http 192.168.86.50:8090";
           }
           {
-            name = "db";
-            help = "Launch SQLiteBrowser";
-            command = "sqlitebrowser ./instance/formula10.db &>/dev/null &";
+            name = "dev";
+            help = "Serve Formula 11 (Dev)";
+            command = "npm run dev -- --host --port 5173";
+          }
+          {
+            name = "prod";
+            help = "Serve Formula 11 (Prod)";
+            command = "npm run build && npm run preview -- --host --port 5173";
           }
         ];
       };
