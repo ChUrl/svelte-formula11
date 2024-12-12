@@ -9,7 +9,7 @@
 </script>
 
 <nav>
-  <!-- TODO: Make this stick to the topsomehow. -->
+  <!-- TODO: Make this stick to the top somehow. -->
   <!--       Fixed breaks the flexbox and sticky doesn't work. -->
   <div class="navbar h-16 bg-primary shadow">
     <div class="navbar-start">
@@ -100,11 +100,15 @@
               <Username id="signin_username" name="username" />
               <Password id="signin_password" name="password" />
               <div class="card-actions mt-2 justify-end">
-                <button formaction="/user?/create" class="btn btn-accent"
-                  >Register</button
+                <button
+                  formaction="/user?/create"
+                  type="button"
+                  class="btn btn-accent">Register</button
                 >
-                <button formaction="/user?/login" class="btn btn-accent"
-                  >Login</button
+                <button
+                  formaction="/user?/login"
+                  type="submit"
+                  class="btn btn-accent">Login</button
                 >
               </div>
             </form>
