@@ -1,9 +1,5 @@
 import type { Actions, PageServerLoad } from "./$types";
-import {
-  form_data_clean,
-  form_data_ensure_keys,
-  form_data_get_and_remove_id,
-} from "$lib/form";
+import { form_data_clean, form_data_ensure_keys, form_data_get_and_remove_id } from "$lib/form";
 
 // These "actions" run serverside only, as they're located inside +page.server.ts
 export const actions = {

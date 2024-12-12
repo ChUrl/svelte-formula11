@@ -1,34 +1,31 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { navigating, page } from "$app/stores";
+  import { Tab, TabGroup } from "@skeletonlabs/skeleton";
   import type { Snippet } from "svelte";
 
   let { children }: { children: Snippet } = $props();
 
-  // This has to be a function, so $page access is deferred to route switches
-  const get_tab = () => {
-    return $page.url.pathname.split("/").at(-1);
+  let current_tab: number = $state(0);
+  const tabs: { [tab: string]: number } = {
+    teams: 0,
+    drivers: 1,
+    races: 2,
   };
+
+  navigating.subscribe((nav) => {
+    if (!nav?.to?.url) return;
+
+    current_tab = tabs[nav.to.url.toString().split("/").at(-1) || "teams"];
+  });
 </script>
 
 <h1>Season Data</h1>
 
-<div role="tablist" class="tabs-boxed tabs">
-  <a
-    href="teams"
-    role="tab"
-    class={get_tab() === "teams" ? "tab tab-active" : "tab"}>Teams</a
-  >
-  <a
-    href="drivers"
-    role="tab"
-    class={get_tab() === "drivers" ? "tab tab-active" : "tab"}>Drivers</a
-  >
-  <a
-    href="races"
-    role="tab"
-    class={get_tab() === "races" ? "tab tab-active" : "tab"}>Races</a
-  >
-</div>
+<TabGroup justify="justify-center">
+  <a href="teams"> <Tab bind:group={current_tab} name="teams" value={0}>Teams</Tab></a>
+  <a href="drivers"><Tab bind:group={current_tab} name="drivers" value={1}>Drivers</Tab></a>
+  <a href="races"><Tab bind:group={current_tab} name="races" value={2}>Races</Tab></a>
+</TabGroup>
 
 <div>
   {@render children()}

@@ -1,20 +1,24 @@
 <script lang="ts">
   let {
-    id = "",
-    name = "",
-    formaction = "",
-    label,
+    children,
     color,
-    disabled = false,
+    submit = false,
+    href = undefined,
+    fullwidth = false,
+    ...restProps
   } = $props();
 </script>
 
-<!-- HACK: Set --tw-bg-opacity to 1 so the disabled label/button looks like the disabled input -->
-<button
-  {id}
-  {name}
-  {formaction}
-  {disabled}
-  class="btn btn-{color}"
-  style="--tw-bg-opacity: 1">{label}</button
->
+{#if href}
+  <a {href} class="btn p-2 variant-filled-{color} {fullwidth ? 'w-full' : 'w-auto'}" {...restProps}>
+    {@render children()}
+  </a>
+{:else}
+  <button
+    type={submit ? "submit" : "button"}
+    class="btn p-2 variant-filled-{color} {fullwidth ? 'w-full' : 'w-auto'}"
+    {...restProps}
+  >
+    {@render children()}
+  </button>
+{/if}
