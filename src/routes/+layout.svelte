@@ -73,15 +73,14 @@
     <div class="navbar-end">
       <!-- Admin button -->
       <div class="dropdown dropdown-end mr-2">
-        <div tabindex="0" role="button" class="btn btn-ghost">Admin</div>
+        <div tabindex="0" role="button" class="btn btn-ghost">Data</div>
         <!-- svelte-ignore a11y_no_noninteractive_tabindex -->
         <ul
           tabindex="0"
           class="menu dropdown-content z-[1] mt-4 w-52 rounded-box border bg-base-100 p-2 shadow"
         >
-          <li><a href="/admin/users">Users</a></li>
-          <li><a href="/admin/seasondata/teams">Season Data</a></li>
-          <li><a href="/admin/userdata">User Data</a></li>
+          <li><a href="/data/seasondata/teams">Season Data</a></li>
+          <li><a href="/data/userdata">User Data</a></li>
         </ul>
       </div>
 
@@ -131,7 +130,7 @@
             tabindex="0"
             class="menu dropdown-content z-[1] mt-4 w-[150] rounded-box border bg-base-100 p-2 shadow"
           >
-            <h1 class="text-lg">Edit Profile</h1>
+            <h1 class="select-none text-lg">Edit Profile</h1>
             <form method="POST" enctype="multipart/form-data">
               <input type="hidden" name="id" value={data.user.id} />
               <Username
