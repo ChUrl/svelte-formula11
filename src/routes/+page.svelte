@@ -1,2 +1,5 @@
-<h1>Welcome to SvelteKit</h1>
-<p>Visit <a href="https://svelte.dev/docs/kit">svelte.dev/docs/kit</a> to read the documentation</p>
+<svelte:head>
+  <title>F11 - Formula 11</title>
+</svelte:head>
+
+<h1>Formula 11</h1>
