@@ -39,34 +39,48 @@
           tabindex="0"
           class="menu dropdown-content z-[1] mt-4 w-52 rounded-box border bg-base-100 p-2 shadow"
         >
-          <li><a href="/racepicks">Race Picks</a></li>
-          <li><a href="/seasonpicks">Season Picks</a></li>
-          <li><a href="/leaderboard">Leaderboard</a></li>
-          <li><a href="/statistics">Statistics</a></li>
-          <li><a href="/rules">Rules</a></li>
+          <li><a draggable="false" href="/racepicks">Race Picks</a></li>
+          <li><a draggable="false" href="/seasonpicks">Season Picks</a></li>
+          <li><a draggable="false" href="/leaderboard">Leaderboard</a></li>
+          <li><a draggable="false" href="/statistics">Statistics</a></li>
+          <li><a draggable="false" href="/rules">Rules</a></li>
         </ul>
       </div>
 
       <!-- Site logo -->
-      <a href="/" class="btn btn-ghost text-xl">Formula 11</a>
+      <a href="/" draggable="false" class="btn btn-ghost select-none text-xl"
+        >Formula 11</a
+      >
     </div>
 
     <!-- Centered navigation -->
     <div class="navbar-center hidden lg:flex">
       <ul class="menu menu-horizontal px-1">
         <li>
-          <a class="btn btn-ghost btn-sm" href="/racepicks">Race Picks</a>
+          <a draggable="false" class="btn btn-ghost btn-sm" href="/racepicks"
+            >Race Picks</a
+          >
         </li>
         <li>
-          <a class="btn btn-ghost btn-sm" href="/seasonpicks">Season Picks</a>
+          <a draggable="false" class="btn btn-ghost btn-sm" href="/seasonpicks"
+            >Season Picks</a
+          >
         </li>
         <li>
-          <a class="btn btn-ghost btn-sm" href="/leaderboard">Leaderboard</a>
+          <a draggable="false" class="btn btn-ghost btn-sm" href="/leaderboard"
+            >Leaderboard</a
+          >
         </li>
         <li>
-          <a class="btn btn-ghost btn-sm" href="/statistics">Statistics</a>
+          <a draggable="false" class="btn btn-ghost btn-sm" href="/statistics"
+            >Statistics</a
+          >
         </li>
-        <li><a class="btn btn-ghost btn-sm" href="/rules">Rules</a></li>
+        <li>
+          <a draggable="false" class="btn btn-ghost btn-sm" href="/rules"
+            >Rules</a
+          >
+        </li>
       </ul>
     </div>
 
@@ -79,8 +93,10 @@
           tabindex="0"
           class="menu dropdown-content z-[1] mt-4 w-52 rounded-box border bg-base-100 p-2 shadow"
         >
-          <li><a href="/data/seasondata/teams">Season Data</a></li>
-          <li><a href="/data/userdata">User Data</a></li>
+          <li>
+            <a draggable="false" href="/data/seasondata/teams">Season Data</a>
+          </li>
+          <li><a draggable="false" href="/data/userdata">User Data</a></li>
         </ul>
       </div>
 
@@ -122,6 +138,8 @@
                 id="user_avatar_preview"
                 src={data.user.avatar_url}
                 alt="User avatar"
+                class="select-none"
+                draggable="false"
               />
             </div>
           </div>
