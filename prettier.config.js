@@ -17,7 +17,7 @@ const config = {
   quoteProps: "as-needed",
   trailingComma: "all",
   bracketSpacing: true,
-  bracketSameLine: true,
+  bracketSameLine: false,
   arrowParens: "always",
 
   // File specific configuration options
