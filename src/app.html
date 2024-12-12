@@ -2,11 +2,22 @@
 <html lang="en">
   <head>
     <meta charset="utf-8" />
-    <link rel="icon" href="%sveltekit.assets%/favicon.png" />
+
+    <!-- Scale the viewport for mobile devices -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <!-- Set the iOS Safari header/tab bar color -->
+    <meta name="theme-color" content="#F8D7DA" />
+
+    <link rel="icon" href="%sveltekit.assets%/favicon.svg" />
+
+    <!-- SvelteKit inserts the header contents here -->
     %sveltekit.head%
   </head>
+
+  <!-- Prefetch data specified in "load" functions on link hover -->
   <body data-sveltekit-preload-data="hover">
+    <!-- SvelteKit inserts the body contents here -->
     <div style="display: contents">%sveltekit.body%</div>
   </body>
 </html>
