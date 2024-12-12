@@ -4,14 +4,12 @@
 
   let { children }: { children: Snippet } = $props();
 
-  // const tab = $state($page.url.pathname.split("/").at(-1));
+  // This has to be a function, so $page access is deferred to route switches
   const get_tab = () => {
     return $page.url.pathname.split("/").at(-1);
   };
 </script>
 
-<!-- TODO: Move this + the tablist into the +layout.svelte and select the correct tab dynamically -->
-<!--       This would also allow it to be animated? Maybe? -->
 <h1>Season Data</h1>
 
 <div role="tablist" class="tabs-boxed tabs">
@@ -31,7 +29,6 @@
     class={get_tab() === "races" ? "tab tab-active" : "tab"}>Races</a
   >
 </div>
-<!-- TODO: End -->
 
 <div>
   {@render children()}
