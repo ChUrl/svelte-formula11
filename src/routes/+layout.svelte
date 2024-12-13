@@ -1,9 +1,13 @@
 <script lang="ts">
   import "../app.css";
+
   import type { Snippet } from "svelte";
   import type { LayoutData } from "./$types";
+  import { page } from "$app/stores";
+
   import { Button, MenuDrawerIcon, UserIcon, Input, PasswordIcon, Card } from "$lib/components";
   import { get_avatar_preview_event_handler, get_image_preview_event_handler } from "$lib/image";
+
   import {
     AppBar,
     popup,
@@ -24,12 +28,17 @@
   initializeStores();
   const drawerStore = getDrawerStore();
 
+  const drawer_settings_base: DrawerSettings = {
+    position: "top",
+    height: "auto",
+    padding: "lg:px-96",
+    bgDrawer: "bg-surface-100",
+  };
+
   const menu_drawer = () => {
     const drawerSettings: DrawerSettings = {
       id: "menu_drawer",
-      position: "top",
-      height: "auto",
-      padding: "lg:px-96",
+      ...drawer_settings_base,
     };
     drawerStore.open(drawerSettings);
   };
@@ -37,9 +46,7 @@
   const data_drawer = () => {
     const drawerSettings: DrawerSettings = {
       id: "data_drawer",
-      position: "top",
-      height: "auto",
-      padding: "lg:px-96",
+      ...drawer_settings_base,
     };
     drawerStore.open(drawerSettings);
   };
@@ -47,9 +54,7 @@
   const login_drawer = () => {
     const drawerSettings: DrawerSettings = {
       id: "login_drawer",
-      position: "top",
-      height: "auto",
-      padding: "lg:px-96",
+      ...drawer_settings_base,
     };
     drawerStore.open(drawerSettings);
   };
@@ -57,9 +62,7 @@
   const profile_drawer = () => {
     const drawerSettings: DrawerSettings = {
       id: "profile_drawer",
-      position: "top",
-      height: "auto",
-      padding: "lg:px-96",
+      ...drawer_settings_base,
     };
     drawerStore.open(drawerSettings);
   };
@@ -104,10 +107,8 @@
     <!-- Data Drawer -->
     <!-- Data Drawer -->
     <div class="p-2 pt-0 *:mt-2">
-      <Button href="/data/seasondata/teams" onclick={close_drawer} color="surface" fullwidth
-        >Season</Button
-      >
-      <Button href="/data/userdata" onclick={close_drawer} color="surface" fullwidth>Users</Button>
+      <Button href="/data/season" onclick={close_drawer} color="surface" fullwidth>Season</Button>
+      <Button href="/data/user" onclick={close_drawer} color="surface" fullwidth>Users</Button>
     </div>
   {:else if $drawerStore.id === "login_drawer"}
     <!-- Login Drawer -->
@@ -123,10 +124,10 @@
           ><PasswordIcon />
         </Input>
         <div class="flex justify-end gap-2">
-          <Button formaction="/user?/login" onclick={close_drawer} color="tertiary" submit
+          <Button formaction="/profile?/login" onclick={close_drawer} color="tertiary" submit
             >Login</Button
           >
-          <Button formaction="/user?/create" onclick={close_drawer} color="tertiary" submit
+          <Button formaction="/profile?/create" onclick={close_drawer} color="tertiary" submit
             >Register</Button
           >
         </div>
@@ -149,10 +150,10 @@
           <svelte:fragment slot="message"><b>Upload Avatar</b> or Drag and Drop</svelte:fragment>
         </FileDropzone>
         <div class="flex justify-end gap-2">
-          <Button formaction="/user?/update" onclick={close_drawer} color="secondary" submit
+          <Button formaction="/profile?/update" onclick={close_drawer} color="secondary" submit
             >Save Changes</Button
           >
-          <Button formaction="/user?/logout" onclick={close_drawer} color="primary" submit
+          <Button formaction="/profile?/logout" onclick={close_drawer} color="primary" submit
             >Logout</Button
           >
         </div>
@@ -162,8 +163,7 @@
 </Drawer>
 
 <nav>
-  <!-- TODO: Make this stick to the top somehow. -->
-  <!--       Fixed breaks flexbox and sticky doesn't work. -->
+  <!-- TODO: Make this stick to the top somehow (fixed/sticky). -->
   <AppBar
     slotDefault="place-self-center"
     slotTrail="place-content-end"
@@ -173,34 +173,34 @@
   >
     <svelte:fragment slot="lead">
       <!-- Navigation drawer -->
-      <button
-        class="variant-filled-primary btn p-2 lg:hidden"
-        style="height: 44px;"
-        onclick={menu_drawer}
-      >
-        <MenuDrawerIcon />
-      </button>
+      <div class="lg:hidden">
+        <Button color="primary" onclick={menu_drawer}>
+          <MenuDrawerIcon />
+        </Button>
+      </div>
 
       <!-- Site logo -->
-      <a
-        href="/"
-        draggable="false"
-        class="variant-filled-primary btn ml-2 select-none p-2 text-xl lg:ml-0">Formula 11</a
-      >
+      <div class="ml-2 lg:ml-0">
+        <Button href="/" color="primary"><span class="text-xl font-bold">Formula 11</span></Button>
+      </div>
     </svelte:fragment>
 
     <!-- Large navigation -->
     <div class="hidden lg:block">
-      <a href="/racepicks" class="variant-filled-primary btn p-2">Race Picks</a>
-      <a href="/seasonpicks" class="variant-filled-primary btn p-2">Season Picks</a>
-      <a href="/leaderboard" class="variant-filled-primary btn p-2">Leaderboard</a>
-      <a href="/statistics" class="variant-filled-primary btn p-2">Statistics</a>
-      <a href="/rules" class="variant-filled-primary btn p-2">Rules</a>
+      <Button href="/racepicks" color="primary" activate_href>Race Picks</Button>
+      <Button href="/seasonpicks" color="primary" activate_href>Season Picks</Button>
+      <Button href="/leaderboard" color="primary" activate_href>Leaderboard</Button>
+      <Button href="/statistics" color="primary" activate_href>Statistics</Button>
+      <Button href="/rules" color="primary" activate_href>Rules</Button>
     </div>
 
     <svelte:fragment slot="trail">
       <!-- Data drawer -->
-      <Button color="primary" onclick={data_drawer}>Data</Button>
+      <Button
+        color="primary"
+        onclick={data_drawer}
+        activate_button={$page.url.pathname.startsWith("/data")}>Data</Button
+      >
 
       <!-- Login/Profile drawer -->
       {#if !data.user}
