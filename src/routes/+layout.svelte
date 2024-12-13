@@ -19,6 +19,7 @@
     type DrawerSettings,
     Avatar,
     FileDropzone,
+    type DrawerStore,
   } from "@skeletonlabs/skeleton";
   import { computePosition, autoUpdate, offset, shift, flip, arrow } from "@floating-ui/dom";
 
@@ -26,7 +27,7 @@
 
   // Drawer config
   initializeStores();
-  const drawerStore = getDrawerStore();
+  const drawerStore: DrawerStore = getDrawerStore();
 
   const drawer_settings_base: DrawerSettings = {
     position: "top",
@@ -89,7 +90,7 @@
     <!-- Menu Drawer -->
     <!-- Menu Drawer -->
     <!-- Menu Drawer -->
-    <div class="p-2 pt-0 *:mt-2">
+    <div class="flex flex-col gap-2 p-2">
       <Button href="/racepicks" onclick={close_drawer} color="surface" fullwidth>Race Picks</Button>
       <Button href="/seasonpicks" onclick={close_drawer} color="surface" fullwidth
         >Season Picks
@@ -106,7 +107,7 @@
     <!-- Data Drawer -->
     <!-- Data Drawer -->
     <!-- Data Drawer -->
-    <div class="p-2 pt-0 *:mt-2">
+    <div class="flex flex-col gap-2 p-2">
       <Button href="/data/season" onclick={close_drawer} color="surface" fullwidth>Season</Button>
       <Button href="/data/user" onclick={close_drawer} color="surface" fullwidth>Users</Button>
     </div>
@@ -114,9 +115,9 @@
     <!-- Login Drawer -->
     <!-- Login Drawer -->
     <!-- Login Drawer -->
-    <div class="p-2">
+    <div class="flex flex-col gap-2 p-2">
       <h4 class="h4 select-none">Enter Username and Password</h4>
-      <form method="POST" class="*:mt-2">
+      <form method="POST" class="contents">
         <Input name="username" placeholder="Username" required>
           <UserIcon />
         </Input>
@@ -127,19 +128,22 @@
           <Button formaction="/profile?/login" onclick={close_drawer} color="tertiary" submit
             >Login</Button
           >
-          <Button formaction="/profile?/create" onclick={close_drawer} color="tertiary" submit
-            >Register</Button
+          <Button
+            formaction="/profile?/create_profile"
+            onclick={close_drawer}
+            color="tertiary"
+            submit>Register</Button
           >
         </div>
       </form>
     </div>
-  {:else if $drawerStore.id === "profile_drawer"}
+  {:else if $drawerStore.id === "profile_drawer" && data.user}
     <!-- Profile Drawer -->
     <!-- Profile Drawer -->
     <!-- Profile Drawer -->
-    <div class="p-2">
+    <div class="flex flex-col gap-2 p-2">
       <h4 class="h4 select-none">Edit Profile</h4>
-      <form method="POST" enctype="multipart/form-data" class="*:mt-2">
+      <form method="POST" enctype="multipart/form-data" class="contents">
         <input type="hidden" name="id" value={data.user.id} />
         <Input name="username" value={data.user.username} placeholder="Username"><UserIcon /></Input
         >
@@ -150,8 +154,11 @@
           <svelte:fragment slot="message"><b>Upload Avatar</b> or Drag and Drop</svelte:fragment>
         </FileDropzone>
         <div class="flex justify-end gap-2">
-          <Button formaction="/profile?/update" onclick={close_drawer} color="secondary" submit
-            >Save Changes</Button
+          <Button
+            formaction="/profile?/update_profile"
+            onclick={close_drawer}
+            color="secondary"
+            submit>Save Changes</Button
           >
           <Button formaction="/profile?/logout" onclick={close_drawer} color="primary" submit
             >Logout</Button
@@ -186,7 +193,7 @@
     </svelte:fragment>
 
     <!-- Large navigation -->
-    <div class="hidden lg:block">
+    <div class="hidden gap-2 lg:flex">
       <Button href="/racepicks" color="primary" activate_href>Race Picks</Button>
       <Button href="/seasonpicks" color="primary" activate_href>Season Picks</Button>
       <Button href="/leaderboard" color="primary" activate_href>Leaderboard</Button>
@@ -199,7 +206,7 @@
       <Button
         color="primary"
         onclick={data_drawer}
-        activate_button={$page.url.pathname.startsWith("/data")}>Data</Button
+        activate={$page.url.pathname.startsWith("/data")}>Data</Button
       >
 
       <!-- Login/Profile drawer -->
