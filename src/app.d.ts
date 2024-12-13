@@ -1,13 +1,20 @@
+import type { PocketBase, RecordModel } from "pocketbase";
+
 // See https://svelte.dev/docs/kit/types#app.d.ts
 // for information about these interfaces
 declare global {
-    namespace App {
-        // interface Error {}
-        // interface Locals {}
-        // interface PageData {}
-        // interface PageState {}
-        // interface Platform {}
+  namespace App {
+    interface Locals {
+      pb: PocketBase;
+      user: RecordModel | undefined;
+      admin: boolean;
     }
+
+    // interface Error {}
+    // interface PageData {}
+    // interface PageState {}
+    // interface Platform {}
+  }
 }
 
-export { };
+export {};

@@ -36,13 +36,13 @@ export const form_data_clean = (data: FormData): FormData => {
 /**
  * Throws SvelteKit error(400) if form_data does not contain key.
  */
-export const form_data_ensure_key = (data: FormData, key: string) => {
+export const form_data_ensure_key = (data: FormData, key: string): void => {
   if (!data.get(key)) error(400, `Key "${key}" missing from form_data!`);
 };
 
 /**
  * Throws SvelteKit error(400) if form_data does not contain all keys.
  */
-export const form_data_ensure_keys = (data: FormData, keys: string[]) => {
+export const form_data_ensure_keys = (data: FormData, keys: string[]): void => {
   keys.map((key) => form_data_ensure_key(data, key));
 };

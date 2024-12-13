@@ -1,13 +1,9 @@
-import {
-  form_data_clean,
-  form_data_ensure_keys,
-  form_data_get_and_remove_id,
-} from "$lib/form";
+import { form_data_clean, form_data_ensure_keys, form_data_get_and_remove_id } from "$lib/form";
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 
 export const actions = {
-  create: async ({ cookies, request, locals }) => {
+  create_profile: async ({ request, locals }) => {
     const data = form_data_clean(await request.formData());
     form_data_ensure_keys(data, ["username", "password"]);
 
@@ -22,16 +18,13 @@ export const actions = {
     // Directly login after registering
     await locals.pb
       .collection("users")
-      .authWithPassword(
-        data.get("username")?.toString(),
-        data.get("password")?.toString(),
-      );
+      .authWithPassword(data.get("username")?.toString(), data.get("password")?.toString());
 
     redirect(303, "/");
   },
 
   // TODO: PocketBase API rule: Only the active user should be able to modify itself
-  update: async ({ cookies, request, locals }) => {
+  update_profile: async ({ request, locals }) => {
     const data = form_data_clean(await request.formData());
     const id = form_data_get_and_remove_id(data);
 
@@ -40,7 +33,7 @@ export const actions = {
     redirect(303, "/");
   },
 
-  login: async ({ cookies, request, locals }) => {
+  login: async ({ request, locals }) => {
     if (locals.user) {
       console.log("Already logged in!");
       return;
@@ -52,10 +45,7 @@ export const actions = {
     try {
       await locals.pb
         .collection("users")
-        .authWithPassword(
-          data.get("username")?.toString(),
-          data.get("password")?.toString(),
-        );
+        .authWithPassword(data.get("username")?.toString(), data.get("password")?.toString());
     } catch (err) {
       console.log(`Failed to login: ${err}`);
       error(400, "Failed to login!");
@@ -65,7 +55,7 @@ export const actions = {
     redirect(303, "/");
   },
 
-  logout: async ({ cookies, request, locals }) => {
+  logout: async ({ locals }) => {
     locals.pb.authStore.clear();
     locals.user = undefined;
 
