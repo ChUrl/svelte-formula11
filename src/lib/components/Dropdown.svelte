@@ -69,6 +69,7 @@
   <input
     use:popup={popup_settings}
     type="text"
+    readonly
     value={get_label(input_variable) ?? placeholder}
     {...restProps}
   />
