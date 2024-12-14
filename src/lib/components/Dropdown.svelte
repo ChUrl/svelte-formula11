@@ -69,7 +69,7 @@
   <input
     use:popup={popup_settings}
     type="text"
-    readonly
+    onkeypress={(event: Event) => event.preventDefault()}
     value={get_label(input_variable) ?? placeholder}
     {...restProps}
   />
