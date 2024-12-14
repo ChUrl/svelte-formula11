@@ -10,6 +10,7 @@
   import { get_by_value } from "$lib/database";
   import TeamCard from "$lib/components/TeamCard.svelte";
   import DriverCard from "$lib/components/DriverCard.svelte";
+  import RaceCard from "$lib/components/RaceCard.svelte";
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -74,7 +75,6 @@
       <!-- Drivers Tab -->
       <!-- Drivers Tab -->
       <!-- Drivers Tab -->
-
       <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         <!-- List all drivers inside the database -->
         {#each data.drivers as driver}
@@ -100,13 +100,22 @@
       <!-- Races Tab -->
       <!-- Races Tab -->
       <!-- Races Tab -->
+      <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-3 2xl:grid-cols-5">
+        {#each data.races as race}
+          <RaceCard {race} disable_inputs={!data.admin} />
+        {/each}
 
-      <span>Races</span>
+        {#if data.admin}
+          <RaceCard
+            pictogram_template={get_by_value(data.graphics, "name", "race_template")?.file_url}
+            require_inputs
+          />
+        {/if}
+      </div>
     {:else if current_tab === 3}
       <!-- Substitutions Tab -->
       <!-- Substitutions Tab -->
       <!-- Substitutions Tab -->
-
       <span>Substitutions</span>
     {/if}
   </svelte:fragment>
