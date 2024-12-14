@@ -118,6 +118,8 @@
     <div class="flex flex-col gap-2 p-2">
       <h4 class="h4 select-none">Enter Username and Password</h4>
       <form method="POST" class="contents">
+        <!-- Supply the pathname so the form can redirect to the current page. -->
+        <input type="hidden" name="redirect_url" value={$page.url.pathname} />
         <Input name="username" placeholder="Username" required>
           <UserIcon />
         </Input>
@@ -144,6 +146,8 @@
     <div class="flex flex-col gap-2 p-2">
       <h4 class="h4 select-none">Edit Profile</h4>
       <form method="POST" enctype="multipart/form-data" class="contents">
+        <!-- Supply the pathname so the form can redirect to the current page. -->
+        <input type="hidden" name="redirect_url" value={$page.url.pathname} />
         <input type="hidden" name="id" value={data.user.id} />
         <Input name="username" value={data.user.username} placeholder="Username"><UserIcon /></Input
         >
@@ -179,15 +183,15 @@
     padding="p-2"
   >
     <svelte:fragment slot="lead">
-      <!-- Navigation drawer -->
-      <div class="lg:hidden">
-        <Button color="primary" onclick={menu_drawer}>
-          <MenuDrawerIcon />
-        </Button>
-      </div>
+      <div class="flex gap-2">
+        <!-- Navigation drawer -->
+        <div class="lg:hidden">
+          <Button color="primary" onclick={menu_drawer}>
+            <MenuDrawerIcon />
+          </Button>
+        </div>
 
-      <!-- Site logo -->
-      <div class="ml-2 lg:ml-0">
+        <!-- Site logo -->
         <Button href="/" color="primary"><span class="text-xl font-bold">Formula 11</span></Button>
       </div>
     </svelte:fragment>
@@ -202,26 +206,30 @@
     </div>
 
     <svelte:fragment slot="trail">
-      <!-- Data drawer -->
-      <Button
-        color="primary"
-        onclick={data_drawer}
-        activate={$page.url.pathname.startsWith("/data")}>Data</Button
-      >
+      <div class="flex gap-2">
+        <!-- Data drawer -->
+        <Button
+          color="primary"
+          onclick={data_drawer}
+          activate={$page.url.pathname.startsWith("/data")}>Data</Button
+        >
 
-      <!-- Login/Profile drawer -->
-      {#if !data.user}
-        <Button color="primary" onclick={login_drawer}>Login</Button>
-      {:else}
-        <Avatar
-          id="user_avatar_preview"
-          src={data.user.avatar_url}
-          rounded="rounded-full"
-          width="w-10"
-          onclick={profile_drawer}
-          cursor="cursor-pointer"
-        />
-      {/if}
+        {#if !data.user}
+          <!-- Login drawer -->
+          <Button color="primary" onclick={login_drawer}>Login</Button>
+        {:else}
+          <!-- Profile drawer -->
+          <Avatar
+            id="user_avatar_preview"
+            src={data.user.avatar_url}
+            rounded="rounded-full"
+            width="w-10"
+            background="bg-primary-50"
+            onclick={profile_drawer}
+            cursor="cursor-pointer"
+          />
+        {/if}
+      </div>
     </svelte:fragment>
   </AppBar>
 </nav>

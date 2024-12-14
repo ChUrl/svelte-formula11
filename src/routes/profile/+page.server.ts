@@ -1,13 +1,14 @@
 import { form_data_clean, form_data_ensure_keys, form_data_get_and_remove_id } from "$lib/form";
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
+import type { User } from "$lib/schema";
 
 export const actions = {
-  create_profile: async ({ request, locals }) => {
-    const data = form_data_clean(await request.formData());
-    form_data_ensure_keys(data, ["username", "password"]);
+  create_profile: async ({ request, locals }): Promise<void> => {
+    const data: FormData = form_data_clean(await request.formData());
+    form_data_ensure_keys(data, ["username", "password", "redirect_url"]);
 
-    // TODO: Errrr passwordConfirm... How to integrate it into the unified login-/register-UI?
+    // Confirm password lol
     const record = await locals.pb.collection("users").create({
       username: data.get("username")?.toString(),
       password: data.get("password")?.toString(),
@@ -20,46 +21,50 @@ export const actions = {
       .collection("users")
       .authWithPassword(data.get("username")?.toString(), data.get("password")?.toString());
 
-    redirect(303, "/");
+    redirect(303, data.get("redirect_url")?.toString() ?? "/");
   },
 
   // TODO: PocketBase API rule: Only the active user should be able to modify itself
-  update_profile: async ({ request, locals }) => {
-    const data = form_data_clean(await request.formData());
-    const id = form_data_get_and_remove_id(data);
+  update_profile: async ({ request, locals }): Promise<void> => {
+    const data: FormData = form_data_clean(await request.formData());
+    form_data_ensure_keys(data, ["redirect_url"]);
+    const id: string = form_data_get_and_remove_id(data);
 
-    const record = await locals.pb.collection("users").update(id, data);
+    const record: User = await locals.pb.collection("users").update(id, data);
 
-    redirect(303, "/");
+    redirect(303, data.get("redirect_url")?.toString() ?? "/");
   },
 
   login: async ({ request, locals }) => {
     if (locals.user) {
-      console.log("Already logged in!");
-      return;
+      error(400, "Already logged in!");
     }
 
-    const data = form_data_clean(await request.formData());
-    form_data_ensure_keys(data, ["username", "password"]);
+    const data: FormData = form_data_clean(await request.formData());
+    form_data_ensure_keys(data, ["username", "password", "redirect_url"]);
 
     try {
       await locals.pb
         .collection("users")
         .authWithPassword(data.get("username")?.toString(), data.get("password")?.toString());
     } catch (err) {
-      console.log(`Failed to login: ${err}`);
       error(400, "Failed to login!");
     }
 
-    // TODO: Would be better to redirect to previous page somehow...
-    redirect(303, "/");
+    redirect(303, data.get("redirect_url")?.toString() ?? "/");
   },
 
-  logout: async ({ locals }) => {
+  logout: async ({ request, locals }) => {
+    if (!locals.user) {
+      error(400, "Not logged in!");
+    }
+
+    const data: FormData = form_data_clean(await request.formData());
+    form_data_ensure_keys(data, ["redirect_url"]);
+
     locals.pb.authStore.clear();
     locals.user = undefined;
 
-    // TODO: Would be better to redirect to previous page somehow...
-    redirect(303, "/");
+    redirect(303, data.get("redirect_url")?.toString() ?? "/");
   },
 } satisfies Actions;
