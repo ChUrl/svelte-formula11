@@ -12,21 +12,19 @@ export const form_data_get_and_remove_id = (data: FormData): string => {
 };
 
 /**
- * Remove empty fields and files from FormData objects.
+ * Remove empty fields (even whitespace) and empty files from FormData objects.
+ * Keys listed in [except] won't be removed although they are empty.
  */
-export const form_data_clean = (data: FormData): FormData => {
+export const form_data_clean = (data: FormData, except: string[] = []): FormData => {
   let delete_keys: string[] = [];
 
   for (const [key, value] of data.entries()) {
-    if (value === "" || value === null) {
-      // Remove empty keys
-      delete_keys.push(key);
-    } else if (
-      // Remove empty files
-      value !== null &&
-      typeof value === "object" &&
-      "size" in value &&
-      value.size === 0
+    if (
+      !except.includes(key) &&
+      (value === null ||
+        value === undefined ||
+        (typeof value === "string" && value.trim() === "") ||
+        (typeof value === "object" && "size" in value && value.size === 0))
     ) {
       delete_keys.push(key);
     }
@@ -51,4 +49,22 @@ export const form_data_ensure_key = (data: FormData, key: string): void => {
  */
 export const form_data_ensure_keys = (data: FormData, keys: string[]): void => {
   keys.map((key) => form_data_ensure_key(data, key));
+};
+
+/**
+ * Modify a single [FormData] element to satisfy PocketBase's date format.
+ * Date format: 2024-12-31 12:00:00.000Z
+ */
+export const form_data_fix_date = (data: FormData, key: string): boolean => {
+  const value: string | undefined = data.get(key)?.toString();
+  if (!value) return false;
+
+  const date: string = new Date(value).toISOString();
+  data.set(key, date);
+
+  return true;
+};
+
+export const form_data_fix_dates = (data: FormData, keys: string[]): boolean[] => {
+  return keys.map((key) => form_data_fix_date(data, key));
 };
