@@ -33,6 +33,7 @@
 	"dependencies": {
 		"@floating-ui/dom": "^1.6.12",
 		"pocketbase": "^0.22.1",
+		"sharp": "^0.33.5",
 		"uuid": "^11.0.3"
 	}
 }
