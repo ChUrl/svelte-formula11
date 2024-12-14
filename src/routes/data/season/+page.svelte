@@ -1,11 +1,13 @@
 <script lang="ts">
-  import { Input, Button, Card } from "$lib/components";
+  import { Input, Button, Card, Search, Dropdown } from "$lib/components";
   import { get_image_preview_event_handler } from "$lib/image";
   import { get_by_id } from "$lib/database";
-  import type { Team } from "$lib/schema";
-
+  import type { Driver, Team } from "$lib/schema";
   import { type PageData, type ActionData } from "./$types";
-  import { FileDropzone, Tab, TabGroup } from "@skeletonlabs/skeleton";
+  import { FileDropzone, Tab, TabGroup, type AutocompleteOption } from "@skeletonlabs/skeleton";
+
+  // TODO: Why does this work but import { type DropdownOption } from "$lib/components" does not?
+  import type { DropdownOption } from "$lib/components/Dropdown.svelte";
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -14,6 +16,17 @@
     // console.log(`Form returned current_tab=${form.current_tab}`);
     current_tab = form.tab;
   }
+
+  // Maps driver to team: <driver.id, team.id>
+  let create_driver_team_select_value: string = $state("");
+  let update_driver_team_select_values: { [key: string]: string } = $state({});
+  data.drivers.forEach((driver: Driver) => {
+    update_driver_team_select_values[driver.id] = driver.team;
+  });
+
+  const driver_team_select_options: DropdownOption[] = data.teams.map((team: Team) => {
+    return { label: team.name, value: team.id } as DropdownOption;
+  });
 </script>
 
 <svelte:head>
@@ -121,8 +134,6 @@
       <!-- Drivers Tab -->
       <!-- Drivers Tab -->
 
-      <!-- TODO: Team select -->
-      <!-- TODO: Active switch -->
       <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
         <!-- List all drivers inside the database -->
         {#each data.drivers as driver}
@@ -155,9 +166,14 @@
                   labelwidth="120px"
                   disabled={!data.admin}>Driver Code</Input
                 >
-                <Button>
-                  <img src={get_by_id<Team>(data.teams, driver.team)?.logo_url} alt="" />
-                </Button>
+
+                <!-- Driver team input -->
+                <Dropdown
+                  name="team"
+                  input_variable={update_driver_team_select_values[driver.id]}
+                  labelwidth="120px"
+                  options={driver_team_select_options}>Team</Dropdown
+                >
 
                 <!-- Headshot upload -->
                 <FileDropzone
@@ -201,7 +217,6 @@
                 <Input
                   id="driver_first_name_create"
                   name="firstname"
-                  placeholder="First Name"
                   labelwidth="120px"
                   disabled={!data.admin}
                   required>First Name</Input
@@ -209,7 +224,6 @@
                 <Input
                   id="driver_last_name_create"
                   name="lastname"
-                  placeholder="Last Name"
                   labelwidth="120px"
                   disabled={!data.admin}
                   required>Last Name</Input
@@ -217,10 +231,20 @@
                 <Input
                   id="driver_code_create"
                   name="code"
-                  placeholder="Driver Code"
                   labelwidth="120px"
                   disabled={!data.admin}
+                  maxlength={3}
+                  minlength={3}
                   required>Driver Code</Input
+                >
+
+                <!-- Driver team input -->
+                <Dropdown
+                  input_variable={create_driver_team_select_value}
+                  name="team"
+                  labelwidth="120px"
+                  options={driver_team_select_options}
+                  required>Team</Dropdown
                 >
 
                 <!-- Headshot upload -->
