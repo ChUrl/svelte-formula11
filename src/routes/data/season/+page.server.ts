@@ -1,6 +1,6 @@
 import type { Actions, PageServerLoad } from "./$types";
 import { form_data_clean, form_data_ensure_keys, form_data_get_and_remove_id } from "$lib/form";
-import type { Team, Driver, Race, Substitution } from "$lib/schema";
+import type { Team, Driver, Race, Substitution, Graphic } from "$lib/schema";
 
 // These "actions" run serverside only, as they're located inside +page.server.ts
 export const actions = {
@@ -95,6 +95,18 @@ export const actions = {
 
 // This "load" function runs serverside only, as it's located inside +page.server.ts
 export const load: PageServerLoad = async ({ fetch, locals }) => {
+  const fetch_graphics = async (): Promise<Graphic[]> => {
+    const graphics: Graphic[] = await locals.pb
+      .collection("graphics")
+      .getFullList({ fetch: fetch });
+
+    graphics.map((graphic: Graphic) => {
+      graphic.file_url = locals.pb.files.getURL(graphic, graphic.file);
+    });
+
+    return graphics;
+  };
+
   const fetch_teams = async (): Promise<Team[]> => {
     const teams: Team[] = await locals.pb.collection("teams").getFullList({
       sort: "+name",
@@ -130,6 +142,7 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
   };
 
   return {
+    graphics: await fetch_graphics(),
     teams: await fetch_teams(),
     drivers: await fetch_drivers(),
     races: await fetch_races(),
