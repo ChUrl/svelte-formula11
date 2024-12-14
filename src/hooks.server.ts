@@ -1,3 +1,4 @@
+import type { Graphic, User } from "$lib/schema";
 import type { Handle } from "@sveltejs/kit";
 import PocketBase from "pocketbase";
 
@@ -14,14 +15,25 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   if (event.locals.pb.authStore.isValid) {
     // If the authentication data is valid, we make a "user" object easily available.
-    event.locals.user = structuredClone(event.locals.pb.authStore.model);
+    event.locals.user = structuredClone(event.locals.pb.authStore.model) as User;
 
     if (event.locals.user) {
-      // Fill in the avatar URL
-      event.locals.user.avatar_url = event.locals.pb.files.getURL(
-        event.locals.pb.authStore.model,
-        event.locals.pb.authStore.model.avatar,
-      );
+      if (event.locals.pb.authStore.model.avatar) {
+        // Fill in the avatar URL
+        event.locals.user.avatar_url = event.locals.pb.files.getURL(
+          event.locals.pb.authStore.model,
+          event.locals.pb.authStore.model.avatar,
+        );
+      } else {
+        // Fill in the driver_template URL if no avatar chosen
+        const driver_template: Graphic = await event.locals.pb
+          .collection("graphics")
+          .getFirstListItem('name="driver_template"');
+        event.locals.user.avatar_url = event.locals.pb.files.getURL(
+          driver_template,
+          driver_template.file,
+        );
+      }
 
       // Set admin status for easier access
       event.locals.admin = event.locals.user.admin;
