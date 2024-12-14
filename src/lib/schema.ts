@@ -30,6 +30,22 @@ export interface Driver {
   active: boolean;
 }
 
-export interface Race {}
+export interface Race {
+  id: string;
+  name: string;
+  step: number;
+  pictogram: string;
+  pictogram_url?: string;
+  pxx: number;
+  sprintqualidate: string;
+  sprintdate: string;
+  qualidate: string;
+  racedate: string;
+}
 
-export interface Substitution {}
+export interface Substitution {
+  id: string;
+  driver: string;
+  substitute: string;
+  race: string;
+}
