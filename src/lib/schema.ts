@@ -1,3 +1,17 @@
+export interface Graphic {
+  name: string;
+  file: string;
+  file_url?: string;
+}
+
+export interface User {
+  id: string;
+  username: string;
+  avatar: string;
+  avatar_url?: string;
+  admin: boolean;
+}
+
 export interface Team {
   id: string;
   name: string;
