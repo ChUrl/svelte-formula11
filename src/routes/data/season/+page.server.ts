@@ -38,12 +38,37 @@ export const actions = {
   },
 
   create_driver: async ({ request, locals }) => {
+    if (!locals.admin) return { unauthorized: true };
+
+    const data: FormData = form_data_clean(await request.formData());
+    form_data_ensure_keys(data, ["firstname", "lastname", "code", "team", "headshot", "active"]);
+
+    console.log(data);
+
+    const record: Driver = await locals.pb.collection("drivers").create(data);
+
     return { tab: 1 };
   },
+
   update_driver: async ({ request, locals }) => {
+    if (!locals.admin) return { unauthorized: true };
+
+    const data: FormData = form_data_clean(await request.formData());
+    const id: string = form_data_get_and_remove_id(data);
+
+    const record: Driver = await locals.pb.collection("drivers").update(id, data);
+
     return { tab: 1 };
   },
+
   delete_driver: async ({ request, locals }) => {
+    if (!locals.admin) return { unauthorized: true };
+
+    const data: FormData = form_data_clean(await request.formData());
+    const id: string = form_data_get_and_remove_id(data);
+
+    await locals.pb.collection("drivers").delete(id);
+
     return { tab: 1 };
   },
 
@@ -70,8 +95,8 @@ export const actions = {
 
 // This "load" function runs serverside only, as it's located inside +page.server.ts
 export const load: PageServerLoad = async ({ fetch, locals }) => {
-  const fetch_teams = async (): Promise<Array<Team>> => {
-    const teams: Array<Team> = await locals.pb.collection("teams").getFullList({
+  const fetch_teams = async (): Promise<Team[]> => {
+    const teams: Team[] = await locals.pb.collection("teams").getFullList({
       sort: "+name",
       fetch: fetch,
     });
@@ -83,8 +108,8 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     return teams;
   };
 
-  const fetch_drivers = async (): Promise<Array<Driver>> => {
-    const drivers: Array<Driver> = await locals.pb.collection("drivers").getFullList({
+  const fetch_drivers = async (): Promise<Driver[]> => {
+    const drivers: Driver[] = await locals.pb.collection("drivers").getFullList({
       sort: "+lastname",
       fetch: fetch,
     });
@@ -96,11 +121,11 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     return drivers;
   };
 
-  const fetch_races = async (): Promise<Array<Race>> => {
+  const fetch_races = async (): Promise<Race[]> => {
     return [];
   };
 
-  const fetch_substitutions = async (): Promise<Array<Substitution>> => {
+  const fetch_substitutions = async (): Promise<Substitution[]> => {
     return [];
   };
 
