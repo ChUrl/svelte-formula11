@@ -1,13 +1,13 @@
 <script lang="ts">
   import { Input, Button, Card, Search, Dropdown } from "$lib/components";
   import { get_image_preview_event_handler } from "$lib/image";
-  import { get_by_id } from "$lib/database";
   import type { Driver, Team } from "$lib/schema";
   import { type PageData, type ActionData } from "./$types";
   import { FileDropzone, Tab, TabGroup, type AutocompleteOption } from "@skeletonlabs/skeleton";
 
   // TODO: Why does this work but import { type DropdownOption } from "$lib/components" does not?
   import type { DropdownOption } from "$lib/components/Dropdown.svelte";
+  import { get_by_value } from "$lib/database";
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -96,11 +96,12 @@
 
         <!-- Add a new team -->
         {#if data.admin}
-          <Card imgsrc="" imgid="create_team_logo_preview" imghidden>
+          <Card
+            imgsrc={get_by_value(data.graphics, "name", "team_template")?.file_url}
+            imgid="create_team_logo_preview"
+          >
             <form method="POST" enctype="multipart/form-data">
               <div class="flex flex-col gap-2">
-                <h4 class="h4 select-none">Add a New Team</h4>
-
                 <!-- Team name input -->
                 <Input id="team_name_create" name="name" required>Name</Input>
 
@@ -122,7 +123,7 @@
                   <!-- By specifying the formaction on the button (instead of action on the form), -->
                   <!-- we can have multiple buttons with different actions in a single form. -->
 
-                  <Button formaction="?/create_team" color="secondary" submit>Create</Button>
+                  <Button formaction="?/create_team" color="tertiary" submit>Create Team</Button>
                 </div>
               </div>
             </form>
@@ -172,6 +173,7 @@
                   name="team"
                   input_variable={update_driver_team_select_values[driver.id]}
                   labelwidth="120px"
+                  disabled={!data.admin}
                   options={driver_team_select_options}>Team</Dropdown
                 >
 
@@ -208,31 +210,23 @@
 
         <!-- Add a new driver -->
         {#if data.admin}
-          <Card imgsrc="" imgid="create_driver_headshot_preview" imghidden>
+          <Card
+            imgsrc={get_by_value(data.graphics, "name", "driver_template")?.file_url}
+            imgid="create_driver_headshot_preview"
+          >
             <form method="POST" enctype="multipart/form-data">
               <div class="flex flex-col gap-2">
-                <h4 class="h4 select-none">Add a New Driver</h4>
-
                 <!-- Driver data input -->
-                <Input
-                  id="driver_first_name_create"
-                  name="firstname"
-                  labelwidth="120px"
-                  disabled={!data.admin}
-                  required>First Name</Input
+                <Input id="driver_first_name_create" name="firstname" labelwidth="120px" required
+                  >First Name</Input
                 >
-                <Input
-                  id="driver_last_name_create"
-                  name="lastname"
-                  labelwidth="120px"
-                  disabled={!data.admin}
-                  required>Last Name</Input
+                <Input id="driver_last_name_create" name="lastname" labelwidth="120px" required
+                  >Last Name</Input
                 >
                 <Input
                   id="driver_code_create"
                   name="code"
                   labelwidth="120px"
-                  disabled={!data.admin}
                   maxlength={3}
                   minlength={3}
                   required>Driver Code</Input
@@ -252,7 +246,6 @@
                   name="headshot"
                   id="driver_headshot_create"
                   onchange={get_image_preview_event_handler("create_driver_headshot_preview")}
-                  disabled={!data.admin}
                   required
                 >
                   <svelte:fragment slot="message"
@@ -262,7 +255,9 @@
 
                 <!-- Buttons -->
                 <div class="flex justify-end gap-2">
-                  <Button formaction="?/create_driver" color="secondary" submit>Create</Button>
+                  <Button formaction="?/create_driver" color="secondary" submit
+                    >Create Driver</Button
+                  >
                 </div>
               </div>
             </form>
