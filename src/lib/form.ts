@@ -15,20 +15,26 @@ export const form_data_get_and_remove_id = (data: FormData): string => {
  * Remove empty fields and files from FormData objects.
  */
 export const form_data_clean = (data: FormData): FormData => {
+  let delete_keys: string[] = [];
+
   for (const [key, value] of data.entries()) {
-    if (value === "") {
+    if (value === "" || value === null) {
       // Remove empty keys
-      data.delete(key);
+      delete_keys.push(key);
     } else if (
       // Remove empty files
-      typeof value === "object" &&
       value !== null &&
+      typeof value === "object" &&
       "size" in value &&
       value.size === 0
     ) {
-      data.delete(key);
+      delete_keys.push(key);
     }
   }
+
+  delete_keys.forEach((key) => {
+    data.delete(key);
+  });
 
   return data;
 };
