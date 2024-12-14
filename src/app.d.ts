@@ -1,3 +1,4 @@
+import type { User } from "$lib/schema";
 import type { PocketBase, RecordModel } from "pocketbase";
 
 // See https://svelte.dev/docs/kit/types#app.d.ts
@@ -6,7 +7,7 @@ declare global {
   namespace App {
     interface Locals {
       pb: PocketBase;
-      user: RecordModel | undefined;
+      user: User | undefined;
       admin: boolean;
     }
 
