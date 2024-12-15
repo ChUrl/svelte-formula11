@@ -1,7 +1,7 @@
 import { form_data_clean, form_data_ensure_keys, form_data_get_and_remove_id } from "$lib/form";
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
-import type { User } from "$lib/schema";
+import { image_to_avif } from "$lib/server/image";
 
 export const actions = {
   create_profile: async ({ request, locals }): Promise<void> => {
@@ -9,7 +9,7 @@ export const actions = {
     form_data_ensure_keys(data, ["username", "password", "redirect_url"]);
 
     // Confirm password lol
-    const record = await locals.pb.collection("users").create({
+    await locals.pb.collection("users").create({
       username: data.get("username")?.toString(),
       password: data.get("password")?.toString(),
       passwordConfirm: data.get("password")?.toString(),
@@ -30,7 +30,23 @@ export const actions = {
     form_data_ensure_keys(data, ["redirect_url"]);
     const id: string = form_data_get_and_remove_id(data);
 
-    const record: User = await locals.pb.collection("users").update(id, data);
+    if (data.has("avatar")) {
+      // Compress image
+      const compressed: Blob = await image_to_avif(
+        await (data.get("avatar") as File).arrayBuffer(),
+        256,
+        256,
+      );
+
+      // At most 20kB
+      if (compressed.size > 20000) {
+        error(400, "Avatar too large!");
+      }
+
+      data.set("avatar", compressed);
+    }
+
+    await locals.pb.collection("users").update(id, data);
 
     redirect(303, data.get("redirect_url")?.toString() ?? "/");
   },
