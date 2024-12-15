@@ -41,13 +41,13 @@
     ? format(new Date(race.racedate), dateformat)
     : undefined;
 
-  const clear_sprint = (event: Event) => {
+  const clear_sprint = () => {
     const sprintquali: HTMLInputElement = document.getElementById(
       `race_sprintqualidate_${race?.id ?? "create"}`,
-    );
+    ) as HTMLInputElement;
     const sprint: HTMLInputElement = document.getElementById(
       `race_sprintdate_${race?.id ?? "create"}`,
-    );
+    ) as HTMLInputElement;
 
     sprintquali.value = "";
     sprint.value = "";
