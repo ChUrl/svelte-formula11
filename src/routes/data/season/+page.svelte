@@ -45,12 +45,16 @@
 
   // All options to create a <Dropdown> component for the teams
   const team_dropdown_options: DropdownOption[] = data.teams.map((team: Team) => {
-    return { label: team.name, value: team.id } as DropdownOption;
+    return { label: team.name, value: team.id, icon_url: team.logo_url } as DropdownOption;
   });
 
   // All options to create a <Dropdown> component for the drivers
   const driver_dropdown_options: DropdownOption[] = data.drivers.map((driver: Driver) => {
-    return { label: driver.code, value: driver.id } as DropdownOption;
+    return {
+      label: driver.code,
+      value: driver.id,
+      icon_url: driver.headshot_url,
+    } as DropdownOption;
   });
 
   // All options to create a <Dropdown> component for the races
@@ -85,11 +89,6 @@
       <!-- Teams Tab -->
       <!-- Teams Tab -->
       <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-        <!-- List all teams inside the database -->
-        {#each data.teams as team}
-          <TeamCard {team} disable_inputs={!data.admin} />
-        {/each}
-
         <!-- Add a new team -->
         {#if data.admin}
           <TeamCard
@@ -97,23 +96,17 @@
             require_inputs
           />
         {/if}
+
+        <!-- List all teams inside the database -->
+        {#each data.teams as team}
+          <TeamCard {team} disable_inputs={!data.admin} />
+        {/each}
       </div>
     {:else if current_tab === 1}
       <!-- Drivers Tab -->
       <!-- Drivers Tab -->
       <!-- Drivers Tab -->
       <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-        <!-- List all drivers inside the database -->
-        {#each data.drivers as driver}
-          <DriverCard
-            {driver}
-            disable_inputs={!data.admin}
-            team_select_value={update_driver_team_select_values[driver.id]}
-            team_select_options={team_dropdown_options}
-            active_value={update_driver_active_values[driver.id]}
-          />
-        {/each}
-
         <!-- Add a new driver -->
         {#if data.admin}
           <DriverCard
@@ -124,41 +117,39 @@
             require_inputs
           />
         {/if}
+
+        <!-- List all drivers inside the database -->
+        {#each data.drivers as driver}
+          <DriverCard
+            {driver}
+            disable_inputs={!data.admin}
+            team_select_value={update_driver_team_select_values[driver.id]}
+            team_select_options={team_dropdown_options}
+            active_value={update_driver_active_values[driver.id]}
+          />
+        {/each}
       </div>
     {:else if current_tab === 2}
       <!-- Races Tab -->
       <!-- Races Tab -->
       <!-- Races Tab -->
       <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-3 2xl:grid-cols-5">
-        {#each data.races as race}
-          <RaceCard {race} disable_inputs={!data.admin} />
-        {/each}
-
         {#if data.admin}
           <RaceCard
             pictogram_template={get_by_value(data.graphics, "name", "race_template")?.file_url}
             require_inputs
           />
         {/if}
+
+        {#each data.races as race}
+          <RaceCard {race} disable_inputs={!data.admin} />
+        {/each}
       </div>
     {:else if current_tab === 3}
       <!-- Substitutions Tab -->
       <!-- Substitutions Tab -->
       <!-- Substitutions Tab -->
       <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-        {#each data.substitutions as substitution}
-          <SubstitutionCard
-            {substitution}
-            drivers={data.drivers}
-            substitute_select_value={update_substitution_substitute_select_values[substitution.id]}
-            driver_select_value={update_substitution_for_select_values[substitution.id]}
-            race_select_value={update_substitution_race_select_values[substitution.id]}
-            driver_select_options={driver_dropdown_options}
-            race_select_options={race_dropdown_options}
-            disable_inputs={!data.admin}
-          />
-        {/each}
-
         {#if data.admin}
           <SubstitutionCard
             drivers={data.drivers}
@@ -171,6 +162,19 @@
             require_inputs
           />
         {/if}
+
+        {#each data.substitutions as substitution}
+          <SubstitutionCard
+            {substitution}
+            drivers={data.drivers}
+            substitute_select_value={update_substitution_substitute_select_values[substitution.id]}
+            driver_select_value={update_substitution_for_select_values[substitution.id]}
+            race_select_value={update_substitution_race_select_values[substitution.id]}
+            driver_select_options={driver_dropdown_options}
+            race_select_options={race_dropdown_options}
+            disable_inputs={!data.admin}
+          />
+        {/each}
       </div>
     {/if}
   </svelte:fragment>
