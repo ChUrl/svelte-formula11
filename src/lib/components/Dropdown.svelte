@@ -90,7 +90,8 @@
   {#if action}
     <input
       use:popup={popup_settings}
-      type="text"
+      type="button"
+      style="height: 42px; text-align: start; text-indent: 12px; border-top-left-radius: 0; border-bottom-left-radius: 0;"
       use:obtain_input
       use:action
       onkeypress={(event: Event) => event.preventDefault()}
@@ -100,7 +101,8 @@
   {:else}
     <input
       use:popup={popup_settings}
-      type="text"
+      type="button"
+      style="height: 42px; text-align: start; text-indent: 12px; border-top-left-radius: 0; border-bottom-left-radius: 0;"
       use:obtain_input
       onkeypress={(event: Event) => event.preventDefault()}
       value={get_label(input_variable) ?? placeholder}
@@ -109,13 +111,26 @@
   {/if}
 </div>
 
-<div data-popup={popup_id} class="card z-10 w-auto p-2 shadow">
+<div
+  data-popup={popup_id}
+  class="card z-10 w-auto overflow-y-scroll p-2 shadow"
+  style="max-height: 350px;"
+>
   <ListBox>
     {#each options as option}
-      <ListBoxItem bind:group={input_variable} {name} value={option.value}
-        >{option.label}</ListBoxItem
-      >
+      <ListBoxItem bind:group={input_variable} {name} value={option.value}>
+        <div class="flex flex-nowrap">
+          {#if option.icon_url}
+            <img
+              src={option.icon_url}
+              alt=""
+              class="mr-2 rounded"
+              style="height: 24px; max-width: 64px;"
+            />
+          {/if}
+          {option.label}
+        </div>
+      </ListBoxItem>
     {/each}
   </ListBox>
-  <div class="bg-surface-100-800-token arrow"></div>
 </div>
