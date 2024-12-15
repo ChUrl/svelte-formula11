@@ -45,7 +45,7 @@ export interface Race {
 
 export interface Substitution {
   id: string;
-  driver: string;
   substitute: string;
+  for: string;
   race: string;
 }
