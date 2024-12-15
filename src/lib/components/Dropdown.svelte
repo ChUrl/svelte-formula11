@@ -1,9 +1,9 @@
 <script lang="ts">
   import { ListBox, ListBoxItem, popup, type PopupSettings } from "@skeletonlabs/skeleton";
   import type { Snippet } from "svelte";
+  import type { Action } from "svelte/action";
   import type { HTMLInputAttributes } from "svelte/elements";
   import { v4 as uuid } from "uuid";
-  import UserIcon from "./svg/UserIcon.svelte";
 
   export interface DropdownOption {
     label: string;
@@ -25,6 +25,9 @@
     /** The variable to bind to the input element. Has to be a [$state] so its value can be updated with the input element's contents. */
     input_variable: string;
 
+    /** Any action to bind to the input element */
+    action?: Action;
+
     /** The ID of the popup to trigger. UUID by default. */
     popup_id?: string;
 
@@ -43,6 +46,7 @@
     name = "",
     labelwidth = "auto",
     input_variable,
+    action = undefined,
     popup_id = uuid(),
     popup_settings = {
       event: "click",
@@ -54,9 +58,26 @@
     ...restProps
   }: SearchProps = $props();
 
+  /** Find the "label" of an option by its "value" */
   const get_label = (value: string): string | undefined => {
     return options.find((o) => o.value === value)?.label;
   };
+
+  // Use an action to fill the "input" variable
+  // required to dispatch the custom event using $effect
+  let input: HTMLInputElement | undefined = undefined;
+  const obtain_input: Action = (node: HTMLElement) => {
+    input = node as HTMLInputElement;
+  };
+
+  // This will run everyting "input_variable" changes.
+  // The event is fired when the input's value is updated via JavaScript.
+  $effect(() => {
+    // Just list this so SvelteKit picks it up as dependency
+    input_variable;
+
+    if (input) input.dispatchEvent(new Event("DropdownChange"));
+  });
 </script>
 
 <div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
@@ -66,13 +87,26 @@
   >
     {@render children()}
   </div>
-  <input
-    use:popup={popup_settings}
-    type="text"
-    onkeypress={(event: Event) => event.preventDefault()}
-    value={get_label(input_variable) ?? placeholder}
-    {...restProps}
-  />
+  {#if action}
+    <input
+      use:popup={popup_settings}
+      type="text"
+      use:obtain_input
+      use:action
+      onkeypress={(event: Event) => event.preventDefault()}
+      value={get_label(input_variable) ?? placeholder}
+      {...restProps}
+    />
+  {:else}
+    <input
+      use:popup={popup_settings}
+      type="text"
+      use:obtain_input
+      onkeypress={(event: Event) => event.preventDefault()}
+      value={get_label(input_variable) ?? placeholder}
+      {...restProps}
+    />
+  {/if}
 </div>
 
 <div data-popup={popup_id} class="card z-10 w-auto p-2 shadow">
