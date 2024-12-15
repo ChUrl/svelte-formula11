@@ -106,7 +106,7 @@
         options={driver_select_options}
         labelwidth="120px"
         disabled={disable_inputs}
-        required={require_inputs}>Driver</Dropdown
+        required={require_inputs}>For</Dropdown
       >
 
       <!-- Race select -->
