@@ -59,6 +59,9 @@ export const actions = {
     const data: FormData = form_data_clean(await request.formData());
     const id: string = form_data_get_and_remove_id(data);
 
+    // The toggle switch will report "on" or nothing
+    data.set("active", data.has("active") ? "true" : "false");
+
     await locals.pb.collection("drivers").update(id, data);
 
     return { tab: 1 };

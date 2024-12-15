@@ -1,6 +1,6 @@
 <script lang="ts">
   import { get_image_preview_event_handler } from "$lib/image";
-  import { FileDropzone } from "@skeletonlabs/skeleton";
+  import { FileDropzone, SlideToggle } from "@skeletonlabs/skeleton";
   import Card from "./Card.svelte";
   import Button from "./Button.svelte";
   import type { Driver } from "$lib/schema";
@@ -20,13 +20,14 @@
     /** The [src] of the driver headshot template preview */
     headshot_template?: string;
 
-    // TODO: Move into this component?
-
     /** The value this component's team select dropdown will bind to */
     team_select_value: string;
 
     /** The options this component's team select dropdown will display */
     team_select_options: DropdownOption[];
+
+    /** The value this component's active switch will bind to */
+    active_value: boolean;
   }
 
   let {
@@ -36,6 +37,7 @@
     headshot_template = "",
     team_select_value,
     team_select_options,
+    active_value,
   }: DriverCardProps = $props();
 </script>
 
@@ -103,7 +105,15 @@
       </FileDropzone>
 
       <!-- Save/Delete buttons -->
-      <div class="flex justify-end gap-2">
+      <div class="flex items-center justify-end gap-2">
+        <div class="mr-auto">
+          <SlideToggle
+            name="active"
+            background="bg-primary-500"
+            active="bg-tertiary-500"
+            bind:checked={active_value}
+          />
+        </div>
         {#if driver}
           <Button formaction="?/update_driver" color="secondary" disabled={disable_inputs} submit
             >Save Changes</Button

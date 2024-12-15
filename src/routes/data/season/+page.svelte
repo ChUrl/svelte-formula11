@@ -19,13 +19,18 @@
     current_tab = form.tab;
   }
 
+  // Values for driver cards
   // Maps driver to team: <driver.id, team.id>
   let update_driver_team_select_values: { [key: string]: string } = $state({});
+  let update_driver_active_values: { [key: string]: boolean } = $state({});
   data.drivers.forEach((driver: Driver) => {
     update_driver_team_select_values[driver.id] = driver.team;
+    update_driver_active_values[driver.id] = driver.active;
   });
   update_driver_team_select_values["create"] = "";
+  update_driver_active_values["create"] = true;
 
+  // Values for substitution cards
   let update_substitution_substitute_select_values: { [key: string]: string } = $state({});
   let update_substitution_for_select_values: { [key: string]: string } = $state({});
   let update_substitution_race_select_values: { [key: string]: string } = $state({});
@@ -105,6 +110,7 @@
             disable_inputs={!data.admin}
             team_select_value={update_driver_team_select_values[driver.id]}
             team_select_options={team_dropdown_options}
+            active_value={update_driver_active_values[driver.id]}
           />
         {/each}
 
@@ -114,6 +120,7 @@
             headshot_template={get_by_value(data.graphics, "name", "driver_template")?.file_url}
             team_select_value={update_driver_team_select_values["create"]}
             team_select_options={team_dropdown_options}
+            active_value={update_driver_active_values["create"]}
             require_inputs
           />
         {/if}
