@@ -5,14 +5,12 @@
   import type { LayoutData } from "./$types";
   import { page } from "$app/stores";
 
-  import { Button, MenuDrawerIcon, UserIcon, Input, PasswordIcon, Card } from "$lib/components";
-  import { get_avatar_preview_event_handler, get_image_preview_event_handler } from "$lib/image";
+  import { Button, MenuDrawerIcon, UserIcon, Input, PasswordIcon } from "$lib/components";
+  import { get_avatar_preview_event_handler } from "$lib/image";
 
   import {
     AppBar,
-    popup,
     storePopup,
-    type PopupSettings,
     initializeStores,
     Drawer,
     getDrawerStore,
