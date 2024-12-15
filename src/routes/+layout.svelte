@@ -108,6 +108,9 @@
     <!-- Data Drawer -->
     <!-- Data Drawer -->
     <div class="flex flex-col gap-2 p-2">
+      <Button href="/data/raceresult" onclick={close_drawer} color="surface" fullwidth
+        >Race Results</Button
+      >
       <Button href="/data/season" onclick={close_drawer} color="surface" fullwidth>Season</Button>
       <Button href="/data/user" onclick={close_drawer} color="surface" fullwidth>Users</Button>
     </div>
