@@ -17,11 +17,15 @@
     /** Require all inputs if [true] */
     require_inputs?: boolean;
 
-    /** The [src] of the team logo template preview */
-    logo_template?: string;
+    /** The [src] of the driver headshot template preview */
+    headshot_template?: string;
 
-    team_select_values: { [key: string]: string };
+    // TODO: Move into this component?
 
+    /** The value this component's team select dropdown will bind to */
+    team_select_value: string;
+
+    /** The options this component's team select dropdown will display */
     team_select_options: DropdownOption[];
   }
 
@@ -29,14 +33,14 @@
     driver = undefined,
     disable_inputs = false,
     require_inputs = false,
-    logo_template = "",
-    team_select_values,
+    headshot_template = "",
+    team_select_value,
     team_select_options,
   }: DriverCardProps = $props();
 </script>
 
 <Card
-  imgsrc={driver?.headshot_url ?? logo_template}
+  imgsrc={driver?.headshot_url ?? headshot_template}
   imgid="update_driver_headshot_preview_{driver?.id ?? 'create'}"
 >
   <form method="POST" enctype="multipart/form-data">
@@ -78,7 +82,7 @@
       <!-- Driver team input -->
       <Dropdown
         name="team"
-        input_variable={team_select_values[driver?.id ?? "create"]}
+        input_variable={team_select_value}
         options={team_select_options}
         labelwidth="120px"
         disabled={disable_inputs}
