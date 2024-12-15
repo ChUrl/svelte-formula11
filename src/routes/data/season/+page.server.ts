@@ -46,7 +46,10 @@ export const actions = {
     if (!locals.admin) return { unauthorized: true };
 
     const data: FormData = form_data_clean(await request.formData());
-    form_data_ensure_keys(data, ["firstname", "lastname", "code", "team", "headshot", "active"]);
+    form_data_ensure_keys(data, ["firstname", "lastname", "code", "team", "headshot"]);
+
+    // The toggle switch will report "on" or nothing
+    data.set("active", data.has("active") ? "true" : "false");
 
     await locals.pb.collection("drivers").create(data);
 
