@@ -77,6 +77,7 @@
 </script>
 
 <LazyCard
+  group="SubstitutionCard"
   imgsrc={get_by_value(drivers, "id", substitution?.substitute ?? "")?.headshot_url ??
     headshot_template}
   imgwidth={DRIVER_HEADSHOT_WIDTH}

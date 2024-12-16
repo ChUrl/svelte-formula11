@@ -43,6 +43,7 @@
 </script>
 
 <LazyCard
+  group="DriverCard"
   imgsrc={driver?.headshot_url ?? headshot_template}
   imgwidth={DRIVER_HEADSHOT_WIDTH}
   imgheight={DRIVER_HEADSHOT_HEIGHT}

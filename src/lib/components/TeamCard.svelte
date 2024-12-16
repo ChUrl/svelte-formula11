@@ -30,6 +30,7 @@
 </script>
 
 <LazyCard
+  group="TeamCard"
   imgsrc={team?.logo_url ?? logo_template}
   imgwidth={TEAM_LOGO_WIDTH}
   imgheight={TEAM_LOGO_HEIGHT}

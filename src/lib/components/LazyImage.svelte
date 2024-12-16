@@ -24,7 +24,7 @@
   };
 
   const img_opacity_handler = (node: HTMLElement) => {
-    setTimeout(() => (node.style.opacity = "1"), 10);
+    setTimeout(() => (node.style.opacity = "1"), 20);
   };
 </script>
 
@@ -40,7 +40,7 @@
         src={data}
         use:img_opacity_handler
         class="bg-surface-100 transition-opacity"
-        style="width: 100%; opacity: 0; transition-duration: 250ms;"
+        style="width: 100%; opacity: 0; transition-duration: 500ms;"
         {...restProps}
       />
     {/await}
