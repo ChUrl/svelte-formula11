@@ -1,11 +1,11 @@
 <script lang="ts">
   import { get_image_preview_event_handler } from "$lib/image";
   import { FileDropzone } from "@skeletonlabs/skeleton";
-  import Card from "./Card.svelte";
   import Button from "./Button.svelte";
   import type { Team } from "$lib/schema";
   import Input from "./Input.svelte";
   import { TEAM_LOGO_HEIGHT, TEAM_LOGO_WIDTH } from "$lib/config";
+  import LazyCard from "./LazyCard.svelte";
 
   interface TeamCardProps {
     /** The [Team] object used to prefill values. */
@@ -29,7 +29,7 @@
   }: TeamCardProps = $props();
 </script>
 
-<Card
+<LazyCard
   imgsrc={team?.logo_url ?? logo_template}
   imgwidth={TEAM_LOGO_WIDTH}
   imgheight={TEAM_LOGO_HEIGHT}
@@ -83,4 +83,4 @@
       </div>
     </div>
   </form>
-</Card>
+</LazyCard>

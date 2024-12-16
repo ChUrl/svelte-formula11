@@ -1,9 +1,9 @@
 <script lang="ts">
-  import Card from "./Card.svelte";
+  import LazyCard from "./LazyCard.svelte";
   import Button from "./Button.svelte";
   import type { Driver, Substitution } from "$lib/schema";
   import { get_by_value } from "$lib/database";
-  import Dropdown, { type DropdownOption } from "./Dropdown.svelte";
+  import LazyDropdown, { type DropdownOption } from "./LazyDropdown.svelte";
   import type { Action } from "svelte/action";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
 
@@ -76,7 +76,7 @@
   };
 </script>
 
-<Card
+<LazyCard
   imgsrc={get_by_value(drivers, "id", substitution?.substitute ?? "")?.headshot_url ??
     headshot_template}
   imgwidth={DRIVER_HEADSHOT_WIDTH}
@@ -92,35 +92,39 @@
 
     <div class="flex flex-col gap-2">
       <!-- Substitute select -->
-      <Dropdown
+      <LazyDropdown
         name="substitute"
         input_variable={substitute_select_value}
         action={register_substitute_preview_handler}
         options={driver_select_options}
         labelwidth="120px"
         disabled={disable_inputs}
-        required={require_inputs}>Substitute</Dropdown
+        required={require_inputs}
       >
+        Substitute
+      </LazyDropdown>
 
       <!-- Driver select -->
-      <Dropdown
+      <LazyDropdown
         name="for"
         input_variable={driver_select_value}
         options={driver_select_options}
         labelwidth="120px"
         disabled={disable_inputs}
-        required={require_inputs}>For</Dropdown
-      >
+        required={require_inputs}
+        >For
+      </LazyDropdown>
 
       <!-- Race select -->
-      <Dropdown
+      <LazyDropdown
         name="race"
         input_variable={race_select_value}
         options={race_select_options}
         labelwidth="120px"
         disabled={disable_inputs}
-        required={require_inputs}>Race</Dropdown
-      >
+        required={require_inputs}
+        >Race
+      </LazyDropdown>
 
       <!-- Save/Delete buttons -->
       <div class="flex justify-end gap-2">
@@ -145,4 +149,4 @@
       </div>
     </div>
   </form>
-</Card>
+</LazyCard>

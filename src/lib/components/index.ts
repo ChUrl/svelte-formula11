@@ -1,8 +1,8 @@
 import Button from "./Button.svelte";
-import Card from "./Card.svelte";
 import DriverCard from "./DriverCard.svelte";
-import Dropdown from "./Dropdown.svelte";
 import Input from "./Input.svelte";
+import LazyCard from "./LazyCard.svelte";
+import LazyDropdown from "./LazyDropdown.svelte";
 import LazyImage from "./LazyImage.svelte";
 import LoadingIndicator from "./LoadingIndicator.svelte";
 import RaceCard from "./RaceCard.svelte";
@@ -17,10 +17,10 @@ import UserIcon from "./svg/UserIcon.svelte";
 export {
   // Components
   Button,
-  Card,
   DriverCard,
-  Dropdown,
   Input,
+  LazyCard,
+  LazyDropdown,
   LazyImage,
   LoadingIndicator,
   RaceCard,

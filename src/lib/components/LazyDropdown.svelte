@@ -4,13 +4,26 @@
   import type { Action } from "svelte/action";
   import type { HTMLInputAttributes } from "svelte/elements";
   import { v4 as uuid } from "uuid";
+  import LazyImage from "./LazyImage.svelte";
 
-  export interface DropdownOption {
+  export interface LazyDropdownOption {
+    /** The label displayed in the list of options. */
     label: string;
+
+    /** The value assigned to the dropdown value variable */
     value: string;
+
+    /** An optional icon displayed left to the label */
+    icon_url?: string;
+
+    /** The aspect ratio width of the optional icon */
+    icon_width?: number;
+
+    /** The aspect ratio height of the optional icon */
+    icon_height?: number;
   }
 
-  interface SearchProps extends HTMLInputAttributes {
+  interface LazyDropdownProps extends HTMLInputAttributes {
     children: Snippet;
 
     /** Placeholder for the empty input element */
@@ -37,7 +50,7 @@
     /** The options this autocomplete component allows to choose from.
      * Example: [[{ label: "Aston", value: "0" }, { label: "VCARB", value: "1" }]].
      */
-    options: DropdownOption[];
+    options: LazyDropdownOption[];
   }
 
   let {
@@ -56,7 +69,7 @@
     },
     options,
     ...restProps
-  }: SearchProps = $props();
+  }: LazyDropdownProps = $props();
 
   /** Find the "label" of an option by its "value" */
   const get_label = (value: string): string | undefined => {
@@ -78,6 +91,12 @@
 
     if (input) input.dispatchEvent(new CustomEvent("DropdownChange"));
   });
+
+  let load: boolean = $state(false);
+
+  const lazy_click_handler = () => {
+    load = true;
+  };
 </script>
 
 <div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
@@ -87,6 +106,7 @@
   >
     {@render children()}
   </div>
+  <!-- TODO: How to assign use: conditionally? I don't wan't to repeat the entire input... -->
   {#if action}
     <input
       use:popup={popup_settings}
@@ -95,6 +115,7 @@
       style="height: 42px; text-align: start; text-indent: 12px; border-top-left-radius: 0; border-bottom-left-radius: 0;"
       use:obtain_input
       use:action
+      onmousedown={lazy_click_handler}
       onkeypress={(event: Event) => event.preventDefault()}
       value={get_label(input_variable) ?? placeholder}
       {...restProps}
@@ -106,6 +127,7 @@
       autocomplete="off"
       style="height: 42px; text-align: start; text-indent: 12px; border-top-left-radius: 0; border-bottom-left-radius: 0;"
       use:obtain_input
+      onmousedown={lazy_click_handler}
       onkeypress={(event: Event) => event.preventDefault()}
       value={get_label(input_variable) ?? placeholder}
       {...restProps}
@@ -118,21 +140,25 @@
   class="card z-10 w-auto overflow-y-scroll p-2 shadow"
   style="max-height: 350px;"
 >
-  <ListBox>
-    {#each options as option}
-      <ListBoxItem bind:group={input_variable} {name} value={option.value}>
-        <div class="flex flex-nowrap">
-          {#if option.icon_url}
-            <img
-              src={option.icon_url}
-              alt=""
-              class="mr-2 rounded"
-              style="height: 24px; max-width: 64px;"
-            />
-          {/if}
-          {option.label}
-        </div>
-      </ListBoxItem>
-    {/each}
-  </ListBox>
+  {#if load}
+    <ListBox>
+      {#each options as option}
+        <ListBoxItem bind:group={input_variable} {name} value={option.value}>
+          <div class="flex flex-nowrap">
+            {#if option.icon_url}
+              <LazyImage
+                src={option.icon_url}
+                alt=""
+                imgwidth={option.icon_width ?? 1}
+                imgheight={option.icon_height ?? 1}
+                class="mr-2 rounded"
+                style="height: 24px; max-width: 64px;"
+              />
+            {/if}
+            {option.label}
+          </div>
+        </ListBoxItem>
+      {/each}
+    </ListBox>
+  {/if}
 </div>
