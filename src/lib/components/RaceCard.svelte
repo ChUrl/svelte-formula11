@@ -56,6 +56,7 @@
 </script>
 
 <LazyCard
+  group="RaceCard"
   imgsrc={race?.pictogram_url ?? pictogram_template}
   imgwidth={RACE_PICTOGRAM_WIDTH}
   imgheight={RACE_PICTOGRAM_HEIGHT}
