@@ -6,6 +6,7 @@
   import type { Driver } from "$lib/schema";
   import Input from "./Input.svelte";
   import Dropdown, { type DropdownOption } from "./Dropdown.svelte";
+  import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
 
   interface DriverCardProps {
     /** The [Driver] object used to prefill values. */
@@ -34,7 +35,7 @@
     driver = undefined,
     disable_inputs = false,
     require_inputs = false,
-    headshot_template = "",
+    headshot_template = undefined,
     team_select_value,
     team_select_options,
     active_value,
@@ -43,6 +44,8 @@
 
 <Card
   imgsrc={driver?.headshot_url ?? headshot_template}
+  imgwidth={DRIVER_HEADSHOT_WIDTH}
+  imgheight={DRIVER_HEADSHOT_HEIGHT}
   imgid="update_driver_headshot_preview_{driver?.id ?? 'create'}"
 >
   <form method="POST" enctype="multipart/form-data">

@@ -6,6 +6,7 @@
   import type { Race } from "$lib/schema";
   import Input from "./Input.svelte";
   import { format } from "date-fns";
+  import { RACE_PICTOGRAM_HEIGHT, RACE_PICTOGRAM_WIDTH } from "$lib/config";
 
   interface RaceCardProps {
     /** The [Race] object used to prefill values. */
@@ -56,6 +57,8 @@
 
 <Card
   imgsrc={race?.pictogram_url ?? pictogram_template}
+  imgwidth={RACE_PICTOGRAM_WIDTH}
+  imgheight={RACE_PICTOGRAM_HEIGHT}
   imgid="update_race_pictogram_preview_{race?.id ?? 'create'}"
 >
   <form method="POST" enctype="multipart/form-data">
