@@ -12,9 +12,22 @@
 
     /** The aspect ratio height used to reserve image space (while its loading) */
     imgheight: number;
+
+    /** Optional extra style for the <img> element  */
+    imgstyle?: string;
+
+    /** Optional extra style for the lazy <div> container */
+    containerstyle?: string;
   }
 
-  let { src, imgwidth, imgheight, ...restProps }: LazyImageProps = $props();
+  let {
+    src,
+    imgwidth,
+    imgheight,
+    imgstyle = undefined,
+    containerstyle = undefined,
+    ...restProps
+  }: LazyImageProps = $props();
 
   // Once the image is visible, this will be set to true, triggering the loading
   let load: boolean = $state(false);
@@ -32,7 +45,7 @@
 <div
   use:lazyload
   onLazyVisible={lazy_visible_handler}
-  style="width: 100%; aspect-ratio: {imgwidth} / {imgheight};"
+  style="aspect-ratio: {imgwidth} / {imgheight}; {containerstyle ?? ''}"
 >
   {#if load}
     {#await fetch_image_base64(src) then data}
@@ -40,7 +53,7 @@
         src={data}
         use:img_opacity_handler
         class="bg-surface-100 transition-opacity"
-        style="width: 100%; opacity: 0; transition-duration: 500ms;"
+        style="opacity: 0; transition-duration: 300ms; {imgstyle ?? ''}"
         {...restProps}
       />
     {/await}

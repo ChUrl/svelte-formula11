@@ -151,11 +151,12 @@
                 alt=""
                 imgwidth={option.icon_width ?? 1}
                 imgheight={option.icon_height ?? 1}
-                class="mr-2 rounded"
-                style="height: 24px; max-width: 64px;"
+                class="rounded"
+                imgstyle="height: 24px;"
+                containerstyle="height: 24px;"
               />
             {/if}
-            {option.label}
+            <span class="ml-2">{option.label}</span>
           </div>
         </ListBoxItem>
       {/each}
