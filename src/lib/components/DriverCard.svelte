@@ -6,7 +6,12 @@
   import type { Driver } from "$lib/schema";
   import Input from "./Input.svelte";
   import LazyDropdown, { type LazyDropdownOption } from "./LazyDropdown.svelte";
-  import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
+  import {
+    DRIVER_CARD_ASPECT_HEIGHT,
+    DRIVER_CARD_ASPECT_WIDTH,
+    DRIVER_HEADSHOT_HEIGHT,
+    DRIVER_HEADSHOT_WIDTH,
+  } from "$lib/config";
 
   interface DriverCardProps {
     /** The [Driver] object used to prefill values. */
@@ -43,7 +48,8 @@
 </script>
 
 <LazyCard
-  group="DriverCard"
+  cardwidth={DRIVER_CARD_ASPECT_WIDTH}
+  cardheight={DRIVER_CARD_ASPECT_HEIGHT}
   imgsrc={driver?.headshot_url ?? headshot_template}
   imgwidth={DRIVER_HEADSHOT_WIDTH}
   imgheight={DRIVER_HEADSHOT_HEIGHT}

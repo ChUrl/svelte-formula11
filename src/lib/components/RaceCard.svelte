@@ -6,7 +6,12 @@
   import type { Race } from "$lib/schema";
   import Input from "./Input.svelte";
   import { format } from "date-fns";
-  import { RACE_PICTOGRAM_HEIGHT, RACE_PICTOGRAM_WIDTH } from "$lib/config";
+  import {
+    RACE_CARD_ASPECT_HEIGHT,
+    RACE_CARD_ASPECT_WIDTH,
+    RACE_PICTOGRAM_HEIGHT,
+    RACE_PICTOGRAM_WIDTH,
+  } from "$lib/config";
 
   interface RaceCardProps {
     /** The [Race] object used to prefill values. */
@@ -56,7 +61,8 @@
 </script>
 
 <LazyCard
-  group="RaceCard"
+  cardwidth={RACE_CARD_ASPECT_WIDTH}
+  cardheight={RACE_CARD_ASPECT_HEIGHT}
   imgsrc={race?.pictogram_url ?? pictogram_template}
   imgwidth={RACE_PICTOGRAM_WIDTH}
   imgheight={RACE_PICTOGRAM_HEIGHT}
