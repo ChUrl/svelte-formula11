@@ -76,7 +76,7 @@
     // Just list this so SvelteKit picks it up as dependency
     input_variable;
 
-    if (input) input.dispatchEvent(new Event("DropdownChange"));
+    if (input) input.dispatchEvent(new CustomEvent("DropdownChange"));
   });
 </script>
 
