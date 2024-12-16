@@ -5,7 +5,14 @@
   import type { LayoutData } from "./$types";
   import { page } from "$app/stores";
 
-  import { Button, MenuDrawerIcon, UserIcon, Input, PasswordIcon } from "$lib/components";
+  import {
+    Button,
+    MenuDrawerIcon,
+    UserIcon,
+    Input,
+    PasswordIcon,
+    LoadingIndicator,
+  } from "$lib/components";
   import { get_avatar_preview_event_handler } from "$lib/image";
 
   import {
@@ -82,6 +89,8 @@
   //   },
   // };
 </script>
+
+<LoadingIndicator />
 
 <Drawer>
   {#if $drawerStore.id === "menu_drawer"}
