@@ -45,3 +45,22 @@ export const get_image_preview_event_handler = (id: string): ((event: Event) => 
 
   return handler;
 };
+
+/** Convert a binary [Blob] to base64 string */
+export const blob_to_base64 = (blob: Blob): Promise<string> => {
+  return new Promise((resolve, _) => {
+    const reader = new FileReader();
+
+    // This is fired once the file read has ended
+    reader.onloadend = () => resolve(reader.result?.toString() ?? "");
+
+    reader.readAsDataURL(blob);
+  });
+};
+
+/** Fetch an image from an URL using a fetch function [f] and return as base64 string */
+export const fetch_image_base64 = async (url: string, f: Function = fetch): Promise<string> => {
+  return f(url)
+    .then((response: Response) => response.blob())
+    .then((blob: Blob) => blob_to_base64(blob));
+};
