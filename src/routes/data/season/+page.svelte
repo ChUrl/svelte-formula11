@@ -4,9 +4,17 @@
   import { Tab, TabGroup } from "@skeletonlabs/skeleton";
 
   // TODO: Why does this work but import { type DropdownOption } from "$lib/components" does not?
-  import type { DropdownOption } from "$lib/components/Dropdown.svelte";
+  import type { LazyDropdownOption } from "$lib/components/LazyDropdown.svelte";
   import { TeamCard, DriverCard, RaceCard, SubstitutionCard } from "$lib/components";
   import { get_by_value } from "$lib/database";
+  import {
+    DRIVER_HEADSHOT_HEIGHT,
+    DRIVER_HEADSHOT_WIDTH,
+    RACE_PICTOGRAM_HEIGHT,
+    RACE_PICTOGRAM_WIDTH,
+    TEAM_LOGO_HEIGHT,
+    TEAM_LOGO_WIDTH,
+  } from "$lib/config";
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
@@ -44,28 +52,42 @@
   update_substitution_race_select_values["create"] = "";
 
   // All options to create a <Dropdown> component for the teams
-  const team_dropdown_options: DropdownOption[] = [];
+  const team_dropdown_options: LazyDropdownOption[] = [];
   data.teams.forEach((team: Team) => {
-    team_dropdown_options.push({ label: team.name, value: team.id, icon_url: team.logo_url });
+    team_dropdown_options.push({
+      label: team.name,
+      value: team.id,
+      icon_url: team.logo_url,
+      icon_width: TEAM_LOGO_WIDTH,
+      icon_height: TEAM_LOGO_HEIGHT,
+    });
   });
 
   // All options to create a <Dropdown> component for the drivers
-  const driver_dropdown_options: DropdownOption[] = [];
+  const driver_dropdown_options: LazyDropdownOption[] = [];
   data.drivers.then((drivers: Driver[]) =>
     drivers.forEach((driver: Driver) => {
       driver_dropdown_options.push({
         label: driver.code,
         value: driver.id,
         icon_url: driver.headshot_url,
+        icon_width: DRIVER_HEADSHOT_WIDTH,
+        icon_height: DRIVER_HEADSHOT_HEIGHT,
       });
     }),
   );
 
   // All options to create a <Dropdown> component for the races
-  const race_dropdown_options: DropdownOption[] = [];
+  const race_dropdown_options: LazyDropdownOption[] = [];
   data.races.then((races: Race[]) =>
     races.forEach((race: Race) => {
-      race_dropdown_options.push({ label: race.name, value: race.id });
+      race_dropdown_options.push({
+        label: race.name,
+        value: race.id,
+        icon_url: race.pictogram_url,
+        icon_width: RACE_PICTOGRAM_WIDTH,
+        icon_height: RACE_PICTOGRAM_HEIGHT,
+      });
     }),
   );
 </script>
