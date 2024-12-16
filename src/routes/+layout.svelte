@@ -48,7 +48,7 @@
       } else {
         // We clicked another button to open another drawer
         drawerStore.close();
-        setTimeout(() => drawerStore.open(settings), 200);
+        setTimeout(() => drawerStore.open(settings), 175);
       }
     } else {
       drawerStore.open(settings);
@@ -116,11 +116,11 @@
 
 <Drawer>
   <!-- Use p-3 because the drawer has a 5px overlap with the navbar -->
-  <div class="flex flex-col gap-2 p-3">
-    {#if $drawerStore.id === "menu_drawer"}
-      <!-- Menu Drawer -->
-      <!-- Menu Drawer -->
-      <!-- Menu Drawer -->
+  {#if $drawerStore.id === "menu_drawer"}
+    <!-- Menu Drawer -->
+    <!-- Menu Drawer -->
+    <!-- Menu Drawer -->
+    <div class="flex flex-col gap-2 p-3">
       <Button href="/racepicks" onclick={close_drawer} color="surface" fullwidth>Race Picks</Button>
       <Button href="/seasonpicks" onclick={close_drawer} color="surface" fullwidth
         >Season Picks
@@ -132,19 +132,23 @@
         >Statistics
       </Button>
       <Button href="/rules" onclick={close_drawer} color="surface" fullwidth>Rules</Button>
-    {:else if $drawerStore.id === "data_drawer"}
-      <!-- Data Drawer -->
-      <!-- Data Drawer -->
-      <!-- Data Drawer -->
+    </div>
+  {:else if $drawerStore.id === "data_drawer"}
+    <!-- Data Drawer -->
+    <!-- Data Drawer -->
+    <!-- Data Drawer -->
+    <div class="flex flex-col gap-2 p-3">
       <Button href="/data/raceresult" onclick={close_drawer} color="surface" fullwidth
         >Race Results
       </Button>
       <Button href="/data/season" onclick={close_drawer} color="surface" fullwidth>Season</Button>
       <Button href="/data/user" onclick={close_drawer} color="surface" fullwidth>Users</Button>
-    {:else if $drawerStore.id === "login_drawer"}
-      <!-- Login Drawer -->
-      <!-- Login Drawer -->
-      <!-- Login Drawer -->
+    </div>
+  {:else if $drawerStore.id === "login_drawer"}
+    <!-- Login Drawer -->
+    <!-- Login Drawer -->
+    <!-- Login Drawer -->
+    <div class="flex flex-col gap-2 p-3">
       <h4 class="h4 select-none">Enter Username and Password</h4>
       <form method="POST" class="contents">
         <!-- Supply the pathname so the form can redirect to the current page. -->
@@ -168,10 +172,12 @@
           </Button>
         </div>
       </form>
-    {:else if $drawerStore.id === "profile_drawer" && data.user}
-      <!-- Profile Drawer -->
-      <!-- Profile Drawer -->
-      <!-- Profile Drawer -->
+    </div>
+  {:else if $drawerStore.id === "profile_drawer" && data.user}
+    <!-- Profile Drawer -->
+    <!-- Profile Drawer -->
+    <!-- Profile Drawer -->
+    <div class="flex flex-col gap-2 p-3">
       <h4 class="h4 select-none">Edit Profile</h4>
       <form method="POST" enctype="multipart/form-data" class="contents">
         <!-- Supply the pathname so the form can redirect to the current page. -->
@@ -205,8 +211,8 @@
           </Button>
         </div>
       </form>
-    {/if}
-  </div>
+    </div>
+  {/if}
 </Drawer>
 
 <nav>
