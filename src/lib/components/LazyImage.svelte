@@ -36,7 +36,7 @@
     {#await loadImage(src)}
       <!-- Loading... -->
     {:then data}
-      <img src={data} {...restProps} />
+      <img src={data} style="width: 100%" {...restProps} />
     {/await}
   {/if}
 </div>
