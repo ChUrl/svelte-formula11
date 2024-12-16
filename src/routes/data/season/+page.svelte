@@ -17,47 +17,57 @@
   }
 
   // Values for driver cards
-  // Maps driver to team: <driver.id, team.id>
-  let update_driver_team_select_values: { [key: string]: string } = $state({});
+  let update_driver_team_select_values: { [key: string]: string } = $state({}); // <driver.id, team.id>
   let update_driver_active_values: { [key: string]: boolean } = $state({});
-  data.drivers.forEach((driver: Driver) => {
-    update_driver_team_select_values[driver.id] = driver.team;
-    update_driver_active_values[driver.id] = driver.active;
-  });
+  data.drivers.then((drivers: Driver[]) =>
+    drivers.forEach((driver: Driver) => {
+      update_driver_team_select_values[driver.id] = driver.team;
+      update_driver_active_values[driver.id] = driver.active;
+    }),
+  );
   update_driver_team_select_values["create"] = "";
   update_driver_active_values["create"] = true;
 
   // Values for substitution cards
-  let update_substitution_substitute_select_values: { [key: string]: string } = $state({});
-  let update_substitution_for_select_values: { [key: string]: string } = $state({});
-  let update_substitution_race_select_values: { [key: string]: string } = $state({});
-  data.substitutions.forEach((substitution: Substitution) => {
-    update_substitution_substitute_select_values[substitution.id] = substitution.substitute;
-    update_substitution_for_select_values[substitution.id] = substitution.for;
-    update_substitution_race_select_values[substitution.id] = substitution.race;
-  });
+  const update_substitution_substitute_select_values: { [key: string]: string } = $state({});
+  const update_substitution_for_select_values: { [key: string]: string } = $state({});
+  const update_substitution_race_select_values: { [key: string]: string } = $state({});
+  data.substitutions.then((substitutions: Substitution[]) =>
+    substitutions.forEach((substitution: Substitution) => {
+      update_substitution_substitute_select_values[substitution.id] = substitution.substitute;
+      update_substitution_for_select_values[substitution.id] = substitution.for;
+      update_substitution_race_select_values[substitution.id] = substitution.race;
+    }),
+  );
   update_substitution_substitute_select_values["create"] = "";
   update_substitution_for_select_values["create"] = "";
   update_substitution_race_select_values["create"] = "";
 
   // All options to create a <Dropdown> component for the teams
-  const team_dropdown_options: DropdownOption[] = data.teams.map((team: Team) => {
-    return { label: team.name, value: team.id, icon_url: team.logo_url } as DropdownOption;
+  const team_dropdown_options: DropdownOption[] = [];
+  data.teams.forEach((team: Team) => {
+    team_dropdown_options.push({ label: team.name, value: team.id, icon_url: team.logo_url });
   });
 
   // All options to create a <Dropdown> component for the drivers
-  const driver_dropdown_options: DropdownOption[] = data.drivers.map((driver: Driver) => {
-    return {
-      label: driver.code,
-      value: driver.id,
-      icon_url: driver.headshot_url,
-    } as DropdownOption;
-  });
+  const driver_dropdown_options: DropdownOption[] = [];
+  data.drivers.then((drivers: Driver[]) =>
+    drivers.forEach((driver: Driver) => {
+      driver_dropdown_options.push({
+        label: driver.code,
+        value: driver.id,
+        icon_url: driver.headshot_url,
+      });
+    }),
+  );
 
   // All options to create a <Dropdown> component for the races
-  const race_dropdown_options: DropdownOption[] = data.races.map((race: Race) => {
-    return { label: race.name, value: race.id } as DropdownOption;
-  });
+  const race_dropdown_options: DropdownOption[] = [];
+  data.races.then((races: Race[]) =>
+    races.forEach((race: Race) => {
+      race_dropdown_options.push({ label: race.name, value: race.id });
+    }),
+  );
 </script>
 
 <svelte:head>
@@ -116,15 +126,17 @@
         {/if}
 
         <!-- List all drivers inside the database -->
-        {#each data.drivers as driver}
-          <DriverCard
-            {driver}
-            disable_inputs={!data.admin}
-            team_select_value={update_driver_team_select_values[driver.id]}
-            team_select_options={team_dropdown_options}
-            active_value={update_driver_active_values[driver.id]}
-          />
-        {/each}
+        {#await data.drivers then drivers}
+          {#each drivers as driver}
+            <DriverCard
+              {driver}
+              disable_inputs={!data.admin}
+              team_select_value={update_driver_team_select_values[driver.id]}
+              team_select_options={team_dropdown_options}
+              active_value={update_driver_active_values[driver.id]}
+            />
+          {/each}
+        {/await}
       </div>
     {:else if current_tab === 2}
       <!-- Races Tab -->
@@ -138,40 +150,48 @@
           />
         {/if}
 
-        {#each data.races as race}
-          <RaceCard {race} disable_inputs={!data.admin} />
-        {/each}
+        {#await data.races then races}
+          {#each races as race}
+            <RaceCard {race} disable_inputs={!data.admin} />
+          {/each}
+        {/await}
       </div>
     {:else if current_tab === 3}
       <!-- Substitutions Tab -->
       <!-- Substitutions Tab -->
       <!-- Substitutions Tab -->
       <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-        {#if data.admin}
-          <SubstitutionCard
-            drivers={data.drivers}
-            substitute_select_value={update_substitution_substitute_select_values["create"]}
-            driver_select_value={update_substitution_for_select_values["create"]}
-            race_select_value={update_substitution_race_select_values["create"]}
-            driver_select_options={driver_dropdown_options}
-            race_select_options={race_dropdown_options}
-            headshot_template={get_by_value(data.graphics, "name", "driver_template")?.file_url}
-            require_inputs
-          />
-        {/if}
+        {#await data.drivers then drivers}
+          {#if data.admin}
+            <SubstitutionCard
+              {drivers}
+              substitute_select_value={update_substitution_substitute_select_values["create"]}
+              driver_select_value={update_substitution_for_select_values["create"]}
+              race_select_value={update_substitution_race_select_values["create"]}
+              driver_select_options={driver_dropdown_options}
+              race_select_options={race_dropdown_options}
+              headshot_template={get_by_value(data.graphics, "name", "driver_template")?.file_url}
+              require_inputs
+            />
+          {/if}
 
-        {#each data.substitutions as substitution}
-          <SubstitutionCard
-            {substitution}
-            drivers={data.drivers}
-            substitute_select_value={update_substitution_substitute_select_values[substitution.id]}
-            driver_select_value={update_substitution_for_select_values[substitution.id]}
-            race_select_value={update_substitution_race_select_values[substitution.id]}
-            driver_select_options={driver_dropdown_options}
-            race_select_options={race_dropdown_options}
-            disable_inputs={!data.admin}
-          />
-        {/each}
+          {#await data.substitutions then substitutions}
+            {#each substitutions as substitution}
+              <SubstitutionCard
+                {substitution}
+                {drivers}
+                substitute_select_value={update_substitution_substitute_select_values[
+                  substitution.id
+                ]}
+                driver_select_value={update_substitution_for_select_values[substitution.id]}
+                race_select_value={update_substitution_race_select_values[substitution.id]}
+                driver_select_options={driver_dropdown_options}
+                race_select_options={race_dropdown_options}
+                disable_inputs={!data.admin}
+              />
+            {/each}
+          {/await}
+        {/await}
       </div>
     {/if}
   </svelte:fragment>

@@ -1,4 +1,4 @@
-import type { Actions, PageServerLoad } from "./$types";
+import type { ActionData, Actions, PageServerLoad } from "./$types";
 import {
   form_data_clean,
   form_data_ensure_keys,
@@ -286,10 +286,13 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
   };
 
   return {
+    // Graphics and teams are awaited, since those are visible on page load.
     graphics: await fetch_graphics(),
     teams: await fetch_teams(),
-    drivers: await fetch_drivers(),
-    races: await fetch_races(),
-    substitutions: await fetch_substitutions(),
+
+    // The rest is streamed gradually, since the user has to switch tabs to need them.
+    drivers: fetch_drivers(),
+    races: fetch_races(),
+    substitutions: fetch_substitutions(),
   };
 };
