@@ -6,6 +6,15 @@ import {
   form_data_get_and_remove_id,
 } from "$lib/form";
 import type { Team, Driver, Race, Substitution, Graphic } from "$lib/schema";
+import { image_to_avif } from "$lib/server/image";
+import {
+  DRIVER_HEADSHOT_HEIGHT,
+  DRIVER_HEADSHOT_WIDTH,
+  RACE_PICTOGRAM_HEIGHT,
+  RACE_PICTOGRAM_WIDTH,
+  TEAM_LOGO_HEIGHT,
+  TEAM_LOGO_WIDTH,
+} from "$lib/config";
 
 // These "actions" run serverside only, as they're located inside +page.server.ts
 export const actions = {
@@ -14,6 +23,15 @@ export const actions = {
 
     const data: FormData = form_data_clean(await request.formData());
     form_data_ensure_keys(data, ["name", "logo"]);
+
+    // Compress logo
+    const compressed: Blob = await image_to_avif(
+      await (data.get("logo") as File).arrayBuffer(),
+      TEAM_LOGO_WIDTH,
+      TEAM_LOGO_HEIGHT,
+    );
+
+    data.set("logo", compressed);
 
     await locals.pb.collection("teams").create(data);
 
@@ -25,6 +43,17 @@ export const actions = {
 
     const data: FormData = form_data_clean(await request.formData());
     const id: string = form_data_get_and_remove_id(data);
+
+    if (data.has("logo")) {
+      // Compress logo
+      const compressed: Blob = await image_to_avif(
+        await (data.get("logo") as File).arrayBuffer(),
+        TEAM_LOGO_WIDTH,
+        TEAM_LOGO_HEIGHT,
+      );
+
+      data.set("logo", compressed);
+    }
 
     await locals.pb.collection("teams").update(id, data);
 
@@ -51,6 +80,15 @@ export const actions = {
     // The toggle switch will report "on" or nothing
     data.set("active", data.has("active") ? "true" : "false");
 
+    // Compress headshot
+    const compressed: Blob = await image_to_avif(
+      await (data.get("headshot") as File).arrayBuffer(),
+      DRIVER_HEADSHOT_WIDTH,
+      DRIVER_HEADSHOT_HEIGHT,
+    );
+
+    data.set("headshot", compressed);
+
     await locals.pb.collection("drivers").create(data);
 
     return { tab: 1 };
@@ -64,6 +102,17 @@ export const actions = {
 
     // The toggle switch will report "on" or nothing
     data.set("active", data.has("active") ? "true" : "false");
+
+    if (data.has("headshot")) {
+      // Compress headshot
+      const compressed: Blob = await image_to_avif(
+        await (data.get("headshot") as File).arrayBuffer(),
+        DRIVER_HEADSHOT_WIDTH,
+        DRIVER_HEADSHOT_HEIGHT,
+      );
+
+      data.set("headshot", compressed);
+    }
 
     await locals.pb.collection("drivers").update(id, data);
 
@@ -88,6 +137,15 @@ export const actions = {
     form_data_ensure_keys(data, ["name", "step", "pictogram", "pxx", "qualidate", "racedate"]);
     form_data_fix_dates(data, ["sprintqualidate", "sprintdate", "qualidate", "racedate"]);
 
+    // Compress pictogram
+    const compressed: Blob = await image_to_avif(
+      await (data.get("pictogram") as File).arrayBuffer(),
+      RACE_PICTOGRAM_WIDTH,
+      RACE_PICTOGRAM_HEIGHT,
+    );
+
+    data.set("pictogram", compressed);
+
     await locals.pb.collection("races").create(data);
 
     return { tab: 2 };
@@ -103,6 +161,17 @@ export const actions = {
     ]);
     form_data_fix_dates(data, ["sprintqualidate", "sprintdate", "qualidate", "racedate"]);
     const id: string = form_data_get_and_remove_id(data);
+
+    if (data.has("pictogram")) {
+      // Compress pictogram
+      const compressed: Blob = await image_to_avif(
+        await (data.get("pictogram") as File).arrayBuffer(),
+        RACE_PICTOGRAM_WIDTH,
+        RACE_PICTOGRAM_HEIGHT,
+      );
+
+      data.set("pictogram", compressed);
+    }
 
     await locals.pb.collection("races").update(id, data);
 
