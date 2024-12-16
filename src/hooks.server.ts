@@ -8,6 +8,8 @@ import PocketBase from "pocketbase";
 // most recent authentication data.
 // The authenticated PocketBase client will be available in all *.server.ts files.
 export const handle: Handle = async ({ event, resolve }) => {
+  const requestStartTime: number = Date.now();
+
   event.locals.pb = new PocketBase("http://192.168.86.50:8090");
 
   // Load the most recent authentication data from a cookie (is updated below)
@@ -44,6 +46,15 @@ export const handle: Handle = async ({ event, resolve }) => {
 
   // Resolve the request. This is what happens by default.
   const response = await resolve(event);
+
+  console.log(
+    "=====\n",
+    `Request Date: ${new Date(requestStartTime).toISOString()}\n`,
+    `Method: ${event.request.method}\n`,
+    `Path: ${event.url.pathname}\n`,
+    `Duration: ${Date.now() - requestStartTime}ms\n`,
+    `Status: ${response.status}`,
+  );
 
   // Store the current authentication data to a cookie, so it can be loaded above.
   response.headers.set("set-cookie", event.locals.pb.authStore.exportToCookie({ secure: false }));
