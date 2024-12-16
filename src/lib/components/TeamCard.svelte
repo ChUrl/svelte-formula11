@@ -4,7 +4,12 @@
   import Button from "./Button.svelte";
   import type { Team } from "$lib/schema";
   import Input from "./Input.svelte";
-  import { TEAM_LOGO_HEIGHT, TEAM_LOGO_WIDTH } from "$lib/config";
+  import {
+    TEAM_CARD_ASPECT_HEIGHT,
+    TEAM_CARD_ASPECT_WIDTH,
+    TEAM_LOGO_HEIGHT,
+    TEAM_LOGO_WIDTH,
+  } from "$lib/config";
   import LazyCard from "./LazyCard.svelte";
 
   interface TeamCardProps {
@@ -30,7 +35,8 @@
 </script>
 
 <LazyCard
-  group="TeamCard"
+  cardwidth={TEAM_CARD_ASPECT_WIDTH}
+  cardheight={TEAM_CARD_ASPECT_HEIGHT}
   imgsrc={team?.logo_url ?? logo_template}
   imgwidth={TEAM_LOGO_WIDTH}
   imgheight={TEAM_LOGO_HEIGHT}

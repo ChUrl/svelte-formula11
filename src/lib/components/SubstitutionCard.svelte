@@ -5,7 +5,12 @@
   import { get_by_value } from "$lib/database";
   import LazyDropdown, { type LazyDropdownOption } from "./LazyDropdown.svelte";
   import type { Action } from "svelte/action";
-  import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
+  import {
+    DRIVER_HEADSHOT_HEIGHT,
+    DRIVER_HEADSHOT_WIDTH,
+    SUBSTITUTION_CARD_ASPECT_HEIGHT,
+    SUBSTITUTION_CARD_ASPECT_WIDTH,
+  } from "$lib/config";
 
   interface SubstitutionCardProps {
     /** The [Substitution] object used to prefill values. */
@@ -77,7 +82,8 @@
 </script>
 
 <LazyCard
-  group="SubstitutionCard"
+  cardwidth={SUBSTITUTION_CARD_ASPECT_WIDTH}
+  cardheight={SUBSTITUTION_CARD_ASPECT_HEIGHT}
   imgsrc={get_by_value(drivers, "id", substitution?.substitute ?? "")?.headshot_url ??
     headshot_template}
   imgwidth={DRIVER_HEADSHOT_WIDTH}
