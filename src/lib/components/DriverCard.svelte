@@ -5,7 +5,7 @@
   import Button from "./Button.svelte";
   import type { Driver } from "$lib/schema";
   import Input from "./Input.svelte";
-  import LazyDropdown, { type DropdownOption } from "./LazyDropdown.svelte";
+  import LazyDropdown, { type LazyDropdownOption } from "./LazyDropdown.svelte";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
 
   interface DriverCardProps {
@@ -25,7 +25,7 @@
     team_select_value: string;
 
     /** The options this component's team select dropdown will display */
-    team_select_options: DropdownOption[];
+    team_select_options: LazyDropdownOption[];
 
     /** The value this component's active switch will bind to */
     active_value: boolean;
@@ -122,6 +122,7 @@
             background="bg-primary-500"
             active="bg-tertiary-500"
             bind:checked={active_value}
+            disabled={disable_inputs}
           />
         </div>
         {#if driver}

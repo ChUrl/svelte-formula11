@@ -3,7 +3,7 @@
   import Button from "./Button.svelte";
   import type { Driver, Substitution } from "$lib/schema";
   import { get_by_value } from "$lib/database";
-  import LazyDropdown, { type DropdownOption } from "./LazyDropdown.svelte";
+  import LazyDropdown, { type LazyDropdownOption } from "./LazyDropdown.svelte";
   import type { Action } from "svelte/action";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
 
@@ -33,10 +33,10 @@
     race_select_value: string;
 
     /** The options this component's substitute/driver select dropdowns will display */
-    driver_select_options: DropdownOption[];
+    driver_select_options: LazyDropdownOption[];
 
     /** The options this component's race select dropdown will display */
-    race_select_options: DropdownOption[];
+    race_select_options: LazyDropdownOption[];
   }
 
   let {
