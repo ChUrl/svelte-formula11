@@ -1,6 +1,7 @@
 <script lang="ts">
   import type { HTMLImgAttributes } from "svelte/elements";
   import { lazyload } from "$lib/lazyload";
+  import { fetch_image_base64 } from "$lib/image";
 
   interface LazyImageProps extends HTMLImgAttributes {
     /** The URL to the image resource to lazyload */
@@ -8,20 +9,6 @@
   }
 
   let { src, ...restProps }: LazyImageProps = $props();
-
-  const blobToBase64 = (blob: Blob): Promise<any> => {
-    return new Promise((resolve, _) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.readAsDataURL(blob);
-    });
-  };
-
-  const loadImage = async (url: string): Promise<any> => {
-    return await fetch(url)
-      .then((response) => response.blob())
-      .then((blob) => blobToBase64(blob));
-  };
 
   const lazy_visible_handler = () => {
     load = true;
@@ -33,9 +20,7 @@
 
 <div use:lazyload onLazyVisible={lazy_visible_handler}>
   {#if load}
-    {#await loadImage(src)}
-      <!-- Loading... -->
-    {:then data}
+    {#await fetch_image_base64(src) then data}
       <img src={data} style="width: 100%" {...restProps} />
     {/await}
   {/if}
