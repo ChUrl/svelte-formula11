@@ -1,3 +1,5 @@
+import { browser } from "$app/environment";
+
 /**
  * Obtain an onchange event handler that updates an <Avatar> component
  * with a new image uploaded via a file input element.
@@ -46,8 +48,15 @@ export const get_image_preview_event_handler = (id: string): ((event: Event) => 
   return handler;
 };
 
-/** Convert a binary [Blob] to base64 string */
+/**
+ * Convert a binary [Blob] to base64 string.
+ * Can only be called clientside from a browser as it depends on FileReader!
+ */
 export const blob_to_base64 = (blob: Blob): Promise<string> => {
+  if (!browser) {
+    console.error("Can't call blob_to_base64 on server (FileReader is not available)!");
+  }
+
   return new Promise((resolve, _) => {
     const reader = new FileReader();
 
@@ -58,9 +67,19 @@ export const blob_to_base64 = (blob: Blob): Promise<string> => {
   });
 };
 
-/** Fetch an image from an URL using a fetch function [f] and return as base64 string */
+/**
+ * Fetch an image from an URL using a fetch function [f] and return as base64 string .
+ * Can be called client- and server-side.
+ */
 export const fetch_image_base64 = async (url: string, f: Function = fetch): Promise<string> => {
-  return f(url)
-    .then((response: Response) => response.blob())
-    .then((blob: Blob) => blob_to_base64(blob));
+  if (browser) {
+    return await f(url)
+      .then((response: Response) => response.blob())
+      .then((blob: Blob) => blob_to_base64(blob));
+  }
+
+  // On the server
+  const response: Response = await f(url);
+  const buffer: Buffer = Buffer.from(await response.arrayBuffer());
+  return buffer.toString("base64");
 };
