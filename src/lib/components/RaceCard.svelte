@@ -1,7 +1,7 @@
 <script lang="ts">
   import { get_image_preview_event_handler } from "$lib/image";
   import { FileDropzone } from "@skeletonlabs/skeleton";
-  import Card from "./Card.svelte";
+  import LazyCard from "./LazyCard.svelte";
   import Button from "./Button.svelte";
   import type { Race } from "$lib/schema";
   import Input from "./Input.svelte";
@@ -55,7 +55,7 @@
   };
 </script>
 
-<Card
+<LazyCard
   imgsrc={race?.pictogram_url ?? pictogram_template}
   imgwidth={RACE_PICTOGRAM_WIDTH}
   imgheight={RACE_PICTOGRAM_HEIGHT}
@@ -175,4 +175,4 @@
       </div>
     </div>
   </form>
-</Card>
+</LazyCard>

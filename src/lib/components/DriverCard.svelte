@@ -1,11 +1,11 @@
 <script lang="ts">
   import { get_image_preview_event_handler } from "$lib/image";
   import { FileDropzone, SlideToggle } from "@skeletonlabs/skeleton";
-  import Card from "./Card.svelte";
+  import LazyCard from "./LazyCard.svelte";
   import Button from "./Button.svelte";
   import type { Driver } from "$lib/schema";
   import Input from "./Input.svelte";
-  import Dropdown, { type DropdownOption } from "./Dropdown.svelte";
+  import LazyDropdown, { type DropdownOption } from "./LazyDropdown.svelte";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
 
   interface DriverCardProps {
@@ -42,7 +42,7 @@
   }: DriverCardProps = $props();
 </script>
 
-<Card
+<LazyCard
   imgsrc={driver?.headshot_url ?? headshot_template}
   imgwidth={DRIVER_HEADSHOT_WIDTH}
   imgheight={DRIVER_HEADSHOT_HEIGHT}
@@ -64,8 +64,9 @@
         autocomplete="off"
         labelwidth="120px"
         disabled={disable_inputs}
-        required={require_inputs}>First Name</Input
-      >
+        required={require_inputs}
+        >First Name
+      </Input>
       <Input
         id="driver_last_name_{driver?.id ?? 'create'}"
         name="lastname"
@@ -73,8 +74,9 @@
         autocomplete="off"
         labelwidth="120px"
         disabled={disable_inputs}
-        required={require_inputs}>Last Name</Input
-      >
+        required={require_inputs}
+        >Last Name
+      </Input>
       <Input
         id="driver_code_{driver?.id ?? 'create'}"
         name="code"
@@ -84,18 +86,20 @@
         maxlength={3}
         labelwidth="120px"
         disabled={disable_inputs}
-        required={require_inputs}>Driver Code</Input
-      >
+        required={require_inputs}
+        >Driver Code
+      </Input>
 
       <!-- Driver team input -->
-      <Dropdown
+      <LazyDropdown
         name="team"
         input_variable={team_select_value}
         options={team_select_options}
         labelwidth="120px"
         disabled={disable_inputs}
-        required={require_inputs}>Team</Dropdown
-      >
+        required={require_inputs}
+        >Team
+      </LazyDropdown>
 
       <!-- Headshot upload -->
       <FileDropzone
@@ -133,4 +137,4 @@
       </div>
     </div>
   </form>
-</Card>
+</LazyCard>

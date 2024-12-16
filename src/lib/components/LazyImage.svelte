@@ -6,19 +6,30 @@
   interface LazyImageProps extends HTMLImgAttributes {
     /** The URL to the image resource to lazyload */
     src: string;
+
+    /** The aspect ratio width used to reserve image space (while its loading) */
+    imgwidth: number;
+
+    /** The aspect ratio height used to reserve image space (while its loading) */
+    imgheight: number;
   }
 
-  let { src, ...restProps }: LazyImageProps = $props();
+  let { src, imgwidth, imgheight, ...restProps }: LazyImageProps = $props();
+
+  // Once the image is visible, this will be set to true, triggering the loading
+  let load: boolean = $state(false);
 
   const lazy_visible_handler = () => {
     load = true;
   };
-
-  // Once the image is visible, this will be set to true, triggering the loading
-  let load: boolean = $state(false);
 </script>
 
-<div use:lazyload onLazyVisible={lazy_visible_handler}>
+<!-- Show a correctly sized div so the layout doesn't jump. -->
+<div
+  use:lazyload
+  onLazyVisible={lazy_visible_handler}
+  style="width: 100%; aspect-ratio: {imgwidth} / {imgheight};"
+>
   {#if load}
     {#await fetch_image_base64(src) then data}
       <img src={data} style="width: 100%" {...restProps} />
