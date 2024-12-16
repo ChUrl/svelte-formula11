@@ -48,9 +48,12 @@
         id="team_name_{team?.id ?? 'create'}"
         name="name"
         value={team?.name ?? ""}
+        autocomplete="off"
         disabled={disable_inputs}
-        required={require_inputs}>Name</Input
+        required={require_inputs}
       >
+        Name
+      </Input>
 
       <!-- Logo upload -->
       <FileDropzone
@@ -68,12 +71,12 @@
       <!-- Save/Delete buttons -->
       <div class="flex justify-end gap-2">
         {#if team}
-          <Button formaction="?/update_team" color="secondary" disabled={disable_inputs} submit
-            >Save Changes</Button
-          >
-          <Button color="primary" submit disabled={disable_inputs} formaction="?/delete_team"
-            >Delete</Button
-          >
+          <Button formaction="?/update_team" color="secondary" disabled={disable_inputs} submit>
+            Save Changes
+          </Button>
+          <Button color="primary" submit disabled={disable_inputs} formaction="?/delete_team">
+            Delete
+          </Button>
         {:else}
           <Button formaction="?/create_team" color="tertiary" submit>Create Team</Button>
         {/if}

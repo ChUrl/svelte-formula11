@@ -74,6 +74,7 @@
         id="race_name_{race?.id ?? 'create'}"
         name="name"
         value={race?.name ?? ""}
+        autocomplete="off"
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}>Name</Input
@@ -82,6 +83,7 @@
         id="race_step_{race?.id ?? 'create'}"
         name="step"
         value={race?.step ?? ""}
+        autocomplete="off"
         labelwidth="120px"
         type="number"
         min={1}
@@ -93,6 +95,7 @@
         id="race_pxx_{race?.id ?? 'create'}"
         name="pxx"
         value={race?.pxx ?? ""}
+        autocomplete="off"
         labelwidth="120px"
         type="number"
         min={1}
@@ -106,6 +109,7 @@
         id="race_sprintqualidate_{race?.id ?? 'create'}"
         name="sprintqualidate"
         value={sprintqualidate ?? ""}
+        autocomplete="off"
         labelwidth="120px"
         type="datetime-local"
         disabled={disable_inputs}>Sprint Quali</Input
@@ -114,6 +118,7 @@
         id="race_sprintdate_{race?.id ?? 'create'}"
         name="sprintdate"
         value={sprintdate ?? ""}
+        autocomplete="off"
         labelwidth="120px"
         type="datetime-local"
         disabled={disable_inputs}>Sprint</Input
@@ -122,6 +127,7 @@
         id="race_qualidate_{race?.id ?? 'create'}"
         name="qualidate"
         value={qualidate ?? ""}
+        autocomplete="off"
         labelwidth="120px"
         type="datetime-local"
         disabled={disable_inputs}
@@ -131,6 +137,7 @@
         id="race_racedate_{race?.id ?? 'create'}"
         name="racedate"
         value={racedate ?? ""}
+        autocomplete="off"
         labelwidth="120px"
         type="datetime-local"
         disabled={disable_inputs}

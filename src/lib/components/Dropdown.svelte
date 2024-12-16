@@ -91,6 +91,7 @@
     <input
       use:popup={popup_settings}
       type="button"
+      autocomplete="off"
       style="height: 42px; text-align: start; text-indent: 12px; border-top-left-radius: 0; border-bottom-left-radius: 0;"
       use:obtain_input
       use:action
@@ -102,6 +103,7 @@
     <input
       use:popup={popup_settings}
       type="button"
+      autocomplete="off"
       style="height: 42px; text-align: start; text-indent: 12px; border-top-left-radius: 0; border-bottom-left-radius: 0;"
       use:obtain_input
       onkeypress={(event: Event) => event.preventDefault()}
