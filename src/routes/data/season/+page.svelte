@@ -5,11 +5,8 @@
 
   // TODO: Why does this work but import { type DropdownOption } from "$lib/components" does not?
   import type { DropdownOption } from "$lib/components/Dropdown.svelte";
+  import { TeamCard, DriverCard, RaceCard, SubstitutionCard } from "$lib/components";
   import { get_by_value } from "$lib/database";
-  import TeamCard from "$lib/components/TeamCard.svelte";
-  import DriverCard from "$lib/components/DriverCard.svelte";
-  import RaceCard from "$lib/components/RaceCard.svelte";
-  import SubstitutionCard from "$lib/components/SubstitutionCard.svelte";
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 

@@ -2,6 +2,7 @@ import { form_data_clean, form_data_ensure_keys, form_data_get_and_remove_id } f
 import { error, redirect } from "@sveltejs/kit";
 import type { Actions } from "./$types";
 import { image_to_avif } from "$lib/server/image";
+import { AVATAR_HEIGHT, AVATAR_WIDTH } from "$lib/config";
 
 export const actions = {
   create_profile: async ({ request, locals }): Promise<void> => {
@@ -34,8 +35,8 @@ export const actions = {
       // Compress image
       const compressed: Blob = await image_to_avif(
         await (data.get("avatar") as File).arrayBuffer(),
-        256,
-        256,
+        AVATAR_WIDTH,
+        AVATAR_HEIGHT,
       );
 
       // At most 20kB
