@@ -22,6 +22,10 @@
   const lazy_visible_handler = () => {
     load = true;
   };
+
+  const img_opacity_handler = (node: HTMLElement) => {
+    setTimeout(() => (node.style.opacity = "1"), 10);
+  };
 </script>
 
 <!-- Show a correctly sized div so the layout doesn't jump. -->
@@ -32,7 +36,13 @@
 >
   {#if load}
     {#await fetch_image_base64(src) then data}
-      <img src={data} style="width: 100%" {...restProps} />
+      <img
+        src={data}
+        use:img_opacity_handler
+        class="bg-surface-100 transition-opacity"
+        style="width: 100%; opacity: 0; transition-duration: 250ms;"
+        {...restProps}
+      />
     {/await}
   {/if}
 </div>
