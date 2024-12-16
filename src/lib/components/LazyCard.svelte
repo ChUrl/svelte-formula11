@@ -43,7 +43,6 @@
   let load: boolean = $state(false);
 
   const lazy_visible_handler = () => {
-    console.log("Hi");
     load = true;
   };
 </script>
