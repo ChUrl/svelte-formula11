@@ -61,6 +61,7 @@
         id="driver_first_name_{driver?.id ?? 'create'}"
         name="firstname"
         value={driver?.firstname ?? ""}
+        autocomplete="off"
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}>First Name</Input
@@ -69,6 +70,7 @@
         id="driver_last_name_{driver?.id ?? 'create'}"
         name="lastname"
         value={driver?.lastname ?? ""}
+        autocomplete="off"
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}>Last Name</Input
@@ -77,6 +79,7 @@
         id="driver_code_{driver?.id ?? 'create'}"
         name="code"
         value={driver?.code ?? ""}
+        autocomplete="off"
         minlength={3}
         maxlength={3}
         labelwidth="120px"
