@@ -115,9 +115,9 @@
     <!-- Data Drawer -->
     <!-- Data Drawer -->
     <div class="flex flex-col gap-2 p-2">
-      <Button href="/data/raceresult" onclick={close_drawer} color="surface" fullwidth
-        >Race Results</Button
-      >
+      <Button href="/data/raceresult" onclick={close_drawer} color="surface" fullwidth>
+        Race Results
+      </Button>
       <Button href="/data/season" onclick={close_drawer} color="surface" fullwidth>Season</Button>
       <Button href="/data/user" onclick={close_drawer} color="surface" fullwidth>Users</Button>
     </div>
@@ -130,16 +130,16 @@
       <form method="POST" class="contents">
         <!-- Supply the pathname so the form can redirect to the current page. -->
         <input type="hidden" name="redirect_url" value={$page.url.pathname} />
-        <Input name="username" placeholder="Username" required>
+        <Input name="username" placeholder="Username" autocomplete="username" required>
           <UserIcon />
         </Input>
-        <Input name="password" type="password" placeholder="Password" required
-          ><PasswordIcon />
+        <Input name="password" type="password" placeholder="Password" autocomplete="off" required>
+          <PasswordIcon />
         </Input>
         <div class="flex justify-end gap-2">
-          <Button formaction="/profile?/login" onclick={close_drawer} color="tertiary" submit
-            >Login</Button
-          >
+          <Button formaction="/profile?/login" onclick={close_drawer} color="tertiary" submit>
+            Login
+          </Button>
           <Button
             formaction="/profile?/create_profile"
             onclick={close_drawer}
@@ -159,8 +159,14 @@
         <!-- Supply the pathname so the form can redirect to the current page. -->
         <input type="hidden" name="redirect_url" value={$page.url.pathname} />
         <input type="hidden" name="id" value={data.user.id} />
-        <Input name="username" value={data.user.username} placeholder="Username"><UserIcon /></Input
+        <Input
+          name="username"
+          value={data.user.username}
+          placeholder="Username"
+          autocomplete="username"
         >
+          <UserIcon />
+        </Input>
         <FileDropzone
           name="avatar"
           onchange={get_avatar_preview_event_handler("user_avatar_preview")}
@@ -172,11 +178,13 @@
             formaction="/profile?/update_profile"
             onclick={close_drawer}
             color="secondary"
-            submit>Save Changes</Button
+            submit
           >
-          <Button formaction="/profile?/logout" onclick={close_drawer} color="primary" submit
-            >Logout</Button
-          >
+            Save Changes
+          </Button>
+          <Button formaction="/profile?/logout" onclick={close_drawer} color="primary" submit>
+            Logout
+          </Button>
         </div>
       </form>
     </div>
