@@ -33,12 +33,36 @@
   // Drawer config
   initializeStores();
   const drawerStore: DrawerStore = getDrawerStore();
+  let drawerOpen: boolean = false;
+  let drawerId: string = "";
+  drawerStore.subscribe((settings: DrawerSettings) => {
+    drawerOpen = settings.open ?? false;
+    drawerId = settings.id ?? "";
+  });
+
+  const toggle_drawer = (settings: DrawerSettings) => {
+    if (drawerOpen) {
+      if (drawerId === settings.id) {
+        // We clicked the same button to close the drawer
+        drawerStore.close();
+      } else {
+        // We clicked another button to open another drawer
+        drawerStore.close();
+        setTimeout(() => drawerStore.open(settings), 200);
+      }
+    } else {
+      drawerStore.open(settings);
+    }
+  };
+
+  const close_drawer = () => drawerStore.close();
 
   const drawer_settings_base: DrawerSettings = {
     position: "top",
     height: "auto",
-    padding: "lg:px-96",
+    padding: "lg:px-96 pt-14", // pt-14 is 56px, so its missing 4px for the 60px navbar...
     bgDrawer: "bg-surface-100",
+    duration: 150,
   };
 
   const menu_drawer = () => {
@@ -46,7 +70,7 @@
       id: "menu_drawer",
       ...drawer_settings_base,
     };
-    drawerStore.open(drawerSettings);
+    toggle_drawer(drawerSettings);
   };
 
   const data_drawer = () => {
@@ -54,7 +78,7 @@
       id: "data_drawer",
       ...drawer_settings_base,
     };
-    drawerStore.open(drawerSettings);
+    toggle_drawer(drawerSettings);
   };
 
   const login_drawer = () => {
@@ -62,7 +86,7 @@
       id: "login_drawer",
       ...drawer_settings_base,
     };
-    drawerStore.open(drawerSettings);
+    toggle_drawer(drawerSettings);
   };
 
   const profile_drawer = () => {
@@ -70,10 +94,8 @@
       id: "profile_drawer",
       ...drawer_settings_base,
     };
-    drawerStore.open(drawerSettings);
+    toggle_drawer(drawerSettings);
   };
-
-  const close_drawer = () => drawerStore.close();
 
   // Popups config
   storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
@@ -93,11 +115,12 @@
 <LoadingIndicator />
 
 <Drawer>
-  {#if $drawerStore.id === "menu_drawer"}
-    <!-- Menu Drawer -->
-    <!-- Menu Drawer -->
-    <!-- Menu Drawer -->
-    <div class="flex flex-col gap-2 p-2">
+  <!-- Use p-3 because the drawer has a 5px overlap with the navbar -->
+  <div class="flex flex-col gap-2 p-3">
+    {#if $drawerStore.id === "menu_drawer"}
+      <!-- Menu Drawer -->
+      <!-- Menu Drawer -->
+      <!-- Menu Drawer -->
       <Button href="/racepicks" onclick={close_drawer} color="surface" fullwidth>Race Picks</Button>
       <Button href="/seasonpicks" onclick={close_drawer} color="surface" fullwidth
         >Season Picks
@@ -109,51 +132,46 @@
         >Statistics
       </Button>
       <Button href="/rules" onclick={close_drawer} color="surface" fullwidth>Rules</Button>
-    </div>
-  {:else if $drawerStore.id === "data_drawer"}
-    <!-- Data Drawer -->
-    <!-- Data Drawer -->
-    <!-- Data Drawer -->
-    <div class="flex flex-col gap-2 p-2">
-      <Button href="/data/raceresult" onclick={close_drawer} color="surface" fullwidth>
-        Race Results
+    {:else if $drawerStore.id === "data_drawer"}
+      <!-- Data Drawer -->
+      <!-- Data Drawer -->
+      <!-- Data Drawer -->
+      <Button href="/data/raceresult" onclick={close_drawer} color="surface" fullwidth
+        >Race Results
       </Button>
       <Button href="/data/season" onclick={close_drawer} color="surface" fullwidth>Season</Button>
       <Button href="/data/user" onclick={close_drawer} color="surface" fullwidth>Users</Button>
-    </div>
-  {:else if $drawerStore.id === "login_drawer"}
-    <!-- Login Drawer -->
-    <!-- Login Drawer -->
-    <!-- Login Drawer -->
-    <div class="flex flex-col gap-2 p-2">
+    {:else if $drawerStore.id === "login_drawer"}
+      <!-- Login Drawer -->
+      <!-- Login Drawer -->
+      <!-- Login Drawer -->
       <h4 class="h4 select-none">Enter Username and Password</h4>
       <form method="POST" class="contents">
         <!-- Supply the pathname so the form can redirect to the current page. -->
         <input type="hidden" name="redirect_url" value={$page.url.pathname} />
-        <Input name="username" placeholder="Username" autocomplete="username" required>
-          <UserIcon />
+        <Input name="username" placeholder="Username" autocomplete="username" required
+          ><UserIcon />
         </Input>
-        <Input name="password" type="password" placeholder="Password" autocomplete="off" required>
-          <PasswordIcon />
+        <Input name="password" type="password" placeholder="Password" autocomplete="off" required
+          ><PasswordIcon />
         </Input>
         <div class="flex justify-end gap-2">
-          <Button formaction="/profile?/login" onclick={close_drawer} color="tertiary" submit>
-            Login
+          <Button formaction="/profile?/login" onclick={close_drawer} color="tertiary" submit
+            >Login
           </Button>
           <Button
             formaction="/profile?/create_profile"
             onclick={close_drawer}
             color="tertiary"
-            submit>Register</Button
-          >
+            submit
+            >Register
+          </Button>
         </div>
       </form>
-    </div>
-  {:else if $drawerStore.id === "profile_drawer" && data.user}
-    <!-- Profile Drawer -->
-    <!-- Profile Drawer -->
-    <!-- Profile Drawer -->
-    <div class="flex flex-col gap-2 p-2">
+    {:else if $drawerStore.id === "profile_drawer" && data.user}
+      <!-- Profile Drawer -->
+      <!-- Profile Drawer -->
+      <!-- Profile Drawer -->
       <h4 class="h4 select-none">Edit Profile</h4>
       <form method="POST" enctype="multipart/form-data" class="contents">
         <!-- Supply the pathname so the form can redirect to the current page. -->
@@ -187,72 +205,74 @@
           </Button>
         </div>
       </form>
-    </div>
-  {/if}
+    {/if}
+  </div>
 </Drawer>
 
 <nav>
-  <!-- TODO: Make this stick to the top somehow (fixed/sticky). -->
-  <AppBar
-    slotDefault="place-self-center"
-    slotTrail="place-content-end"
-    background="bg-primary-500"
-    shadow="shadow"
-    padding="p-2"
-  >
-    <svelte:fragment slot="lead">
-      <div class="flex gap-2">
-        <!-- Navigation drawer -->
-        <div class="lg:hidden">
-          <Button color="primary" onclick={menu_drawer}>
-            <MenuDrawerIcon />
-          </Button>
+  <div class="fixed left-0 right-0 top-0 z-50">
+    <AppBar
+      slotDefault="place-self-center"
+      slotTrail="place-content-end"
+      background="bg-primary-500"
+      shadow="shadow"
+      padding="p-2"
+    >
+      <svelte:fragment slot="lead">
+        <div class="flex gap-2">
+          <!-- Navigation drawer -->
+          <div class="lg:hidden">
+            <Button color="primary" onclick={menu_drawer}>
+              <MenuDrawerIcon />
+            </Button>
+          </div>
+
+          <!-- Site logo -->
+          <Button href="/" color="primary"><span class="text-xl font-bold">Formula 11</span></Button
+          >
         </div>
+      </svelte:fragment>
 
-        <!-- Site logo -->
-        <Button href="/" color="primary"><span class="text-xl font-bold">Formula 11</span></Button>
+      <!-- Large navigation -->
+      <div class="hidden gap-2 lg:flex">
+        <Button href="/racepicks" color="primary" activate_href>Race Picks</Button>
+        <Button href="/seasonpicks" color="primary" activate_href>Season Picks</Button>
+        <Button href="/leaderboard" color="primary" activate_href>Leaderboard</Button>
+        <Button href="/statistics" color="primary" activate_href>Statistics</Button>
+        <Button href="/rules" color="primary" activate_href>Rules</Button>
       </div>
-    </svelte:fragment>
 
-    <!-- Large navigation -->
-    <div class="hidden gap-2 lg:flex">
-      <Button href="/racepicks" color="primary" activate_href>Race Picks</Button>
-      <Button href="/seasonpicks" color="primary" activate_href>Season Picks</Button>
-      <Button href="/leaderboard" color="primary" activate_href>Leaderboard</Button>
-      <Button href="/statistics" color="primary" activate_href>Statistics</Button>
-      <Button href="/rules" color="primary" activate_href>Rules</Button>
-    </div>
+      <svelte:fragment slot="trail">
+        <div class="flex gap-2">
+          <!-- Data drawer -->
+          <Button
+            color="primary"
+            onclick={data_drawer}
+            activate={$page.url.pathname.startsWith("/data")}>Data</Button
+          >
 
-    <svelte:fragment slot="trail">
-      <div class="flex gap-2">
-        <!-- Data drawer -->
-        <Button
-          color="primary"
-          onclick={data_drawer}
-          activate={$page.url.pathname.startsWith("/data")}>Data</Button
-        >
-
-        {#if !data.user}
-          <!-- Login drawer -->
-          <Button color="primary" onclick={login_drawer}>Login</Button>
-        {:else}
-          <!-- Profile drawer -->
-          <Avatar
-            id="user_avatar_preview"
-            src={data.user.avatar_url}
-            rounded="rounded-full"
-            width="w-10"
-            background="bg-primary-50"
-            onclick={profile_drawer}
-            cursor="cursor-pointer"
-          />
-        {/if}
-      </div>
-    </svelte:fragment>
-  </AppBar>
+          {#if !data.user}
+            <!-- Login drawer -->
+            <Button color="primary" onclick={login_drawer}>Login</Button>
+          {:else}
+            <!-- Profile drawer -->
+            <Avatar
+              id="user_avatar_preview"
+              src={data.user.avatar_url}
+              rounded="rounded-full"
+              width="w-10"
+              background="bg-primary-50"
+              onclick={profile_drawer}
+              cursor="cursor-pointer"
+            />
+          {/if}
+        </div>
+      </svelte:fragment>
+    </AppBar>
+  </div>
 </nav>
 
 <!-- Each child's contents will be inserted here -->
-<div class="p-2">
+<div class="p-2" style="margin-top: 60px;">
   {@render children()}
 </div>
