@@ -5,6 +5,7 @@
   import { get_by_value } from "$lib/database";
   import Dropdown, { type DropdownOption } from "./Dropdown.svelte";
   import type { Action } from "svelte/action";
+  import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
 
   interface SubstitutionCardProps {
     /** The [Substitution] object used to prefill values. */
@@ -70,7 +71,7 @@
         `update_substitution_headshot_preview_${substitution?.id ?? "create"}`,
       ) as HTMLImageElement;
 
-      preview.src = src;
+      if (preview) preview.src = src;
     }
   };
 </script>
@@ -78,6 +79,8 @@
 <Card
   imgsrc={get_by_value(drivers, "id", substitution?.substitute ?? "")?.headshot_url ??
     headshot_template}
+  imgwidth={DRIVER_HEADSHOT_WIDTH}
+  imgheight={DRIVER_HEADSHOT_HEIGHT}
   imgid="update_substitution_headshot_preview_{substitution?.id ?? 'create'}"
 >
   <form method="POST" enctype="multipart/form-data">

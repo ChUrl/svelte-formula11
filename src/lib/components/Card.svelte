@@ -1,5 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
+  import LazyImage from "./LazyImage.svelte";
 
   interface CardProps {
     children: Snippet;
@@ -9,6 +10,12 @@
 
     /** The id of the header image element for JS access. */
     imgid?: string | undefined;
+
+    /** The aspect ratio width used to reserve image space (while its loading) */
+    imgwidth?: number;
+
+    /** The aspect ratio height used to reserve image space (while its loading) */
+    imgheight?: number;
 
     /** Hide the header image element. It can be shown by removing the "hidden" property using JS and the imgid. */
     imghidden?: boolean;
@@ -21,6 +28,8 @@
     children,
     imgsrc = undefined,
     imgid = undefined,
+    imgwidth = undefined,
+    imgheight = undefined,
     imghidden = false,
     fullwidth = false,
     ...restProps
@@ -30,14 +39,16 @@
 <div class="card overflow-hidden bg-white shadow {fullwidth ? 'w-full' : 'w-auto'}">
   <!-- Allow empty strings for images that only appear after user action -->
   {#if imgsrc !== undefined}
-    <img
-      id={imgid}
-      src={imgsrc}
-      alt="Card header"
-      draggable="false"
-      class="select-none shadow"
-      hidden={imghidden}
-    />
+    <div style="width: auto; aspect-ratio: {imgwidth} / {imgheight};">
+      <LazyImage
+        id={imgid}
+        src={imgsrc}
+        alt="Card header"
+        draggable="false"
+        class="select-none shadow"
+        hidden={imghidden}
+      />
+    </div>
   {/if}
   <div class="p-2" {...restProps}>
     {@render children()}

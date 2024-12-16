@@ -5,6 +5,7 @@
   import Button from "./Button.svelte";
   import type { Team } from "$lib/schema";
   import Input from "./Input.svelte";
+  import { TEAM_LOGO_HEIGHT, TEAM_LOGO_WIDTH } from "$lib/config";
 
   interface TeamCardProps {
     /** The [Team] object used to prefill values. */
@@ -30,6 +31,8 @@
 
 <Card
   imgsrc={team?.logo_url ?? logo_template}
+  imgwidth={TEAM_LOGO_WIDTH}
+  imgheight={TEAM_LOGO_HEIGHT}
   imgid="update_team_logo_preview_{team?.id ?? 'create'}"
 >
   <form method="POST" enctype="multipart/form-data">
