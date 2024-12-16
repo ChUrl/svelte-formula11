@@ -120,7 +120,7 @@
     <!-- Menu Drawer -->
     <!-- Menu Drawer -->
     <!-- Menu Drawer -->
-    <div class="flex flex-col gap-2 p-3">
+    <div class="flex flex-col gap-2 p-2 pt-3">
       <Button href="/racepicks" onclick={close_drawer} color="surface" fullwidth>Race Picks</Button>
       <Button href="/seasonpicks" onclick={close_drawer} color="surface" fullwidth
         >Season Picks
@@ -137,7 +137,7 @@
     <!-- Data Drawer -->
     <!-- Data Drawer -->
     <!-- Data Drawer -->
-    <div class="flex flex-col gap-2 p-3">
+    <div class="flex flex-col gap-2 p-2 pt-3">
       <Button href="/data/raceresult" onclick={close_drawer} color="surface" fullwidth
         >Race Results
       </Button>
@@ -148,7 +148,7 @@
     <!-- Login Drawer -->
     <!-- Login Drawer -->
     <!-- Login Drawer -->
-    <div class="flex flex-col gap-2 p-3">
+    <div class="flex flex-col gap-2 p-2 pt-3">
       <h4 class="h4 select-none">Enter Username and Password</h4>
       <form method="POST" class="contents">
         <!-- Supply the pathname so the form can redirect to the current page. -->
@@ -177,7 +177,7 @@
     <!-- Profile Drawer -->
     <!-- Profile Drawer -->
     <!-- Profile Drawer -->
-    <div class="flex flex-col gap-2 p-3">
+    <div class="flex flex-col gap-2 p-2 pt-3">
       <h4 class="h4 select-none">Edit Profile</h4>
       <form method="POST" enctype="multipart/form-data" class="contents">
         <!-- Supply the pathname so the form can redirect to the current page. -->
