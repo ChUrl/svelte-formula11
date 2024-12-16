@@ -100,11 +100,10 @@
   justify="justify-center"
   active="variant-filled-primary"
   hover="hover:variant-filled-primary"
-  regionList="gap-2 shadow rounded-container-token p-2"
-  regionPanel="!mt-0"
+  regionList="gap-2 shadow rounded-bl-container-token rounded-br-container-token p-2 pt-3 bg-white fixed left-2 right-2 top-14 z-10"
+  regionPanel="!mt-14"
   rounded="rounded-container-token"
-  border=""
-  class="w-full rounded-container-token"
+  border="border-none"
   padding="p-2"
 >
   <Tab bind:group={current_tab} name="teams" value={0}>Teams</Tab>
