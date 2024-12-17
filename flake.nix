@@ -125,7 +125,7 @@
         # Use $1 for positional args
         commands = [
           {
-            name = "db";
+            name = "pb";
             help = "Serve PocketBase";
             command = "pocketbase serve --http 192.168.86.50:8090";
           }

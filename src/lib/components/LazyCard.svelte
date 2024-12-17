@@ -47,8 +47,6 @@
   };
 </script>
 
-<!-- TODO: This component needs to know its own height, otherwise the intersection observer doesn't work -->
-<!--       (all elements are visible at once, so no lazy loading...) -->
 <div
   use:lazyload
   onLazyVisible={lazy_visible_handler}
