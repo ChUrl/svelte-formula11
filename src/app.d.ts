@@ -16,6 +16,13 @@ declare global {
     // interface PageState {}
     // interface Platform {}
   }
+
+  declare namespace svelteHTML {
+    interface HTMLAttributes<T> {
+      /** This element will be dispatched once an element with [use:lazyload] starts intersecting with the viewport. */
+      onLazyVisible?: (event: CustomEvent) => void;
+    }
+  }
 }
 
 export {};
