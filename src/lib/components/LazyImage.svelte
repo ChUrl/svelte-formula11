@@ -36,6 +36,8 @@
     load = true;
   };
 
+  // Once the image component is mounted (e.g. when the image has loaded),
+  // transition the opacity to fade-in the image
   const img_opacity_handler = (node: HTMLElement) => {
     setTimeout(() => (node.style.opacity = "1"), 20);
   };

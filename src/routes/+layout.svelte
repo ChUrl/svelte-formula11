@@ -114,7 +114,7 @@
 
 <LoadingIndicator />
 
-<Drawer>
+<Drawer zIndex="z-30">
   <!-- Use p-3 because the drawer has a 5px overlap with the navbar -->
   {#if $drawerStore.id === "menu_drawer"}
     <!-- Menu Drawer -->
@@ -216,7 +216,7 @@
 </Drawer>
 
 <nav>
-  <div class="fixed left-0 right-0 top-0 z-50">
+  <div class="fixed left-0 right-0 top-0 z-40">
     <AppBar
       slotDefault="place-self-center"
       slotTrail="place-content-end"
