@@ -1,6 +1,6 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import LazyImage from "./LazyImage.svelte";
+  import LazyImage from "../LazyImage.svelte";
   import { lazyload } from "$lib/lazyload";
 
   interface CardProps {
