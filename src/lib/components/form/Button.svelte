@@ -22,8 +22,8 @@
     /** Make the button act as a link. */
     href?: string | undefined;
 
-    /** Add the "w-full" class to the button. */
-    fullwidth?: boolean;
+    /** Add a width class to the button. */
+    width?: string;
 
     /** Enable the button's ":hover" state manually. */
     activate?: boolean;
@@ -40,7 +40,7 @@
     color = undefined,
     submit = false,
     href = undefined,
-    fullwidth = false,
+    width = "w-auto",
     activate = false,
     activate_href = false,
     trigger_popup = { event: "click", target: "invalid" },
@@ -53,9 +53,9 @@
   <form action={href} class="contents">
     <button
       type="submit"
-      class="btn m-0 select-none px-2 py-2 {color ? `variant-filled-${color}` : ''} {fullwidth
-        ? 'w-full'
-        : 'w-auto'} {activate ? 'btn-hover' : ''} {activate_href && is_at_path(href)
+      class="btn m-0 select-none px-2 py-2 {color
+        ? `variant-filled-${color}`
+        : ''} {width} {activate ? 'btn-hover' : ''} {activate_href && is_at_path(href)
         ? 'btn-hover'
         : ''}"
       draggable="false"
@@ -65,9 +65,9 @@
 {:else}
   <button
     type={submit ? "submit" : "button"}
-    class="btn select-none px-2 py-2 {color ? `variant-filled-${color}` : ''} {fullwidth
-      ? 'w-full'
-      : 'w-auto'} {activate ? 'btn-hover' : ''}"
+    class="btn select-none px-2 py-2 {color ? `variant-filled-${color}` : ''} {width} {activate
+      ? 'btn-hover'
+      : ''}"
     draggable="false"
     use:popup={trigger_popup}
     {...restProps}>{@render children()}</button
