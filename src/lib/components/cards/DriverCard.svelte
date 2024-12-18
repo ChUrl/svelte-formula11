@@ -1,11 +1,8 @@
 <script lang="ts">
   import { get_image_preview_event_handler } from "$lib/image";
   import { FileDropzone, SlideToggle } from "@skeletonlabs/skeleton";
-  import LazyCard from "./LazyCard.svelte";
-  import Button from "./Button.svelte";
+  import { Button, Input, LazyCard, LazyDropdown, type LazyDropdownOption } from "$lib/components";
   import type { Driver } from "$lib/schema";
-  import Input from "./Input.svelte";
-  import LazyDropdown, { type LazyDropdownOption } from "./LazyDropdown.svelte";
   import {
     DRIVER_CARD_ASPECT_HEIGHT,
     DRIVER_CARD_ASPECT_WIDTH,
@@ -118,7 +115,7 @@
         disabled={disable_inputs}
         required={require_inputs}
       >
-        <svelte:fragment slot="message"><b>Upload Headshot</b> or Drag and Drop</svelte:fragment>
+        <svelte:fragment slot="message"><b>Upload Headshot</b></svelte:fragment>
       </FileDropzone>
 
       <!-- Save/Delete buttons -->
@@ -133,14 +130,28 @@
           />
         </div>
         {#if driver}
-          <Button formaction="?/update_driver" color="secondary" disabled={disable_inputs} submit
-            >Save Changes</Button
+          <Button
+            formaction="?/update_driver"
+            color="secondary"
+            disabled={disable_inputs}
+            submit
+            width="w-1/2"
           >
-          <Button color="primary" submit disabled={disable_inputs} formaction="?/delete_driver"
-            >Delete</Button
+            Save
+          </Button>
+          <Button
+            color="primary"
+            submit
+            disabled={disable_inputs}
+            formaction="?/delete_driver"
+            width="w-1/2"
           >
+            Delete
+          </Button>
         {:else}
-          <Button formaction="?/create_driver" color="tertiary" submit>Create Driver</Button>
+          <Button formaction="?/create_driver" color="tertiary" submit width="w-full"
+            >Create Driver</Button
+          >
         {/if}
       </div>
     </div>

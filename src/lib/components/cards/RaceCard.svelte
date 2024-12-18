@@ -1,10 +1,8 @@
 <script lang="ts">
   import { get_image_preview_event_handler } from "$lib/image";
   import { FileDropzone } from "@skeletonlabs/skeleton";
-  import LazyCard from "./LazyCard.svelte";
-  import Button from "./Button.svelte";
+  import { Button, LazyCard, Input } from "$lib/components";
   import type { Race } from "$lib/schema";
-  import Input from "./Input.svelte";
   import { format } from "date-fns";
   import {
     RACE_CARD_ASPECT_HEIGHT,
@@ -58,6 +56,8 @@
     sprintquali.value = "";
     sprint.value = "";
   };
+
+  const labelwidth = "80px";
 </script>
 
 <LazyCard
@@ -82,7 +82,7 @@
         name="name"
         value={race?.name ?? ""}
         autocomplete="off"
-        labelwidth="120px"
+        {labelwidth}
         disabled={disable_inputs}
         required={require_inputs}>Name</Input
       >
@@ -91,7 +91,7 @@
         name="step"
         value={race?.step ?? ""}
         autocomplete="off"
-        labelwidth="120px"
+        {labelwidth}
         type="number"
         min={1}
         max={24}
@@ -103,7 +103,7 @@
         name="pxx"
         value={race?.pxx ?? ""}
         autocomplete="off"
-        labelwidth="120px"
+        {labelwidth}
         type="number"
         min={1}
         max={20}
@@ -117,25 +117,25 @@
         name="sprintqualidate"
         value={sprintqualidate ?? ""}
         autocomplete="off"
-        labelwidth="120px"
+        {labelwidth}
         type="datetime-local"
-        disabled={disable_inputs}>Sprint Quali</Input
+        disabled={disable_inputs}>SQuali</Input
       >
       <Input
         id="race_sprintdate_{race?.id ?? 'create'}"
         name="sprintdate"
         value={sprintdate ?? ""}
         autocomplete="off"
-        labelwidth="120px"
+        {labelwidth}
         type="datetime-local"
-        disabled={disable_inputs}>Sprint</Input
+        disabled={disable_inputs}>SRace</Input
       >
       <Input
         id="race_qualidate_{race?.id ?? 'create'}"
         name="qualidate"
         value={qualidate ?? ""}
         autocomplete="off"
-        labelwidth="120px"
+        {labelwidth}
         type="datetime-local"
         disabled={disable_inputs}
         required={require_inputs}>Quali</Input
@@ -145,10 +145,10 @@
         name="racedate"
         value={racedate ?? ""}
         autocomplete="off"
-        labelwidth="120px"
+        {labelwidth}
         type="datetime-local"
         disabled={disable_inputs}
-        required={require_inputs}>Sprint Quali</Input
+        required={require_inputs}>Race</Input
       >
 
       <!-- Headshot upload -->
@@ -161,7 +161,7 @@
         disabled={disable_inputs}
         required={require_inputs}
       >
-        <svelte:fragment slot="message"><b>Upload Pictogram</b> or Drag and Drop</svelte:fragment>
+        <svelte:fragment slot="message"><b>Upload Pictogram</b></svelte:fragment>
       </FileDropzone>
 
       <!-- Save/Delete buttons -->

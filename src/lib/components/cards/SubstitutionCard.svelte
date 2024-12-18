@@ -1,9 +1,8 @@
 <script lang="ts">
   import LazyCard from "./LazyCard.svelte";
-  import Button from "./Button.svelte";
+  import { Button, LazyDropdown, type LazyDropdownOption } from "$lib/components";
   import type { Driver, Substitution } from "$lib/schema";
   import { get_by_value } from "$lib/database";
-  import LazyDropdown, { type LazyDropdownOption } from "./LazyDropdown.svelte";
   import type { Action } from "svelte/action";
   import {
     DRIVER_HEADSHOT_HEIGHT,
