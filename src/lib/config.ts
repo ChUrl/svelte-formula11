@@ -8,8 +8,11 @@
 export const AVATAR_WIDTH: number = 256;
 export const AVATAR_HEIGHT: number = 256;
 
-export const TEAM_LOGO_WIDTH: number = 512;
-export const TEAM_LOGO_HEIGHT: number = 288;
+export const TEAM_BANNER_WIDTH: number = 512;
+export const TEAM_BANNER_HEIGHT: number = 288;
+
+export const TEAM_LOGO_WIDTH: number = 96;
+export const TEAM_LOGO_HEIGHT: number = 96;
 
 export const DRIVER_HEADSHOT_WIDTH: number = 512;
 export const DRIVER_HEADSHOT_HEIGHT: number = 512;

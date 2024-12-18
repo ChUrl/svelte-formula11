@@ -27,13 +27,13 @@ export const handle: Handle = async ({ event, resolve }) => {
           event.locals.pb.authStore.model.avatar,
         );
       } else {
-        // Fill in the driver_template URL if no avatar chosen
-        const driver_template: Graphic = await event.locals.pb
+        // Fill in the driver_headshot_template URL if no avatar chosen
+        const driver_headshot_template: Graphic = await event.locals.pb
           .collection("graphics")
-          .getFirstListItem('name="driver_template"');
+          .getFirstListItem('name="driver_headshot_template"');
         event.locals.user.avatar_url = event.locals.pb.files.getURL(
-          driver_template,
-          driver_template.file,
+          driver_headshot_template,
+          driver_headshot_template.file,
         );
       }
 
