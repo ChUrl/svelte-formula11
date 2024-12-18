@@ -1,14 +1,20 @@
-import Button from "./Button.svelte";
-import DriverCard from "./DriverCard.svelte";
-import Input from "./Input.svelte";
-import LazyCard from "./LazyCard.svelte";
-import LazyDropdown from "./LazyDropdown.svelte";
 import LazyImage from "./LazyImage.svelte";
 import LoadingIndicator from "./LoadingIndicator.svelte";
-import RaceCard from "./RaceCard.svelte";
-import Search from "./Search.svelte";
-import SubstitutionCard from "./SubstitutionCard.svelte";
-import TeamCard from "./TeamCard.svelte";
+import Table from "./Table.svelte";
+
+import Button from "./form/Button.svelte";
+import Input from "./form/Input.svelte";
+import LazyDropdown from "./form/LazyDropdown.svelte";
+import Search from "./form/Search.svelte";
+
+import DriverCard from "./cards/DriverCard.svelte";
+import LazyCard from "./cards/LazyCard.svelte";
+import RaceCard from "./cards/RaceCard.svelte";
+import SubstitutionCard from "./cards/SubstitutionCard.svelte";
+import TeamCard from "./cards/TeamCard.svelte";
+
+import type { LazyDropdownOption } from "./form/LazyDropdown";
+import type { TableColumn } from "./Table";
 
 import MenuDrawerIcon from "./svg/MenuDrawerIcon.svelte";
 import PasswordIcon from "./svg/PasswordIcon.svelte";
@@ -16,17 +22,26 @@ import UserIcon from "./svg/UserIcon.svelte";
 
 export {
   // Components
-  Button,
-  DriverCard,
-  Input,
-  LazyCard,
-  LazyDropdown,
   LazyImage,
   LoadingIndicator,
-  RaceCard,
+  Table,
+
+  // Form
+  Button,
+  Input,
+  LazyDropdown,
   Search,
+
+  // Cards
+  DriverCard,
+  LazyCard,
+  RaceCard,
   SubstitutionCard,
   TeamCard,
+
+  // Types
+  type LazyDropdownOption,
+  type TableColumn,
 
   // SVG
   MenuDrawerIcon,
