@@ -121,28 +121,32 @@
     <!-- Menu Drawer -->
     <!-- Menu Drawer -->
     <div class="flex flex-col gap-2 p-2 pt-3">
-      <Button href="/racepicks" onclick={close_drawer} color="surface" fullwidth>Race Picks</Button>
-      <Button href="/seasonpicks" onclick={close_drawer} color="surface" fullwidth
-        >Season Picks
+      <Button href="/racepicks" onclick={close_drawer} color="surface" width="w-full">
+        Race Picks
       </Button>
-      <Button href="/leaderboard" onclick={close_drawer} color="surface" fullwidth
-        >Leaderboard
+      <Button href="/seasonpicks" onclick={close_drawer} color="surface" width="w-full">
+        Season Picks
       </Button>
-      <Button href="/statistics" onclick={close_drawer} color="surface" fullwidth
-        >Statistics
+      <Button href="/leaderboard" onclick={close_drawer} color="surface" width="w-full">
+        Leaderboard
       </Button>
-      <Button href="/rules" onclick={close_drawer} color="surface" fullwidth>Rules</Button>
+      <Button href="/statistics" onclick={close_drawer} color="surface" width="w-full">
+        Statistics
+      </Button>
+      <Button href="/rules" onclick={close_drawer} color="surface" width="w-full">Rules</Button>
     </div>
   {:else if $drawerStore.id === "data_drawer"}
     <!-- Data Drawer -->
     <!-- Data Drawer -->
     <!-- Data Drawer -->
     <div class="flex flex-col gap-2 p-2 pt-3">
-      <Button href="/data/raceresult" onclick={close_drawer} color="surface" fullwidth
+      <Button href="/data/raceresult" onclick={close_drawer} color="surface" width="w-full"
         >Race Results
       </Button>
-      <Button href="/data/season" onclick={close_drawer} color="surface" fullwidth>Season</Button>
-      <Button href="/data/user" onclick={close_drawer} color="surface" fullwidth>Users</Button>
+      <Button href="/data/season" onclick={close_drawer} color="surface" width="w-full"
+        >Season</Button
+      >
+      <Button href="/data/user" onclick={close_drawer} color="surface" width="w-full">Users</Button>
     </div>
   {:else if $drawerStore.id === "login_drawer"}
     <!-- Login Drawer -->
@@ -195,7 +199,7 @@
           name="avatar"
           onchange={get_avatar_preview_event_handler("user_avatar_preview")}
         >
-          <svelte:fragment slot="message"><b>Upload Avatar</b> or Drag and Drop</svelte:fragment>
+          <svelte:fragment slot="message"><b>Upload Avatar</b></svelte:fragment>
         </FileDropzone>
         <div class="flex justify-end gap-2">
           <Button
