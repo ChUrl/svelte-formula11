@@ -15,15 +15,18 @@ export interface User {
 export interface Team {
   id: string;
   name: string;
+  banner: string;
+  banner_url?: string;
   logo: string;
   logo_url?: string;
+  color: string;
 }
 
 export interface Driver {
   id: string;
+  code: string;
   firstname: string;
   lastname: string;
-  code: string;
   headshot: string;
   headshot_url?: string;
   team: string;

@@ -12,6 +12,8 @@ import {
   DRIVER_HEADSHOT_WIDTH,
   RACE_PICTOGRAM_HEIGHT,
   RACE_PICTOGRAM_WIDTH,
+  TEAM_BANNER_HEIGHT,
+  TEAM_BANNER_WIDTH,
   TEAM_LOGO_HEIGHT,
   TEAM_LOGO_WIDTH,
 } from "$lib/config";
@@ -22,16 +24,23 @@ export const actions = {
     if (!locals.admin) return { unauthorized: true };
 
     const data: FormData = form_data_clean(await request.formData());
-    form_data_ensure_keys(data, ["name", "logo"]);
+    form_data_ensure_keys(data, ["name", "banner", "logo", "color"]);
+
+    // Compress banner
+    const banner_avif: Blob = await image_to_avif(
+      await (data.get("banner") as File).arrayBuffer(),
+      TEAM_BANNER_WIDTH,
+      TEAM_BANNER_HEIGHT,
+    );
+    data.set("banner", banner_avif);
 
     // Compress logo
-    const compressed: Blob = await image_to_avif(
+    const logo_avif: Blob = await image_to_avif(
       await (data.get("logo") as File).arrayBuffer(),
       TEAM_LOGO_WIDTH,
       TEAM_LOGO_HEIGHT,
     );
-
-    data.set("logo", compressed);
+    data.set("logo", logo_avif);
 
     await locals.pb.collection("teams").create(data);
 
@@ -44,15 +53,24 @@ export const actions = {
     const data: FormData = form_data_clean(await request.formData());
     const id: string = form_data_get_and_remove_id(data);
 
+    if (data.has("banner")) {
+      // Compress banner
+      const banner_avif: Blob = await image_to_avif(
+        await (data.get("banner") as File).arrayBuffer(),
+        TEAM_BANNER_WIDTH,
+        TEAM_BANNER_HEIGHT,
+      );
+      data.set("banner", banner_avif);
+    }
+
     if (data.has("logo")) {
       // Compress logo
-      const compressed: Blob = await image_to_avif(
+      const logo_avif: Blob = await image_to_avif(
         await (data.get("logo") as File).arrayBuffer(),
         TEAM_LOGO_WIDTH,
         TEAM_LOGO_HEIGHT,
       );
-
-      data.set("logo", compressed);
+      data.set("logo", logo_avif);
     }
 
     await locals.pb.collection("teams").update(id, data);
@@ -81,13 +99,13 @@ export const actions = {
     data.set("active", data.has("active") ? "true" : "false");
 
     // Compress headshot
-    const compressed: Blob = await image_to_avif(
+    const headshot_avif: Blob = await image_to_avif(
       await (data.get("headshot") as File).arrayBuffer(),
       DRIVER_HEADSHOT_WIDTH,
       DRIVER_HEADSHOT_HEIGHT,
     );
 
-    data.set("headshot", compressed);
+    data.set("headshot", headshot_avif);
 
     await locals.pb.collection("drivers").create(data);
 
@@ -105,13 +123,13 @@ export const actions = {
 
     if (data.has("headshot")) {
       // Compress headshot
-      const compressed: Blob = await image_to_avif(
+      const headshot_avif: Blob = await image_to_avif(
         await (data.get("headshot") as File).arrayBuffer(),
         DRIVER_HEADSHOT_WIDTH,
         DRIVER_HEADSHOT_HEIGHT,
       );
 
-      data.set("headshot", compressed);
+      data.set("headshot", headshot_avif);
     }
 
     await locals.pb.collection("drivers").update(id, data);
@@ -138,13 +156,13 @@ export const actions = {
     form_data_fix_dates(data, ["sprintqualidate", "sprintdate", "qualidate", "racedate"]);
 
     // Compress pictogram
-    const compressed: Blob = await image_to_avif(
+    const pictogram_avif: Blob = await image_to_avif(
       await (data.get("pictogram") as File).arrayBuffer(),
       RACE_PICTOGRAM_WIDTH,
       RACE_PICTOGRAM_HEIGHT,
     );
 
-    data.set("pictogram", compressed);
+    data.set("pictogram", pictogram_avif);
 
     await locals.pb.collection("races").create(data);
 
@@ -164,13 +182,13 @@ export const actions = {
 
     if (data.has("pictogram")) {
       // Compress pictogram
-      const compressed: Blob = await image_to_avif(
+      const pictogram_avif: Blob = await image_to_avif(
         await (data.get("pictogram") as File).arrayBuffer(),
         RACE_PICTOGRAM_WIDTH,
         RACE_PICTOGRAM_HEIGHT,
       );
 
-      data.set("pictogram", compressed);
+      data.set("pictogram", pictogram_avif);
     }
 
     await locals.pb.collection("races").update(id, data);
@@ -244,6 +262,7 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     });
 
     teams.map((team: Team) => {
+      team.banner_url = locals.pb.files.getURL(team, team.banner);
       team.logo_url = locals.pb.files.getURL(team, team.logo);
     });
 
@@ -252,7 +271,7 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
 
   const fetch_drivers = async (): Promise<Driver[]> => {
     const drivers: Driver[] = await locals.pb.collection("drivers").getFullList({
-      sort: "+lastname",
+      sort: "+code",
       fetch: fetch,
     });
 
