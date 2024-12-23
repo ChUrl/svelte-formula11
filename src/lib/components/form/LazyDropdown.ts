@@ -1,4 +1,6 @@
-export interface LazyDropdownOption {
+import { type DropdownOption } from "$lib/components";
+
+export interface LazyDropdownOption extends DropdownOption {
   /** The label displayed in the list of options. */
   label: string;
 
