@@ -150,9 +150,7 @@
       data_value_name: "active",
       label: "Active",
       valuefun: (value: boolean): string =>
-        value
-          ? "<span class='badge variant-filled-tertiary text-center' style='width: 36px;'>Yes</span>"
-          : "<span class='badge variant-filled-primary text-center' style='width: 36px;'>No</span>",
+        `<span class='badge variant-filled-${value ? "tertiary" : "primary"} text-center' style='width: 36px;'>${value ? "Yes" : "No"}</span>`,
     },
   ];
 
@@ -176,8 +174,13 @@
   };
 
   const races_columns: TableColumn[] = [
+    {
+      data_value_name: "name",
+      label: "Name",
+      valuefun: (value: string): string =>
+        `<span class='badge variant-filled-surface'>${value}</span>`,
+    },
     { data_value_name: "step", label: "Step" },
-    { data_value_name: "name", label: "Name" },
     // TODO: Date formatting
     { data_value_name: "sprintqualidate", label: "Sprint Quali" },
     { data_value_name: "sprintdate", label: "Sprint Race" },
