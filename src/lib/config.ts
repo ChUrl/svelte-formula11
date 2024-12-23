@@ -21,14 +21,14 @@ export const RACE_PICTOGRAM_WIDTH: number = 512;
 export const RACE_PICTOGRAM_HEIGHT: number = 384;
 
 // Card aspect ratios
-export const TEAM_CARD_ASPECT_WIDTH: number = 413;
-export const TEAM_CARD_ASPECT_HEIGHT: number = 438;
+// export const TEAM_CARD_ASPECT_WIDTH: number = 413;
+// export const TEAM_CARD_ASPECT_HEIGHT: number = 438;
 
-export const DRIVER_CARD_ASPECT_WIDTH: number = 411;
-export const DRIVER_CARD_ASPECT_HEIGHT: number = 769;
+// export const DRIVER_CARD_ASPECT_WIDTH: number = 411;
+// export const DRIVER_CARD_ASPECT_HEIGHT: number = 769;
 
-export const RACE_CARD_ASPECT_WIDTH: number = 497;
-export const RACE_CARD_ASPECT_HEIGHT: number = 879;
+// export const RACE_CARD_ASPECT_WIDTH: number = 497;
+// export const RACE_CARD_ASPECT_HEIGHT: number = 879;
 
-export const SUBSTITUTION_CARD_ASPECT_WIDTH: number = 413;
-export const SUBSTITUTION_CARD_ASPECT_HEIGHT: number = 625;
+// export const SUBSTITUTION_CARD_ASPECT_WIDTH: number = 413;
+// export const SUBSTITUTION_CARD_ASPECT_HEIGHT: number = 625;
