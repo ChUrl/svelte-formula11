@@ -7,9 +7,12 @@
 
     /** The columns the table should have. */
     columns: TableColumn[];
+
+    /** An optional function handling clicking on a table row */
+    handler?: (event: Event, id: string) => Promise<void>;
   }
 
-  let { data, columns }: TableProps = $props();
+  let { data, columns, handler = undefined }: TableProps = $props();
 </script>
 
 <div class="table-container bg-white shadow">
@@ -21,24 +24,23 @@
         {/each}
       </tr>
     </thead>
+
     <tbody>
       {#each data as row}
-        <tr>
+        <tr
+          onclick={async (event: Event) => {
+            if (handler) await handler(event, row.id);
+          }}
+        >
           {#each columns as col}
             {#if col.valuefun}
-              <td>{@html col.valuefun(row[col.data_value_name])}</td>
+              <td class="!align-middle">{@html col.valuefun(row[col.data_value_name])}</td>
             {:else}
-              <td>{row[col.data_value_name]}</td>
+              <td class="!align-middle">{row[col.data_value_name]}</td>
             {/if}
           {/each}
         </tr>
       {/each}
     </tbody>
-    <!-- <tfoot> -->
-    <!--   <tr> -->
-    <!--     <th colspan="3">Calculated Total Weight</th> -->
-    <!--     <td>{totalWeight}</td> -->
-    <!--   </tr> -->
-    <!-- </tfoot> -->
   </table>
 </div>
