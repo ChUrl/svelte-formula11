@@ -101,13 +101,13 @@
     {
       data_value_name: "name",
       label: "Name",
-      valuefun: (value: string): string =>
+      valuefun: async (value: string): Promise<string> =>
         `<span class='badge variant-filled-surface'>${value}</span>`,
     },
     {
       data_value_name: "color",
       label: "Color",
-      valuefun: (value: string): string =>
+      valuefun: async (value: string): Promise<string> =>
         `<span class='badge border mr-2' style='color: ${value}; background: ${value};'>C</span>`,
     },
   ];
@@ -131,7 +131,7 @@
     {
       data_value_name: "code",
       label: "Driver Code",
-      valuefun: (value: string): string =>
+      valuefun: async (value: string): Promise<string> =>
         `<span class='badge variant-filled-surface'>${value}</span>`,
     },
     { data_value_name: "firstname", label: "First Name" },
@@ -139,7 +139,7 @@
     {
       data_value_name: "team",
       label: "Team",
-      valuefun: (value: string): string => {
+      valuefun: async (value: string): Promise<string> => {
         const team: Team | undefined = get_by_value(data.teams, "id", value);
         return team
           ? `<span class='badge border mr-2' style='color: ${team.color}; background: ${team.color};'>C</span>${team.name}`
@@ -149,7 +149,7 @@
     {
       data_value_name: "active",
       label: "Active",
-      valuefun: (value: boolean): string =>
+      valuefun: async (value: boolean): Promise<string> =>
         `<span class='badge variant-filled-${value ? "tertiary" : "primary"} text-center' style='width: 36px;'>${value ? "Yes" : "No"}</span>`,
     },
   ];
@@ -177,15 +177,30 @@
     {
       data_value_name: "name",
       label: "Name",
-      valuefun: (value: string): string =>
+      valuefun: async (value: string): Promise<string> =>
         `<span class='badge variant-filled-surface'>${value}</span>`,
     },
     { data_value_name: "step", label: "Step" },
-    // TODO: Date formatting
-    { data_value_name: "sprintqualidate", label: "Sprint Quali" },
-    { data_value_name: "sprintdate", label: "Sprint Race" },
-    { data_value_name: "qualidate", label: "Quali" },
-    { data_value_name: "racedate", label: "Race" },
+    {
+      data_value_name: "sprintqualidate",
+      label: "Sprint Quali",
+      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
+    },
+    {
+      data_value_name: "sprintdate",
+      label: "Sprint Race",
+      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
+    },
+    {
+      data_value_name: "qualidate",
+      label: "Quali",
+      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
+    },
+    {
+      data_value_name: "racedate",
+      label: "Race",
+      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
+    },
   ];
 
   const races_handler = async (event: Event, id: string) => {
@@ -204,10 +219,26 @@
   };
 
   const substitutions_columns: TableColumn[] = [
-    // TODO: Lookup actual values from driver/race objects
-    { data_value_name: "substitute", label: "Substitute" },
-    { data_value_name: "for", label: "For" },
-    { data_value_name: "race", label: "Race" },
+    {
+      data_value_name: "substitute",
+      label: "Substitute",
+      valuefun: async (value: string): Promise<string> => {
+        const substitute = get_by_value(await data.drivers, "id", value)?.code ?? "Invalid";
+        return `<span class='badge variant-filled-surface'>${substitute}</span>`;
+      },
+    },
+    {
+      data_value_name: "for",
+      label: "For",
+      valuefun: async (value: string): Promise<string> =>
+        get_by_value(await data.drivers, "id", value)?.code ?? "Invalid",
+    },
+    {
+      data_value_name: "race",
+      label: "Race",
+      valuefun: async (value: string): Promise<string> =>
+        get_by_value(await data.races, "id", value)?.name ?? "Invalid",
+    },
   ];
 
   const substitutions_handler = async (event: Event, id: string) => {
