@@ -1,19 +1,23 @@
 <script lang="ts">
   import type { Driver, Race, Substitution, Team } from "$lib/schema";
   import { type PageData, type ActionData } from "./$types";
-  import { Tab, TabGroup } from "@skeletonlabs/skeleton";
+  import {
+    getModalStore,
+    Tab,
+    TabGroup,
+    type ModalSettings,
+    type ModalStore,
+  } from "@skeletonlabs/skeleton";
 
-  // TODO: Why does this work but import { type DropdownOption } from "$lib/components" does not?
-  import type { LazyDropdownOption } from "$lib/components/LazyDropdown.svelte";
-  import { TeamCard, DriverCard, RaceCard, SubstitutionCard } from "$lib/components";
+  import { Table, type LazyDropdownOption, type TableColumn } from "$lib/components";
   import { get_by_value } from "$lib/database";
   import {
     DRIVER_HEADSHOT_HEIGHT,
     DRIVER_HEADSHOT_WIDTH,
     RACE_PICTOGRAM_HEIGHT,
     RACE_PICTOGRAM_WIDTH,
-    TEAM_LOGO_HEIGHT,
-    TEAM_LOGO_WIDTH,
+    TEAM_BANNER_HEIGHT,
+    TEAM_BANNER_WIDTH,
   } from "$lib/config";
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -58,8 +62,8 @@
       label: team.name,
       value: team.id,
       icon_url: team.logo_url,
-      icon_width: TEAM_LOGO_WIDTH,
-      icon_height: TEAM_LOGO_HEIGHT,
+      icon_width: TEAM_BANNER_WIDTH,
+      icon_height: TEAM_BANNER_HEIGHT,
     });
   });
 
@@ -90,6 +94,139 @@
       });
     }),
   );
+
+  const modalStore: ModalStore = getModalStore();
+
+  const teams_columns: TableColumn[] = [
+    {
+      data_value_name: "name",
+      label: "Name",
+      valuefun: (value: string): string =>
+        `<span class='badge variant-filled-surface'>${value}</span>`,
+    },
+    {
+      data_value_name: "color",
+      label: "Color",
+      valuefun: (value: string): string =>
+        `<span class='badge border mr-2' style='color: ${value}; background: ${value};'>C</span>`,
+    },
+  ];
+
+  const teams_handler = async (event: Event, id: string) => {
+    const team: Team | undefined = get_by_value(data.teams, "id", id);
+    if (!team) return;
+
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "teamCard",
+      meta: {
+        team: team,
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
+
+  const drivers_columns: TableColumn[] = [
+    {
+      data_value_name: "code",
+      label: "Driver Code",
+      valuefun: (value: string): string =>
+        `<span class='badge variant-filled-surface'>${value}</span>`,
+    },
+    { data_value_name: "firstname", label: "First Name" },
+    { data_value_name: "lastname", label: "Last Name" },
+    {
+      data_value_name: "team",
+      label: "Team",
+      valuefun: (value: string): string => {
+        const team: Team | undefined = get_by_value(data.teams, "id", value);
+        return team
+          ? `<span class='badge border mr-2' style='color: ${team.color}; background: ${team.color};'>C</span>${team.name}`
+          : "<span class='badge variant-filled-primary'>Invalid</span>";
+      },
+    },
+    {
+      data_value_name: "active",
+      label: "Active",
+      valuefun: (value: boolean): string =>
+        value
+          ? "<span class='badge variant-filled-tertiary text-center' style='width: 36px;'>Yes</span>"
+          : "<span class='badge variant-filled-primary text-center' style='width: 36px;'>No</span>",
+    },
+  ];
+
+  /** Shows the DriverCard modal to edit the clicked driver */
+  const drivers_handler = async (event: Event, id: string) => {
+    const driver: Driver | undefined = get_by_value(await data.drivers, "id", id);
+    if (!driver) return;
+
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "driverCard",
+      meta: {
+        driver: driver,
+        team_select_value: update_driver_team_select_values[driver.id],
+        team_select_options: team_dropdown_options,
+        active_value: update_driver_active_values[driver.id],
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
+
+  const races_columns: TableColumn[] = [
+    { data_value_name: "step", label: "Step" },
+    { data_value_name: "name", label: "Name" },
+    // TODO: Date formatting
+    { data_value_name: "sprintqualidate", label: "Sprint Quali" },
+    { data_value_name: "sprintdate", label: "Sprint Race" },
+    { data_value_name: "qualidate", label: "Quali" },
+    { data_value_name: "racedate", label: "Race" },
+  ];
+
+  const races_handler = async (event: Event, id: string) => {
+    const race: Race | undefined = get_by_value(await data.races, "id", id);
+    if (!race) return;
+
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "raceCard",
+      meta: {
+        race: race,
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
+
+  const substitutions_columns: TableColumn[] = [
+    // TODO: Lookup actual values from driver/race objects
+    { data_value_name: "substitute", label: "Substitute" },
+    { data_value_name: "for", label: "For" },
+    { data_value_name: "race", label: "Race" },
+  ];
+
+  const substitutions_handler = async (event: Event, id: string) => {
+    const substitution: Substitution | undefined = get_by_value(await data.substitutions, "id", id);
+    if (!substitution) return;
+
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "substitutionCard",
+      meta: {
+        substitution: substitution,
+        drivers: await data.drivers,
+        substitute_select_value: update_substitution_substitute_select_values[substitution.id],
+        driver_select_value: update_substitution_for_select_values[substitution.id],
+        race_select_value: update_substitution_race_select_values[substitution.id],
+        driver_select_options: driver_dropdown_options,
+        race_select_options: race_dropdown_options,
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
 </script>
 
 <svelte:head>
@@ -116,104 +253,34 @@
       <!-- Teams Tab -->
       <!-- Teams Tab -->
       <!-- Teams Tab -->
-      <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-        <!-- Add a new team -->
-        {#if data.admin}
-          <TeamCard
-            logo_template={get_by_value(data.graphics, "name", "team_template")?.file_url}
-            require_inputs
-          />
-        {/if}
-
-        <!-- List all teams inside the database -->
-        {#each data.teams as team}
-          <TeamCard {team} disable_inputs={!data.admin} />
-        {/each}
-      </div>
+      <!-- TODO: Add team -->
+      <Table data={data.teams} columns={teams_columns} handler={teams_handler} />
     {:else if current_tab === 1}
       <!-- Drivers Tab -->
       <!-- Drivers Tab -->
       <!-- Drivers Tab -->
-      <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-        <!-- Add a new driver -->
-        {#if data.admin}
-          <DriverCard
-            headshot_template={get_by_value(data.graphics, "name", "driver_template")?.file_url}
-            team_select_value={update_driver_team_select_values["create"]}
-            team_select_options={team_dropdown_options}
-            active_value={update_driver_active_values["create"]}
-            require_inputs
-          />
-        {/if}
-
-        <!-- List all drivers inside the database -->
-        {#await data.drivers then drivers}
-          {#each drivers as driver}
-            <DriverCard
-              {driver}
-              disable_inputs={!data.admin}
-              team_select_value={update_driver_team_select_values[driver.id]}
-              team_select_options={team_dropdown_options}
-              active_value={update_driver_active_values[driver.id]}
-            />
-          {/each}
-        {/await}
-      </div>
+      <!-- TODO: Add driver -->
+      {#await data.drivers then drivers}
+        <Table data={drivers} columns={drivers_columns} handler={drivers_handler} />
+      {/await}
     {:else if current_tab === 2}
       <!-- Races Tab -->
       <!-- Races Tab -->
       <!-- Races Tab -->
-      <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-3 2xl:grid-cols-5">
-        {#if data.admin}
-          <RaceCard
-            pictogram_template={get_by_value(data.graphics, "name", "race_template")?.file_url}
-            require_inputs
-          />
-        {/if}
-
-        {#await data.races then races}
-          {#each races as race}
-            <RaceCard {race} disable_inputs={!data.admin} />
-          {/each}
-        {/await}
-      </div>
+      {#await data.races then races}
+        <Table data={races} columns={races_columns} handler={races_handler} />
+      {/await}
     {:else if current_tab === 3}
       <!-- Substitutions Tab -->
       <!-- Substitutions Tab -->
       <!-- Substitutions Tab -->
-      <div class="mt-2 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
-        {#await data.drivers then drivers}
-          {#if data.admin}
-            <SubstitutionCard
-              {drivers}
-              substitute_select_value={update_substitution_substitute_select_values["create"]}
-              driver_select_value={update_substitution_for_select_values["create"]}
-              race_select_value={update_substitution_race_select_values["create"]}
-              driver_select_options={driver_dropdown_options}
-              race_select_options={race_dropdown_options}
-              headshot_template={get_by_value(data.graphics, "name", "driver_template")?.file_url}
-              require_inputs
-            />
-          {/if}
-
-          {#await data.substitutions then substitutions}
-            {#each substitutions as substitution}
-              <SubstitutionCard
-                {substitution}
-                {drivers}
-                substitute_select_value={update_substitution_substitute_select_values[
-                  substitution.id
-                ]}
-                driver_select_value={update_substitution_for_select_values[substitution.id]}
-                race_select_value={update_substitution_race_select_values[substitution.id]}
-                driver_select_options={driver_dropdown_options}
-                race_select_options={race_dropdown_options}
-                disable_inputs={!data.admin}
-              />
-            {/each}
-          {/await}
-        {/await}
-      </div>
+      {#await data.substitutions then substitutions}
+        <Table
+          data={substitutions}
+          columns={substitutions_columns}
+          handler={substitutions_handler}
+        />
+      {/await}
     {/if}
   </svelte:fragment>
 </TabGroup>
