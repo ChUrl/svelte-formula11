@@ -121,6 +121,7 @@
       component: "teamCard",
       meta: {
         team: team,
+        disable_inputs: !data.admin,
       },
     };
 
@@ -167,6 +168,7 @@
         team_select_value: update_driver_team_select_values[driver.id],
         team_select_options: team_dropdown_options,
         active_value: update_driver_active_values[driver.id],
+        disable_inputs: !data.admin,
       },
     };
 
@@ -212,6 +214,7 @@
       component: "raceCard",
       meta: {
         race: race,
+        disable_inputs: !data.admin,
       },
     };
 
@@ -256,6 +259,7 @@
         race_select_value: update_substitution_race_select_values[substitution.id],
         driver_select_options: driver_dropdown_options,
         race_select_options: race_dropdown_options,
+        disable_inputs: !data.admin,
       },
     };
 
