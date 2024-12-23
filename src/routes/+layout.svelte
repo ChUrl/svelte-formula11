@@ -12,6 +12,10 @@
     Input,
     PasswordIcon,
     LoadingIndicator,
+    DriverCard,
+    TeamCard,
+    RaceCard,
+    SubstitutionCard,
   } from "$lib/components";
   import { get_avatar_preview_event_handler } from "$lib/image";
 
@@ -21,17 +25,33 @@
     initializeStores,
     Drawer,
     getDrawerStore,
+    Modal,
+    getModalStore,
     type DrawerSettings,
     Avatar,
     FileDropzone,
     type DrawerStore,
+    type ModalStore,
+    type ModalComponent,
   } from "@skeletonlabs/skeleton";
   import { computePosition, autoUpdate, offset, shift, flip, arrow } from "@floating-ui/dom";
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
-  // Drawer config
+  // Init skeleton stores for drawer + modal
   initializeStores();
+
+  // Modal config
+  const modalStore: ModalStore = getModalStore();
+  const modalRegistry: Record<string, ModalComponent> = {
+    // Card data (e.g. team, driver etc.) is passed using $modalStore[0].meta
+    teamCard: { ref: TeamCard },
+    driverCard: { ref: DriverCard },
+    raceCard: { ref: RaceCard },
+    substitutionCard: { ref: SubstitutionCard },
+  };
+
+  // Drawer config
   const drawerStore: DrawerStore = getDrawerStore();
   let drawerOpen: boolean = false;
   let drawerId: string = "";
@@ -99,20 +119,11 @@
 
   // Popups config
   storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
-
-  // Example: https://www.skeleton.dev/utilities/popups
-  // const data_popup_settings: PopupSettings = {
-  //   event: "click",
-  //   target: "data_popup",
-  //   placement: "bottom",
-  //   middleware: {
-  //     offset: { mainAxis: 22, crossAxis: 0 },
-  //     // shift: { mainAxis: true, crossAxis: false },
-  //   },
-  // };
 </script>
 
 <LoadingIndicator />
+
+<Modal components={modalRegistry} regionBackdrop="!overflow-y-scroll" />
 
 <Drawer zIndex="z-30">
   <!-- Use p-3 because the drawer has a 5px overlap with the navbar -->
