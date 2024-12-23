@@ -20,7 +20,7 @@
     <thead>
       <tr class="bg-white">
         {#each columns as col}
-          <th>{col.label}</th>
+          <th class="!px-3">{col.label}</th>
         {/each}
       </tr>
     </thead>
@@ -34,7 +34,9 @@
         >
           {#each columns as col}
             {#if col.valuefun}
-              <td class="!align-middle">{@html col.valuefun(row[col.data_value_name])}</td>
+              <td class="!align-middle">
+                {#await col.valuefun(row[col.data_value_name]) then value}{@html value}{/await}
+              </td>
             {:else}
               <td class="!align-middle">{row[col.data_value_name]}</td>
             {/if}

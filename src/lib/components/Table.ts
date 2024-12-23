@@ -6,5 +6,5 @@ export interface TableColumn {
   label: string;
 
   /** Any function to further customize the displayed value. May return HTML. */
-  valuefun?: (value: any) => string;
+  valuefun?: (value: any) => Promise<string>;
 }
