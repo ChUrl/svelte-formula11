@@ -38,6 +38,7 @@
     const meta = $modalStore[0].meta;
 
     team = meta.team;
+    disable_inputs = meta.disable_inputs;
   }
 </script>
 

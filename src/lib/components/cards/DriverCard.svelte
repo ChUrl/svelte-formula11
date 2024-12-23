@@ -50,6 +50,7 @@
     team_select_value = meta.team_select_value;
     team_select_options = meta.team_select_options;
     active_value = meta.active_value;
+    disable_inputs = meta.disable_inputs;
   }
 </script>
 

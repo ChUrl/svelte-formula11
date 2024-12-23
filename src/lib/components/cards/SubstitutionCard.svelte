@@ -61,6 +61,7 @@
     race_select_value = meta.race_select_value;
     driver_select_options = meta.driver_select_options;
     race_select_options = meta.race_select_options;
+    disable_inputs = meta.disable_inputs;
   }
 
   // This action is used on the <Dropdown> element.

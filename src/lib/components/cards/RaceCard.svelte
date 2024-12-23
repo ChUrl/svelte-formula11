@@ -31,6 +31,7 @@
     const meta = $modalStore[0].meta;
 
     race = meta.race;
+    disable_inputs = meta.disable_inputs;
   }
 
   // Dates have to be formatted to datetime-local format
