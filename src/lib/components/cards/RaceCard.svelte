@@ -164,18 +164,32 @@
 
       <!-- Save/Delete buttons -->
       <div class="flex justify-end gap-2">
-        <Button onclick={clear_sprint} color="secondary" disabled={disable_inputs}
-          >Remove Sprint</Button
-        >
+        <Button onclick={clear_sprint} color="secondary" disabled={disable_inputs} width="w-1/3">
+          Remove Sprint
+        </Button>
         {#if race}
-          <Button formaction="?/update_race" color="secondary" disabled={disable_inputs} submit
-            >Save Changes</Button
+          <Button
+            formaction="?/update_race"
+            color="secondary"
+            disabled={disable_inputs}
+            submit
+            width="w-1/3"
           >
-          <Button color="primary" submit disabled={disable_inputs} formaction="?/delete_race"
-            >Delete</Button
+            Save Changes
+          </Button>
+          <Button
+            color="primary"
+            submit
+            disabled={disable_inputs}
+            formaction="?/delete_race"
+            width="w-1/3"
           >
+            Delete
+          </Button>
         {:else}
-          <Button formaction="?/create_race" color="tertiary" submit>Create Race</Button>
+          <Button formaction="?/create_race" color="tertiary" submit width="w-1/2"
+            >Create Race</Button
+          >
         {/if}
       </div>
     </div>

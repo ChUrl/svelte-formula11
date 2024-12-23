@@ -146,6 +146,7 @@
             color="secondary"
             disabled={disable_inputs}
             submit
+            width="w-1/2"
           >
             Save Changes
           </Button>
@@ -154,11 +155,12 @@
             submit
             disabled={disable_inputs}
             formaction="?/delete_substitution"
+            width="w-1/2"
           >
             Delete
           </Button>
         {:else}
-          <Button formaction="?/create_substitution" color="tertiary" submit>
+          <Button formaction="?/create_substitution" color="tertiary" submit width="w-full">
             Create Substitution
           </Button>
         {/if}
