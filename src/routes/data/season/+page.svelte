@@ -9,7 +9,7 @@
     type ModalStore,
   } from "@skeletonlabs/skeleton";
 
-  import { Table, type LazyDropdownOption, type TableColumn } from "$lib/components";
+  import { Button, Table, type LazyDropdownOption, type TableColumn } from "$lib/components";
   import { get_by_value } from "$lib/database";
   import {
     DRIVER_HEADSHOT_HEIGHT,
@@ -24,7 +24,6 @@
 
   let current_tab: number = $state(0);
   if (form?.tab) {
-    // console.log(`Form returned current_tab=${form.current_tab}`);
     current_tab = form.tab;
   }
 
@@ -121,6 +120,23 @@
       component: "teamCard",
       meta: {
         team: team,
+        disable_inputs: !data.admin,
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
+
+  const create_team_handler = (event: Event) => {
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "teamCard",
+      meta: {
+        banner_template:
+          get_by_value(data.graphics, "name", "team_banner_template")?.file_url ?? "Invalid",
+        logo_template:
+          get_by_value(data.graphics, "name", "team_logo_template")?.file_url ?? "Invalid",
+        require_inputs: true,
         disable_inputs: !data.admin,
       },
     };
@@ -291,7 +307,11 @@
       <!-- Teams Tab -->
       <!-- Teams Tab -->
       <!-- Teams Tab -->
-      <!-- TODO: Add team -->
+      <div class="pb-2">
+        <Button width="w-full" color="surface" onclick={create_team_handler}>
+          <b>Create New Team</b>
+        </Button>
+      </div>
       <Table data={data.teams} columns={teams_columns} handler={teams_handler} />
     {:else if current_tab === 1}
       <!-- Drivers Tab -->

@@ -38,7 +38,10 @@
     const meta = $modalStore[0].meta;
 
     team = meta.team;
+    require_inputs = meta.require_inputs;
     disable_inputs = meta.disable_inputs;
+    banner_template = meta.banner_template;
+    logo_template = meta.logo_template;
   }
 </script>
 

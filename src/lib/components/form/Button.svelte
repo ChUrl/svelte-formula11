@@ -14,13 +14,13 @@
     children: Snippet;
 
     /** The main color variant, e.g. "primary" or "secondary". */
-    color?: string | undefined;
+    color?: string;
 
     /** Set the button type to "submit" (otherwise "button"). Only if "href" is undefined. */
     submit?: boolean;
 
     /** Make the button act as a link. */
-    href?: string | undefined;
+    href?: string;
 
     /** Add a width class to the button. */
     width?: string;
