@@ -1,15 +1,9 @@
 <script lang="ts">
   import { get_image_preview_event_handler } from "$lib/image";
-  import { FileDropzone } from "@skeletonlabs/skeleton";
-  import { Button, LazyCard, Input } from "$lib/components";
+  import { FileDropzone, getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
+  import { Button, Card, Input } from "$lib/components";
   import type { Race } from "$lib/schema";
   import { format } from "date-fns";
-  import {
-    RACE_CARD_ASPECT_HEIGHT,
-    RACE_CARD_ASPECT_WIDTH,
-    RACE_PICTOGRAM_HEIGHT,
-    RACE_PICTOGRAM_WIDTH,
-  } from "$lib/config";
 
   interface RaceCardProps {
     /** The [Race] object used to prefill values. */
@@ -31,6 +25,13 @@
     require_inputs = false,
     pictogram_template = "",
   }: RaceCardProps = $props();
+
+  const modalStore: ModalStore = getModalStore();
+  if ($modalStore[0].meta) {
+    const meta = $modalStore[0].meta;
+
+    race = meta.race;
+  }
 
   // Dates have to be formatted to datetime-local format
   const dateformat: string = "yyyy-MM-dd'T'HH:mm";
@@ -60,13 +61,10 @@
   const labelwidth = "80px";
 </script>
 
-<LazyCard
-  cardwidth={RACE_CARD_ASPECT_WIDTH}
-  cardheight={RACE_CARD_ASPECT_HEIGHT}
+<Card
   imgsrc={race?.pictogram_url ?? pictogram_template}
-  imgwidth={RACE_PICTOGRAM_WIDTH}
-  imgheight={RACE_PICTOGRAM_HEIGHT}
   imgid="update_race_pictogram_preview_{race?.id ?? 'create'}"
+  width="w-full sm:w-auto"
 >
   <form method="POST" enctype="multipart/form-data">
     <!-- This is also disabled, because the ID should only be -->
@@ -182,4 +180,4 @@
       </div>
     </div>
   </form>
-</LazyCard>
+</Card>

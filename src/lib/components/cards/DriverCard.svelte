@@ -1,14 +1,13 @@
 <script lang="ts">
   import { get_image_preview_event_handler } from "$lib/image";
-  import { FileDropzone, SlideToggle } from "@skeletonlabs/skeleton";
-  import { Button, Input, LazyCard, LazyDropdown, type LazyDropdownOption } from "$lib/components";
-  import type { Driver } from "$lib/schema";
   import {
-    DRIVER_CARD_ASPECT_HEIGHT,
-    DRIVER_CARD_ASPECT_WIDTH,
-    DRIVER_HEADSHOT_HEIGHT,
-    DRIVER_HEADSHOT_WIDTH,
-  } from "$lib/config";
+    FileDropzone,
+    getModalStore,
+    SlideToggle,
+    type ModalStore,
+  } from "@skeletonlabs/skeleton";
+  import { Button, Input, Card, Dropdown, type DropdownOption } from "$lib/components";
+  import type { Driver } from "$lib/schema";
 
   interface DriverCardProps {
     /** The [Driver] object used to prefill values. */
@@ -27,7 +26,7 @@
     team_select_value: string;
 
     /** The options this component's team select dropdown will display */
-    team_select_options: LazyDropdownOption[];
+    team_select_options: DropdownOption[];
 
     /** The value this component's active switch will bind to */
     active_value: boolean;
@@ -42,15 +41,22 @@
     team_select_options,
     active_value,
   }: DriverCardProps = $props();
+
+  const modalStore: ModalStore = getModalStore();
+  if ($modalStore[0].meta) {
+    const meta = $modalStore[0].meta;
+
+    driver = meta.driver;
+    team_select_value = meta.team_select_value;
+    team_select_options = meta.team_select_options;
+    active_value = meta.active_value;
+  }
 </script>
 
-<LazyCard
-  cardwidth={DRIVER_CARD_ASPECT_WIDTH}
-  cardheight={DRIVER_CARD_ASPECT_HEIGHT}
+<Card
   imgsrc={driver?.headshot_url ?? headshot_template}
-  imgwidth={DRIVER_HEADSHOT_WIDTH}
-  imgheight={DRIVER_HEADSHOT_HEIGHT}
   imgid="update_driver_headshot_preview_{driver?.id ?? 'create'}"
+  width="w-full sm:w-auto"
 >
   <form method="POST" enctype="multipart/form-data">
     <!-- This is also disabled, because the ID should only be -->
@@ -95,15 +101,16 @@
       </Input>
 
       <!-- Driver team input -->
-      <LazyDropdown
+      <Dropdown
         name="team"
         input_variable={team_select_value}
         options={team_select_options}
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}
-        >Team
-      </LazyDropdown>
+      >
+        Team
+      </Dropdown>
 
       <!-- Headshot upload -->
       <FileDropzone
@@ -149,11 +156,11 @@
             Delete
           </Button>
         {:else}
-          <Button formaction="?/create_driver" color="tertiary" submit width="w-full"
-            >Create Driver</Button
-          >
+          <Button formaction="?/create_driver" color="tertiary" submit width="w-full">
+            Create Driver
+          </Button>
         {/if}
       </div>
     </div>
   </form>
-</LazyCard>
+</Card>

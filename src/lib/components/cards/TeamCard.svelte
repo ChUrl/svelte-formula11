@@ -1,17 +1,8 @@
 <script lang="ts">
   import { get_image_preview_event_handler } from "$lib/image";
-  import { FileDropzone } from "@skeletonlabs/skeleton";
-  import { Button, Input, LazyImage } from "$lib/components";
+  import { FileDropzone, getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
+  import { Card, Button, Input, Image } from "$lib/components";
   import type { Team } from "$lib/schema";
-  import {
-    TEAM_CARD_ASPECT_HEIGHT,
-    TEAM_CARD_ASPECT_WIDTH,
-    TEAM_BANNER_HEIGHT,
-    TEAM_BANNER_WIDTH,
-    TEAM_LOGO_WIDTH,
-    TEAM_LOGO_HEIGHT,
-  } from "$lib/config";
-  import LazyCard from "./LazyCard.svelte";
 
   interface TeamCardProps {
     /** The [Team] object used to prefill values. */
@@ -41,15 +32,19 @@
   const labelwidth: string = "110px";
 
   let colorpreview: string = $state(team?.color ?? "white");
+
+  const modalStore: ModalStore = getModalStore();
+  if ($modalStore[0].meta) {
+    const meta = $modalStore[0].meta;
+
+    team = meta.team;
+  }
 </script>
 
-<LazyCard
-  cardwidth={TEAM_CARD_ASPECT_WIDTH}
-  cardheight={TEAM_CARD_ASPECT_HEIGHT}
+<Card
   imgsrc={team?.banner_url ?? banner_template}
-  imgwidth={TEAM_BANNER_WIDTH}
-  imgheight={TEAM_BANNER_HEIGHT}
   imgid="update_team_banner_preview_{team?.id ?? 'create'}"
+  width="w-full sm:w-auto"
 >
   <form method="POST" enctype="multipart/form-data">
     <!-- This is also disabled, because the ID should only be -->
@@ -117,12 +112,10 @@
         <svelte:fragment slot="message">
           <div class="inline-flex flex-nowrap items-center gap-2">
             <b>Upload Logo</b>
-            <LazyImage
+            <Image
               src={team?.logo_url ?? logo_template}
-              imgwidth={TEAM_LOGO_WIDTH}
-              imgheight={TEAM_LOGO_HEIGHT}
-              imgstyle="width: 32px; height: 32px;"
               id="update_team_logo_preview_{team?.id ?? 'create'}"
+              style="width: 32px; height: 32px;"
             />
           </div>
         </svelte:fragment>
@@ -157,4 +150,4 @@
       </div>
     </div>
   </form>
-</LazyCard>
+</Card>

@@ -1,15 +1,9 @@
 <script lang="ts">
-  import LazyCard from "./LazyCard.svelte";
-  import { Button, LazyDropdown, type LazyDropdownOption } from "$lib/components";
+  import { Card, Button, Dropdown, type DropdownOption } from "$lib/components";
   import type { Driver, Substitution } from "$lib/schema";
   import { get_by_value } from "$lib/database";
   import type { Action } from "svelte/action";
-  import {
-    DRIVER_HEADSHOT_HEIGHT,
-    DRIVER_HEADSHOT_WIDTH,
-    SUBSTITUTION_CARD_ASPECT_HEIGHT,
-    SUBSTITUTION_CARD_ASPECT_WIDTH,
-  } from "$lib/config";
+  import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
 
   interface SubstitutionCardProps {
     /** The [Substitution] object used to prefill values. */
@@ -37,10 +31,10 @@
     race_select_value: string;
 
     /** The options this component's substitute/driver select dropdowns will display */
-    driver_select_options: LazyDropdownOption[];
+    driver_select_options: DropdownOption[];
 
     /** The options this component's race select dropdown will display */
-    race_select_options: LazyDropdownOption[];
+    race_select_options: DropdownOption[];
   }
 
   let {
@@ -55,6 +49,19 @@
     driver_select_options,
     race_select_options,
   }: SubstitutionCardProps = $props();
+
+  const modalStore: ModalStore = getModalStore();
+  if ($modalStore[0].meta) {
+    const meta = $modalStore[0].meta;
+
+    substitution = meta.substitution;
+    drivers = meta.drivers;
+    substitute_select_value = meta.substitute_select_value;
+    driver_select_value = meta.driver_select_value;
+    race_select_value = meta.race_select_value;
+    driver_select_options = meta.driver_select_options;
+    race_select_options = meta.race_select_options;
+  }
 
   // This action is used on the <Dropdown> element.
   // It will trigger once the Dropdown's <input> elements is mounted.
@@ -80,14 +87,11 @@
   };
 </script>
 
-<LazyCard
-  cardwidth={SUBSTITUTION_CARD_ASPECT_WIDTH}
-  cardheight={SUBSTITUTION_CARD_ASPECT_HEIGHT}
+<Card
   imgsrc={get_by_value(drivers, "id", substitution?.substitute ?? "")?.headshot_url ??
     headshot_template}
-  imgwidth={DRIVER_HEADSHOT_WIDTH}
-  imgheight={DRIVER_HEADSHOT_HEIGHT}
   imgid="update_substitution_headshot_preview_{substitution?.id ?? 'create'}"
+  width="w-full sm:w-auto"
 >
   <form method="POST" enctype="multipart/form-data">
     <!-- This is also disabled, because the ID should only be -->
@@ -98,7 +102,7 @@
 
     <div class="flex flex-col gap-2">
       <!-- Substitute select -->
-      <LazyDropdown
+      <Dropdown
         name="substitute"
         input_variable={substitute_select_value}
         action={register_substitute_preview_handler}
@@ -108,29 +112,31 @@
         required={require_inputs}
       >
         Substitute
-      </LazyDropdown>
+      </Dropdown>
 
       <!-- Driver select -->
-      <LazyDropdown
+      <Dropdown
         name="for"
         input_variable={driver_select_value}
         options={driver_select_options}
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}
-        >For
-      </LazyDropdown>
+      >
+        For
+      </Dropdown>
 
       <!-- Race select -->
-      <LazyDropdown
+      <Dropdown
         name="race"
         input_variable={race_select_value}
         options={race_select_options}
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}
-        >Race
-      </LazyDropdown>
+      >
+        Race
+      </Dropdown>
 
       <!-- Save/Delete buttons -->
       <div class="flex justify-end gap-2">
@@ -139,20 +145,24 @@
             formaction="?/update_substitution"
             color="secondary"
             disabled={disable_inputs}
-            submit>Save Changes</Button
+            submit
           >
+            Save Changes
+          </Button>
           <Button
             color="primary"
             submit
             disabled={disable_inputs}
-            formaction="?/delete_substitution">Delete</Button
+            formaction="?/delete_substitution"
           >
+            Delete
+          </Button>
         {:else}
-          <Button formaction="?/create_substitution" color="tertiary" submit
-            >Create Substitution</Button
-          >
+          <Button formaction="?/create_substitution" color="tertiary" submit>
+            Create Substitution
+          </Button>
         {/if}
       </div>
     </div>
   </form>
-</LazyCard>
+</Card>
