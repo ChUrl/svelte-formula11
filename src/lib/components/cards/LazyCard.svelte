@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import LazyImage from "../LazyImage.svelte";
+  import { LazyImage } from "$lib/components";
   import { lazyload } from "$lib/lazyload";
 
-  interface CardProps {
+  interface LazyCardProps {
     children: Snippet;
 
     /** The URL for a possible header image. Leave undefined for no header image. Set to empty string for an image not yet loaded. */
@@ -38,7 +38,7 @@
     cardwidth,
     cardheight,
     ...restProps
-  }: CardProps = $props();
+  }: LazyCardProps = $props();
 
   let load: boolean = $state(false);
 
@@ -50,7 +50,7 @@
 <div
   use:lazyload
   onLazyVisible={lazy_visible_handler}
-  style="width: 100%; aspect-ratio: {cardwidth} / {cardheight};"
+  style="aspect-ratio: {cardwidth} / {cardheight};"
 >
   <div class="card w-full overflow-hidden bg-white shadow">
     <!-- Allow empty strings for images that only appear after user action -->
