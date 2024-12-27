@@ -18,6 +18,8 @@
     RACE_PICTOGRAM_WIDTH,
     TEAM_BANNER_HEIGHT,
     TEAM_BANNER_WIDTH,
+    TEAM_LOGO_HEIGHT,
+    TEAM_LOGO_WIDTH,
   } from "$lib/config";
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
@@ -61,8 +63,8 @@
       label: team.name,
       value: team.id,
       icon_url: team.logo_url,
-      icon_width: TEAM_BANNER_WIDTH,
-      icon_height: TEAM_BANNER_HEIGHT,
+      icon_width: TEAM_LOGO_WIDTH,
+      icon_height: TEAM_LOGO_HEIGHT,
     });
   });
 
