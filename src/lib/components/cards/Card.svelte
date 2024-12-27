@@ -23,6 +23,9 @@
 
     /** The width class for the card, defaults to [w-auto] */
     width?: string;
+
+    /** An optional event handler for clicking the image */
+    imgonclick?: (event: Event) => void;
   }
 
   let {
@@ -33,6 +36,7 @@
     imgid = undefined,
     imghidden = false,
     width = "w-auto",
+    imgonclick = undefined,
     ...restProps
   }: CardProps = $props();
 
@@ -53,6 +57,7 @@
       hidden={imghidden}
       imgwidth={imgwidth ?? 0}
       imgheight={imgheight ?? 0}
+      onclick={imgonclick}
     />
   {/if}
 
