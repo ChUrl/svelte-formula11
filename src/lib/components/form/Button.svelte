@@ -6,8 +6,8 @@
 
   const is_at_path = (path: string): boolean => {
     const pathname: string = $page.url.pathname;
-    // console.log(pathname);
-    return pathname === path;
+    // return pathname === path;
+    return pathname.endsWith(path);
   };
 
   interface ButtonProps extends HTMLButtonAttributes {
