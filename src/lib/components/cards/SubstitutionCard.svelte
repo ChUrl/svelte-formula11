@@ -4,6 +4,7 @@
   import { get_by_value } from "$lib/database";
   import type { Action } from "svelte/action";
   import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
+  import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
 
   interface SubstitutionCardProps {
     /** The [Substitution] object used to prefill values. */
@@ -93,6 +94,8 @@
     headshot_template}
   imgid="update_substitution_headshot_preview_{substitution?.id ?? 'create'}"
   width="w-full sm:w-auto"
+  imgwidth={DRIVER_HEADSHOT_WIDTH}
+  imgheight={DRIVER_HEADSHOT_HEIGHT}
 >
   <form method="POST" enctype="multipart/form-data">
     <!-- This is also disabled, because the ID should only be -->

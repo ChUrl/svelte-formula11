@@ -4,7 +4,7 @@
   import type { Action } from "svelte/action";
   import type { HTMLInputAttributes } from "svelte/elements";
   import { v4 as uuid } from "uuid";
-  import { type DropdownOption, Image } from "$lib/components";
+  import { type DropdownOption, LazyImage } from "$lib/components";
 
   interface DropdownProps extends HTMLInputAttributes {
     children: Snippet;
@@ -120,7 +120,14 @@
       <ListBoxItem bind:group={input_variable} {name} value={option.value}>
         <div class="flex flex-nowrap">
           {#if option.icon_url}
-            <Image src={option.icon_url} alt="" class="rounded" style="height: 24px;" />
+            <LazyImage
+              src={option.icon_url}
+              alt=""
+              class="rounded"
+              style="height: 24px;"
+              imgwidth={option.icon_width ?? 0}
+              imgheight={option.icon_height ?? 0}
+            />
           {/if}
           <span class="ml-2">{option.label}</span>
         </div>

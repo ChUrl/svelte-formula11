@@ -1,8 +1,9 @@
 <script lang="ts">
   import { get_image_preview_event_handler } from "$lib/image";
   import { FileDropzone, getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
-  import { Card, Button, Input, Image } from "$lib/components";
+  import { Card, Button, Input, LazyImage } from "$lib/components";
   import type { Team } from "$lib/schema";
+  import { TEAM_BANNER_HEIGHT, TEAM_BANNER_WIDTH } from "$lib/config";
 
   interface TeamCardProps {
     /** The [Team] object used to prefill values. */
@@ -49,6 +50,8 @@
   imgsrc={team?.banner_url ?? banner_template}
   imgid="update_team_banner_preview_{team?.id ?? 'create'}"
   width="w-full sm:w-auto"
+  imgwidth={TEAM_BANNER_WIDTH}
+  imgheight={TEAM_BANNER_HEIGHT}
 >
   <form method="POST" enctype="multipart/form-data">
     <!-- This is also disabled, because the ID should only be -->
@@ -78,6 +81,7 @@
         value={team?.color ?? ""}
         {labelwidth}
         autocomplete="off"
+        placeholder="Enter as '#XXXXXX'"
         disabled={disable_inputs}
         required={require_inputs}
         onchange={(event: Event) => {
@@ -116,10 +120,11 @@
         <svelte:fragment slot="message">
           <div class="inline-flex flex-nowrap items-center gap-2">
             <b>Upload Logo</b>
-            <Image
+            <LazyImage
               src={team?.logo_url ?? logo_template}
               id="update_team_logo_preview_{team?.id ?? 'create'}"
-              style="width: 32px; height: 32px;"
+              imgwidth={32}
+              imgheight={32}
             />
           </div>
         </svelte:fragment>

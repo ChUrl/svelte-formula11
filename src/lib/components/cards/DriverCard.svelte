@@ -8,6 +8,7 @@
   } from "@skeletonlabs/skeleton";
   import { Button, Input, Card, Dropdown, type DropdownOption } from "$lib/components";
   import type { Driver } from "$lib/schema";
+  import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
 
   interface DriverCardProps {
     /** The [Driver] object used to prefill values. */
@@ -58,6 +59,8 @@
   imgsrc={driver?.headshot_url ?? headshot_template}
   imgid="update_driver_headshot_preview_{driver?.id ?? 'create'}"
   width="w-full sm:w-auto"
+  imgwidth={DRIVER_HEADSHOT_WIDTH}
+  imgheight={DRIVER_HEADSHOT_HEIGHT}
 >
   <form method="POST" enctype="multipart/form-data">
     <!-- This is also disabled, because the ID should only be -->

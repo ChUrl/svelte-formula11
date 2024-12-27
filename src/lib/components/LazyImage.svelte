@@ -47,7 +47,8 @@
 <div
   use:lazyload
   onLazyVisible={lazy_visible_handler}
-  style="aspect-ratio: {imgwidth} / {imgheight}; {containerstyle ?? ''}"
+  style="aspect-ratio: {imgwidth} / {imgheight}; {containerstyle ??
+    ''}; max-width: {imgwidth}px; max-height: {imgheight}px"
 >
   {#if load}
     {#await fetch_image_base64(src) then data}

@@ -1,4 +1,3 @@
-import Image from "./Image.svelte";
 import LazyImage from "./LazyImage.svelte";
 import LoadingIndicator from "./LoadingIndicator.svelte";
 import Table from "./Table.svelte";
@@ -26,7 +25,6 @@ import UserIcon from "./svg/UserIcon.svelte";
 
 export {
   // Components
-  Image,
   LazyImage,
   LoadingIndicator,
   Table,
