@@ -55,6 +55,7 @@
   width="w-full sm:w-auto"
   imgwidth={TEAM_BANNER_WIDTH}
   imgheight={TEAM_BANNER_HEIGHT}
+  imgonclick={(event: Event) => modalStore.close()}
 >
   <form method="POST" enctype="multipart/form-data">
     <!-- This is also disabled, because the ID should only be -->
