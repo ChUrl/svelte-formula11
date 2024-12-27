@@ -9,15 +9,13 @@
     type ModalStore,
   } from "@skeletonlabs/skeleton";
 
-  import { Button, Table, type LazyDropdownOption, type TableColumn } from "$lib/components";
+  import { Button, Table, type DropdownOption, type TableColumn } from "$lib/components";
   import { get_by_value } from "$lib/database";
   import {
     DRIVER_HEADSHOT_HEIGHT,
     DRIVER_HEADSHOT_WIDTH,
     RACE_PICTOGRAM_HEIGHT,
     RACE_PICTOGRAM_WIDTH,
-    TEAM_BANNER_HEIGHT,
-    TEAM_BANNER_WIDTH,
     TEAM_LOGO_HEIGHT,
     TEAM_LOGO_WIDTH,
   } from "$lib/config";
@@ -57,7 +55,7 @@
   update_substitution_race_select_values["create"] = "";
 
   // All options to create a <Dropdown> component for the teams
-  const team_dropdown_options: LazyDropdownOption[] = [];
+  const team_dropdown_options: DropdownOption[] = [];
   data.teams.forEach((team: Team) => {
     team_dropdown_options.push({
       label: team.name,
@@ -69,7 +67,7 @@
   });
 
   // All options to create a <Dropdown> component for the drivers
-  const driver_dropdown_options: LazyDropdownOption[] = [];
+  const driver_dropdown_options: DropdownOption[] = [];
   data.drivers.then((drivers: Driver[]) =>
     drivers.forEach((driver: Driver) => {
       driver_dropdown_options.push({
@@ -83,7 +81,7 @@
   );
 
   // All options to create a <Dropdown> component for the races
-  const race_dropdown_options: LazyDropdownOption[] = [];
+  const race_dropdown_options: DropdownOption[] = [];
   data.races.then((races: Race[]) =>
     races.forEach((race: Race) => {
       race_dropdown_options.push({
