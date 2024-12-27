@@ -22,10 +22,15 @@
 
   let { data, form }: { data: PageData; form: ActionData } = $props();
 
+  // When being redirected from a form, the user should land on the same tab
   let current_tab: number = $state(0);
   if (form?.tab) {
     current_tab = form.tab;
   }
+
+  //
+  // Dropdown/Select value storages ===============================================================
+  //
 
   // Values for driver cards
   let update_driver_team_select_values: { [key: string]: string } = $state({}); // <driver.id, team.id>
@@ -53,6 +58,10 @@
   update_substitution_substitute_select_values["create"] = "";
   update_substitution_for_select_values["create"] = "";
   update_substitution_race_select_values["create"] = "";
+
+  //
+  // Dropdown option lists ========================================================================
+  //
 
   // All options to create a <Dropdown> component for the teams
   const team_dropdown_options: DropdownOption[] = [];
@@ -94,7 +103,9 @@
     }),
   );
 
-  const modalStore: ModalStore = getModalStore();
+  //
+  // Data table row data ==========================================================================
+  //
 
   const teams_columns: TableColumn[] = [
     {
@@ -110,6 +121,92 @@
         `<span class='badge border mr-2' style='color: ${value}; background: ${value};'>C</span>`,
     },
   ];
+
+  const drivers_columns: TableColumn[] = [
+    {
+      data_value_name: "code",
+      label: "Driver Code",
+      valuefun: async (value: string): Promise<string> =>
+        `<span class='badge variant-filled-surface'>${value}</span>`,
+    },
+    { data_value_name: "firstname", label: "First Name" },
+    { data_value_name: "lastname", label: "Last Name" },
+    {
+      data_value_name: "team",
+      label: "Team",
+      valuefun: async (value: string): Promise<string> => {
+        const team: Team | undefined = get_by_value(data.teams, "id", value);
+        return team
+          ? `<span class='badge border mr-2' style='color: ${team.color}; background: ${team.color};'>C</span>${team.name}`
+          : "<span class='badge variant-filled-primary'>Invalid</span>";
+      },
+    },
+    {
+      data_value_name: "active",
+      label: "Active",
+      valuefun: async (value: boolean): Promise<string> =>
+        `<span class='badge variant-filled-${value ? "tertiary" : "primary"} text-center' style='width: 36px;'>${value ? "Yes" : "No"}</span>`,
+    },
+  ];
+
+  const races_columns: TableColumn[] = [
+    {
+      data_value_name: "name",
+      label: "Name",
+      valuefun: async (value: string): Promise<string> =>
+        `<span class='badge variant-filled-surface'>${value}</span>`,
+    },
+    { data_value_name: "step", label: "Step" },
+    {
+      data_value_name: "sprintqualidate",
+      label: "Sprint Quali",
+      valuefun: async (value: string): Promise<string> => value.slice(0, -5), // Cutoff the "Z" from the ISO datetime
+    },
+    {
+      data_value_name: "sprintdate",
+      label: "Sprint Race",
+      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
+    },
+    {
+      data_value_name: "qualidate",
+      label: "Quali",
+      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
+    },
+    {
+      data_value_name: "racedate",
+      label: "Race",
+      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
+    },
+  ];
+
+  const substitutions_columns: TableColumn[] = [
+    {
+      data_value_name: "substitute",
+      label: "Substitute",
+      valuefun: async (value: string): Promise<string> => {
+        const substitute = get_by_value(await data.drivers, "id", value)?.code ?? "Invalid";
+        return `<span class='badge variant-filled-surface'>${substitute}</span>`;
+      },
+    },
+    {
+      data_value_name: "for",
+      label: "For",
+      valuefun: async (value: string): Promise<string> =>
+        get_by_value(await data.drivers, "id", value)?.code ?? "Invalid",
+    },
+    {
+      data_value_name: "race",
+      label: "Race",
+      valuefun: async (value: string): Promise<string> =>
+        get_by_value(await data.races, "id", value)?.name ?? "Invalid",
+    },
+  ];
+
+  //
+  // Card modal handlers ==========================================================================
+  //
+
+  const modalStore: ModalStore = getModalStore();
 
   const teams_handler = async (event: Event, id: string) => {
     const team: Team | undefined = get_by_value(data.teams, "id", id);
@@ -143,33 +240,6 @@
 
     modalStore.trigger(modalSettings);
   };
-
-  const drivers_columns: TableColumn[] = [
-    {
-      data_value_name: "code",
-      label: "Driver Code",
-      valuefun: async (value: string): Promise<string> =>
-        `<span class='badge variant-filled-surface'>${value}</span>`,
-    },
-    { data_value_name: "firstname", label: "First Name" },
-    { data_value_name: "lastname", label: "Last Name" },
-    {
-      data_value_name: "team",
-      label: "Team",
-      valuefun: async (value: string): Promise<string> => {
-        const team: Team | undefined = get_by_value(data.teams, "id", value);
-        return team
-          ? `<span class='badge border mr-2' style='color: ${team.color}; background: ${team.color};'>C</span>${team.name}`
-          : "<span class='badge variant-filled-primary'>Invalid</span>";
-      },
-    },
-    {
-      data_value_name: "active",
-      label: "Active",
-      valuefun: async (value: boolean): Promise<string> =>
-        `<span class='badge variant-filled-${value ? "tertiary" : "primary"} text-center' style='width: 36px;'>${value ? "Yes" : "No"}</span>`,
-    },
-  ];
 
   /** Shows the DriverCard modal to edit the clicked driver */
   const drivers_handler = async (event: Event, id: string) => {
@@ -209,36 +279,6 @@
     modalStore.trigger(modalSettings);
   };
 
-  const races_columns: TableColumn[] = [
-    {
-      data_value_name: "name",
-      label: "Name",
-      valuefun: async (value: string): Promise<string> =>
-        `<span class='badge variant-filled-surface'>${value}</span>`,
-    },
-    { data_value_name: "step", label: "Step" },
-    {
-      data_value_name: "sprintqualidate",
-      label: "Sprint Quali",
-      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
-    },
-    {
-      data_value_name: "sprintdate",
-      label: "Sprint Race",
-      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
-    },
-    {
-      data_value_name: "qualidate",
-      label: "Quali",
-      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
-    },
-    {
-      data_value_name: "racedate",
-      label: "Race",
-      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
-    },
-  ];
-
   const races_handler = async (event: Event, id: string) => {
     const race: Race | undefined = get_by_value(await data.races, "id", id);
     if (!race) return;
@@ -269,29 +309,6 @@
 
     modalStore.trigger(modalSettings);
   };
-
-  const substitutions_columns: TableColumn[] = [
-    {
-      data_value_name: "substitute",
-      label: "Substitute",
-      valuefun: async (value: string): Promise<string> => {
-        const substitute = get_by_value(await data.drivers, "id", value)?.code ?? "Invalid";
-        return `<span class='badge variant-filled-surface'>${substitute}</span>`;
-      },
-    },
-    {
-      data_value_name: "for",
-      label: "For",
-      valuefun: async (value: string): Promise<string> =>
-        get_by_value(await data.drivers, "id", value)?.code ?? "Invalid",
-    },
-    {
-      data_value_name: "race",
-      label: "Race",
-      valuefun: async (value: string): Promise<string> =>
-        get_by_value(await data.races, "id", value)?.name ?? "Invalid",
-    },
-  ];
 
   const substitutions_handler = async (event: Event, id: string) => {
     const substitution: Substitution | undefined = get_by_value(await data.substitutions, "id", id);
