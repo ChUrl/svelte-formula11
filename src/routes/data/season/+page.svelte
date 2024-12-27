@@ -193,6 +193,24 @@
     modalStore.trigger(modalSettings);
   };
 
+  const create_driver_handler = async (event: Event) => {
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "driverCard",
+      meta: {
+        team_select_value: update_driver_team_select_values["create"],
+        team_select_options: team_dropdown_options,
+        active_value: update_driver_active_values["create"],
+        disable_inputs: !data.admin,
+        require_inputs: true,
+        headshot_template:
+          get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? "Invalid",
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
+
   const races_columns: TableColumn[] = [
     {
       data_value_name: "name",
@@ -233,6 +251,21 @@
       meta: {
         race: race,
         disable_inputs: !data.admin,
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
+
+  const create_race_handler = async (event: Event) => {
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "raceCard",
+      meta: {
+        disable_inputs: !data.admin,
+        require_inputs: true,
+        pictogram_template:
+          get_by_value(data.graphics, "name", "race_pictogram_template")?.file_url ?? "Invalid",
       },
     };
 
@@ -283,6 +316,27 @@
 
     modalStore.trigger(modalSettings);
   };
+
+  const create_substitution_handler = async (event: Event) => {
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "substitutionCard",
+      meta: {
+        drivers: await data.drivers,
+        substitute_select_value: update_substitution_substitute_select_values["create"],
+        driver_select_value: update_substitution_for_select_values["create"],
+        disable_inputs: !data.admin,
+        race_select_value: update_substitution_race_select_values["create"],
+        driver_select_options: driver_dropdown_options,
+        race_select_options: race_dropdown_options,
+        require_inputs: true,
+        headshot_template:
+          get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? "Invalid",
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
 </script>
 
 <svelte:head>
@@ -319,7 +373,11 @@
       <!-- Drivers Tab -->
       <!-- Drivers Tab -->
       <!-- Drivers Tab -->
-      <!-- TODO: Add driver -->
+      <div class="pb-2">
+        <Button width="w-full" color="surface" onclick={create_driver_handler}>
+          <b>Create New Driver</b>
+        </Button>
+      </div>
       {#await data.drivers then drivers}
         <Table data={drivers} columns={drivers_columns} handler={drivers_handler} />
       {/await}
@@ -327,6 +385,11 @@
       <!-- Races Tab -->
       <!-- Races Tab -->
       <!-- Races Tab -->
+      <div class="pb-2">
+        <Button width="w-full" color="surface" onclick={create_race_handler}>
+          <b>Create New Race</b>
+        </Button>
+      </div>
       {#await data.races then races}
         <Table data={races} columns={races_columns} handler={races_handler} />
       {/await}
@@ -334,6 +397,11 @@
       <!-- Substitutions Tab -->
       <!-- Substitutions Tab -->
       <!-- Substitutions Tab -->
+      <div class="pb-2">
+        <Button width="w-full" color="surface" onclick={create_substitution_handler}>
+          <b>Create New Substitution</b>
+        </Button>
+      </div>
       {#await data.substitutions then substitutions}
         <Table
           data={substitutions}
