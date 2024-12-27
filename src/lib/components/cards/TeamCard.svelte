@@ -38,9 +38,12 @@
   if ($modalStore[0].meta) {
     const meta = $modalStore[0].meta;
 
+    // Stuff thats required for the "update" card
     team = meta.team;
-    require_inputs = meta.require_inputs;
     disable_inputs = meta.disable_inputs;
+
+    // Stuff thats additionally required for the "create" card
+    require_inputs = meta.require_inputs;
     banner_template = meta.banner_template;
     logo_template = meta.logo_template;
   }

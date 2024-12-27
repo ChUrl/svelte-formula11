@@ -55,14 +55,19 @@
   if ($modalStore[0].meta) {
     const meta = $modalStore[0].meta;
 
+    // Stuff thats required for the "update" card
     substitution = meta.substitution;
     drivers = meta.drivers;
+    disable_inputs = meta.disable_inputs;
     substitute_select_value = meta.substitute_select_value;
     driver_select_value = meta.driver_select_value;
     race_select_value = meta.race_select_value;
     driver_select_options = meta.driver_select_options;
     race_select_options = meta.race_select_options;
-    disable_inputs = meta.disable_inputs;
+
+    // Stuff thats additionally required for the "create" card
+    require_inputs = meta.require_inputs;
+    headshot_template = meta.headshot_template;
   }
 
   // This action is used on the <Dropdown> element.
