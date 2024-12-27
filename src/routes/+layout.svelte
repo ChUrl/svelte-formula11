@@ -154,7 +154,7 @@
       <Button href="/data/raceresult" onclick={close_drawer} color="surface" width="w-full"
         >Race Results
       </Button>
-      <Button href="/data/season" onclick={close_drawer} color="surface" width="w-full"
+      <Button href="/data/season/teams" onclick={close_drawer} color="surface" width="w-full"
         >Season</Button
       >
       <Button href="/data/user" onclick={close_drawer} color="surface" width="w-full">Users</Button>
@@ -255,7 +255,7 @@
       </svelte:fragment>
 
       <!-- Large navigation -->
-      <div class="hidden gap-2 lg:flex">
+      <div class="hidden gap-2 pr-8 lg:flex">
         <Button href="/racepicks" color="primary" activate_href>Race Picks</Button>
         <Button href="/seasonpicks" color="primary" activate_href>Season Picks</Button>
         <Button href="/leaderboard" color="primary" activate_href>Leaderboard</Button>
