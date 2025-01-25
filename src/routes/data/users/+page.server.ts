@@ -1,7 +1,7 @@
 import type { User } from "$lib/schema";
-import type { LayoutServerLoad } from "./$types";
+import type { PageServerLoad } from "./$types";
 
-export const load: LayoutServerLoad = async ({ fetch, locals }) => {
+export const load: PageServerLoad = async ({ fetch, locals }) => {
   const fetch_users = async (): Promise<User[]> => {
     const users: User[] = await locals.pb
       .collection("users")
