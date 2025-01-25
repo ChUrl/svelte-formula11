@@ -16,7 +16,7 @@
 </script>
 
 <div class="table-container bg-white shadow">
-  <table class="table table-interactive table-compact bg-white">
+  <table class="table table-compact bg-white">
     <thead>
       <tr class="bg-surface-500">
         {#each columns as col}
@@ -28,7 +28,7 @@
     <tbody>
       {#each data as row}
         <tr
-          class="bg-surface-300"
+          class="cursor-pointer bg-surface-300"
           onclick={async (event: Event) => {
             if (handler) await handler(event, row.id);
           }}
