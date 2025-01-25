@@ -7,11 +7,12 @@ import { AVATAR_HEIGHT, AVATAR_WIDTH } from "$lib/config";
 export const actions = {
   create_profile: async ({ request, locals }): Promise<void> => {
     const data: FormData = form_data_clean(await request.formData());
-    form_data_ensure_keys(data, ["username", "password", "redirect_url"]);
+    form_data_ensure_keys(data, ["username", "firstname", "password", "redirect_url"]);
 
     // Confirm password lol
     await locals.pb.collection("users").create({
       username: data.get("username")?.toString(),
+      firstname: data.get("firstname")?.toString(),
       password: data.get("password")?.toString(),
       passwordConfirm: data.get("password")?.toString(),
       admin: false,
@@ -22,6 +23,7 @@ export const actions = {
       .collection("users")
       .authWithPassword(data.get("username")?.toString(), data.get("password")?.toString());
 
+    // The current page is sent with the form, redirect to that page
     redirect(303, data.get("redirect_url")?.toString() ?? "/");
   },
 

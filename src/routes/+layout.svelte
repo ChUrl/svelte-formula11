@@ -16,6 +16,7 @@
     TeamCard,
     RaceCard,
     SubstitutionCard,
+    NameIcon,
   } from "$lib/components";
   import { get_avatar_preview_event_handler } from "$lib/image";
 
@@ -151,13 +152,15 @@
     <!-- Data Drawer -->
     <!-- Data Drawer -->
     <div class="flex flex-col gap-2 p-2 pt-3">
-      <Button href="/data/raceresult" onclick={close_drawer} color="surface" width="w-full"
-        >Race Results
+      <Button href="/data/raceresults" onclick={close_drawer} color="surface" width="w-full">
+        Race Results
       </Button>
-      <Button href="/data/season/teams" onclick={close_drawer} color="surface" width="w-full"
-        >Season</Button
-      >
-      <Button href="/data/user" onclick={close_drawer} color="surface" width="w-full">Users</Button>
+      <Button href="/data/season/teams" onclick={close_drawer} color="surface" width="w-full">
+        Season
+      </Button>
+      <Button href="/data/users" onclick={close_drawer} color="surface" width="w-full">
+        Users
+      </Button>
     </div>
   {:else if $drawerStore.id === "login_drawer"}
     <!-- Login Drawer -->
@@ -168,22 +171,26 @@
       <form method="POST" class="contents">
         <!-- Supply the pathname so the form can redirect to the current page. -->
         <input type="hidden" name="redirect_url" value={$page.url.pathname} />
-        <Input name="username" placeholder="Username" autocomplete="username" required
-          ><UserIcon />
+        <Input name="username" placeholder="Username" autocomplete="username" required>
+          <UserIcon />
         </Input>
-        <Input name="password" type="password" placeholder="Password" autocomplete="off" required
-          ><PasswordIcon />
+        <Input name="firstname" placeholder="First Name (leave empty for login)" autocomplete="off">
+          <NameIcon />
+        </Input>
+        <Input name="password" type="password" placeholder="Password" autocomplete="off" required>
+          <PasswordIcon />
         </Input>
         <div class="flex justify-end gap-2">
-          <Button formaction="/profile?/login" onclick={close_drawer} color="tertiary" submit
-            >Login
+          <Button formaction="/profile?/login" onclick={close_drawer} color="tertiary" submit>
+            Login
           </Button>
           <Button
             formaction="/profile?/create_profile"
             onclick={close_drawer}
             color="tertiary"
             submit
-            >Register
+          >
+            Register
           </Button>
         </div>
       </form>
@@ -205,6 +212,14 @@
           autocomplete="username"
         >
           <UserIcon />
+        </Input>
+        <Input
+          name="firstname"
+          value={data.user.firstname}
+          placeholder="First Name"
+          autocomplete="off"
+        >
+          <NameIcon />
         </Input>
         <FileDropzone
           name="avatar"

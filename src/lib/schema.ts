@@ -7,6 +7,7 @@ export interface Graphic {
 export interface User {
   id: string;
   username: string;
+  firstname: string;
   avatar: string;
   avatar_url?: string;
   admin: boolean;
