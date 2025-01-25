@@ -139,6 +139,11 @@
             help = "Serve Formula 11 (Prod)";
             command = "npm run build && npm run preview -- --host --port 5173";
           }
+          {
+            name = "check";
+            help = "Continuously monitor for SvelteKit issues";
+            command = "svelte-check --watch";
+          }
         ];
       };
     });
