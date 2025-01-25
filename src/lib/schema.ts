@@ -53,3 +53,11 @@ export interface Substitution {
   for: string;
   race: string;
 }
+
+export interface RacePick {
+  id: string;
+  user: string;
+  race: string;
+  pxx?: string;
+  dnf?: string;
+}
