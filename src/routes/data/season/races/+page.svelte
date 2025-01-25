@@ -72,7 +72,7 @@
 </script>
 
 <div class="pb-2">
-  <Button width="w-full" color="surface" onclick={create_race_handler}>
+  <Button width="w-full" color="tertiary" onclick={create_race_handler}>
     <b>Create New Race</b>
   </Button>
 </div>

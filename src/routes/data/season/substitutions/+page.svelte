@@ -123,7 +123,7 @@
 </script>
 
 <div class="pb-2">
-  <Button width="w-full" color="surface" onclick={create_substitution_handler}>
+  <Button width="w-full" color="tertiary" onclick={create_substitution_handler}>
     <b>Create New Substitution</b>
   </Button>
 </div>

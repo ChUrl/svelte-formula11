@@ -100,7 +100,7 @@
 </script>
 
 <div class="pb-2">
-  <Button width="w-full" color="surface" onclick={create_driver_handler}>
+  <Button width="w-full" color="tertiary" onclick={create_driver_handler}>
     <b>Create New Driver</b>
   </Button>
 </div>
