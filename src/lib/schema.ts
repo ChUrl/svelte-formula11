@@ -1,3 +1,5 @@
+// Application Data
+
 export interface Graphic {
   name: string;
   file: string;
@@ -12,6 +14,8 @@ export interface User {
   avatar_url?: string;
   admin: boolean;
 }
+
+// Season Data
 
 export interface Team {
   id: string;
@@ -54,10 +58,18 @@ export interface Substitution {
   race: string;
 }
 
+// User Data
+
 export interface RacePick {
   id: string;
   user: string;
   race: string;
   pxx?: string;
   dnf?: string;
+  expand: {
+    dnf: Driver;
+    pxx: Driver;
+    race: Race;
+    user: User;
+  };
 }
