@@ -1,3 +1,6 @@
+// NOTE: The "expand" fields might be undefined.
+//       I'm not using "expand?" because I won't check for undefined anyways.
+
 // Application Data
 
 export interface Graphic {
@@ -36,6 +39,9 @@ export interface Driver {
   headshot_url?: string;
   team: string;
   active: boolean;
+  expand: {
+    team: Team;
+  };
 }
 
 export interface Race {
@@ -56,6 +62,9 @@ export interface Substitution {
   substitute: string;
   for: string;
   race: string;
+  expand: {
+    race: Race;
+  };
 }
 
 // User Data
