@@ -3,50 +3,76 @@
   import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
   import { RACE_PICTOGRAM_HEIGHT, RACE_PICTOGRAM_WIDTH } from "$lib/config";
+  import type { RacePick } from "$lib/schema";
 
   let { data }: { data: PageData } = $props();
 
   const modalStore: ModalStore = getModalStore();
   const create_guess_handler = async (event: Event) => {};
+
+  const currentpick: RacePick | null =
+    data.racepicks.filter(
+      (racepick: RacePick) =>
+        racepick.expand.user.username === data.user?.username &&
+        racepick.race === data.currentrace?.id,
+    )[0] ?? null;
 </script>
 
-<div class="pb-2">
-  <Button width="w-full" color="tertiary" onclick={create_guess_handler}>
-    <b>Make Guess</b>
-  </Button>
-</div>
-
+<!-- TODO: This thing must display the boxes as a column on mobile -->
 {#if data.currentrace}
-  <div class="bg-surface-800">
-    <h1>Next Race</h1>
-    <div class="flex w-full gap-2 bg-surface-500">
-      <div class="flex w-full gap-2 bg-surface-300">
-        <LazyImage
-          src={data.currentrace.pictogram_url ?? "Invalid"}
-          imgwidth={RACE_PICTOGRAM_WIDTH}
-          imgheight={RACE_PICTOGRAM_HEIGHT}
-          containerstyle="width: 175px;"
-          imgstyle="background: transparent;"
-        />
-        <div>
-          Name: {data.currentrace.name}<br />
-          Step: {data.currentrace.step}<br />
+  <div class="flex w-full gap-2">
+    <!-- Next Guess Box -->
+    <!-- TODO: Countdown -->
+    <div class="w-full bg-tertiary-500 p-2 shadow rounded-container-token">
+      <h1 class="text-lg font-bold">Next Race</h1>
+      <div class="mt-2 flex w-full gap-2">
+        <div class="border border-black p-2 rounded-container-token">
+          <LazyImage
+            src={data.currentrace.pictogram_url ?? "Invalid"}
+            imgwidth={RACE_PICTOGRAM_WIDTH}
+            imgheight={RACE_PICTOGRAM_HEIGHT}
+            containerstyle="width: 175px;"
+            imgstyle="background: transparent;"
+          />
+        </div>
+        <div class="flex flex-col border border-black p-2 rounded-container-token">
+          <!-- TODO: Replace the <b></b> usages with class="font-bold" elsewhere -->
+          <span class="font-bold">Step {data.currentrace.step}: {data.currentrace.name}</span>
           {#if data.currentrace.sprintqualidate}
-            Sprint Quali: {data.currentrace.sprintqualidate}<br />
-            Sprint Race: {data.currentrace.sprintdate}<br />
+            <span>Sprint Quali: {data.currentrace.sprintqualidate}</span>
+            <span>Sprint Race: {data.currentrace.sprintdate}</span>
           {:else}
-            Sprint: No Sprint this time :)<br />
+            <span>Sprint: No Sprint :)</span>
           {/if}
-          Quali: {data.currentrace.qualidate}<br />
-          Race: {data.currentrace.racedate}
+          <span>Quali: {data.currentrace.qualidate}</span>
+          <span>Race: {data.currentrace.racedate}</span>
         </div>
       </div>
-
-      <div class="bg-surface-300">
-        <!-- If the user has already made a guess for the next race, display it inside a box to the right -->
-        Hello
-      </div>
     </div>
+
+    <!-- Your Pick Box -->
+    {#if currentpick}
+      <div class="flex flex-col gap-2">
+        <div class="w-full bg-tertiary-500 p-2 shadow rounded-container-token">
+          <h1 class="text-lg font-bold">Your Pick:</h1>
+          <div class="mt-2 flex flex-col border border-black p-2 rounded-container-token">
+            <span class="text-nowrap">P{data.currentrace.pxx}: {currentpick.pxx}</span>
+            <span class="text-nowrap">DNF: {currentpick.dnf}</span>
+          </div>
+        </div>
+
+        <!-- TODO: Add other button shadows -->
+        <Button
+          width="w-full"
+          color="tertiary"
+          onclick={create_guess_handler}
+          style="height: 100%;"
+          shadow
+        >
+          <b>{currentpick ? "Edit Pick" : "Make Pick"}</b>
+        </Button>
+      </div>
+    {/if}
   </div>
 {/if}
 
