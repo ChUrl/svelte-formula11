@@ -29,6 +29,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals }) => {
     return teams;
   };
 
+  // TODO: Duplicated code from racepicks/+page.server.ts
   const fetch_drivers = async (): Promise<Driver[]> => {
     const drivers: Driver[] = await locals.pb.collection("drivers").getFullList({
       sort: "+code",
@@ -56,10 +57,13 @@ export const load: LayoutServerLoad = async ({ fetch, locals }) => {
   };
 
   const fetch_substitutions = async (): Promise<Substitution[]> => {
-    // TODO: Sort by race step (does the race need to be expanded for this?)
     const substitutions: Substitution[] = await locals.pb.collection("substitutions").getFullList({
+      expand: "race",
       fetch: fetch,
     });
+
+    // Sort by race step (ascending)
+    substitutions.sort((a, b) => a.expand.race.step - b.expand.race.step);
 
     return substitutions;
   };
@@ -69,7 +73,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals }) => {
     graphics: await fetch_graphics(),
     teams: await fetch_teams(),
 
-    // The rest is streamed gradually, since the user has to switch tabs to need them.
+    // The rest is streamed gradually, since the user has to switch pages to need them.
     drivers: fetch_drivers(),
     races: fetch_races(),
     substitutions: fetch_substitutions(),
