@@ -82,3 +82,15 @@ export interface RacePick {
     user: User;
   };
 }
+
+export interface RaceResult {
+  id: string;
+  race: string;
+  pxxs: string[];
+  dnfs: string[];
+  expand: {
+    dnfs: Driver[];
+    pxxs: Driver[];
+    race: Race;
+  };
+}
