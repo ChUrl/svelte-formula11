@@ -57,7 +57,8 @@
     {
       data_value_name: "expand",
       label: "Step",
-      valuefun: async (value: { race: Race }): Promise<string> => value.race.step.toString(),
+      valuefun: async (value: { race: Race }): Promise<string> =>
+        `<span class='badge variant-filled-surface'>${value.race.step.toString()}</span>`,
     },
     {
       data_value_name: "substitute",
