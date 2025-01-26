@@ -3,10 +3,12 @@ import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, locals }) => {
   const fetch_racepicks = async (): Promise<RacePick[]> => {
-    // PXX/DNF is not expanded, as we have the drivers anyways (for guessing)
+    // Don't expand race/pxx/dnf since we already fetched those
     const racepicks: RacePick[] = await locals.pb
       .collection("racepicks")
-      .getFullList({ fetch: fetch, expand: "user,race" });
+      .getFullList({ fetch: fetch, expand: "user" });
+
+    // TODO: Fill in the expanded race pictogram_url fields
 
     return racepicks;
   };
@@ -15,13 +17,19 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     const currentrace: Race[] = await locals.pb.collection("currentrace").getFullList();
 
     // The currentrace collection either has a single or no entries
-    return currentrace[0] ?? null;
+    if (currentrace.length == 0) return null;
+
+    currentrace[0].pictogram_url = await locals.pb.files.getURL(
+      currentrace[0],
+      currentrace[0].pictogram,
+    );
+
+    return currentrace[0];
   };
 
   const fetch_raceresults = async (): Promise<RaceResult[]> => {
-    const raceresults: RaceResult[] = await locals.pb
-      .collection("raceresults")
-      .getFullList({ expand: "race,pxxs,dnfs" });
+    // Don't expand races/pxxs/dnfs since we already fetched those
+    const raceresults: RaceResult[] = await locals.pb.collection("raceresults").getFullList();
 
     return raceresults;
   };
@@ -40,10 +48,25 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     return drivers;
   };
 
+  // TODO: Duplicated code from data/season/+layout.server.ts
+  const fetch_races = async (): Promise<Race[]> => {
+    const races: Race[] = await locals.pb.collection("races").getFullList({
+      sort: "+step",
+      fetch: fetch,
+    });
+
+    races.map((race: Race) => {
+      race.pictogram_url = locals.pb.files.getURL(race, race.pictogram);
+    });
+
+    return races;
+  };
+
   return {
     racepicks: await fetch_racepicks(),
     currentrace: await fetch_currentrace(),
     raceresults: await fetch_raceresults(),
     drivers: await fetch_drivers(),
+    races: await fetch_races(),
   };
 };
