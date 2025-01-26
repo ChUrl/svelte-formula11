@@ -43,6 +43,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals }) => {
     return drivers;
   };
 
+  // TODO: Duplicated code from racepicks/+page.server.ts
   const fetch_races = async (): Promise<Race[]> => {
     const races: Race[] = await locals.pb.collection("races").getFullList({
       sort: "+step",
