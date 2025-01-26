@@ -55,6 +55,11 @@
 
   const substitutions_columns: TableColumn[] = [
     {
+      data_value_name: "expand",
+      label: "Step",
+      valuefun: async (value: { race: Race }): Promise<string> => value.race.step.toString(),
+    },
+    {
       data_value_name: "substitute",
       label: "Substitute",
       valuefun: async (value: string): Promise<string> => {
