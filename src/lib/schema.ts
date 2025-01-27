@@ -94,3 +94,13 @@ export interface RaceResult {
     race: Race;
   };
 }
+
+export interface CurrentPickedUser {
+  id: string;
+  username: string;
+  firstname: string;
+  avatar: string;
+  avatar_url?: string;
+  admin: boolean;
+  picked: boolean;
+}
