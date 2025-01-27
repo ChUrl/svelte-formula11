@@ -59,7 +59,7 @@
 </script>
 
 <div class="pb-2">
-  <Button width="w-full" color="tertiary" onclick={create_team_handler}>
+  <Button width="w-full" color="tertiary" onclick={create_team_handler} shadow>
     <span class="font-bold">Create New Team</span>
   </Button>
 </div>
