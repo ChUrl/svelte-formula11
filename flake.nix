@@ -108,10 +108,9 @@
         name = "Formula11";
 
         packages = with pkgs; [
-          f1python
+          nodejs_23
           pocketbase
 
-          nodejs_23
           # nodePackages.autoprefixer
           # nodePackages.postcss
           # nodePackages.postcss-cli
@@ -119,7 +118,8 @@
           # nodePackages.svelte-check
           # nodePackages.tailwindcss
 
-          sqlitebrowser
+          # f1python
+          # sqlitebrowser
         ];
 
         # Use $1 for positional args
