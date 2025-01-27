@@ -27,6 +27,7 @@
   update_substitution_for_select_values["create"] = "";
   update_substitution_race_select_values["create"] = "";
 
+  // TODO: Duplicated code in substitutions/+page.svelte
   const driver_dropdown_options: DropdownOption[] = [];
   data.drivers.then((drivers: Driver[]) =>
     drivers.forEach((driver: Driver) => {
