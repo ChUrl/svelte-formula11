@@ -16,6 +16,7 @@ import TeamCard from "./cards/TeamCard.svelte";
 import type { DropdownOption } from "./form/Dropdown";
 import type { TableColumn } from "./Table";
 
+import ChequeredFlagIcon from "./svg/ChequeredFlagIcon.svelte";
 import MenuDrawerIcon from "./svg/MenuDrawerIcon.svelte";
 import NameIcon from "./svg/NameIcon.svelte";
 import PasswordIcon from "./svg/PasswordIcon.svelte";
@@ -45,6 +46,7 @@ export {
   type TableColumn,
 
   // SVG
+  ChequeredFlagIcon,
   NameIcon,
   MenuDrawerIcon,
   PasswordIcon,
