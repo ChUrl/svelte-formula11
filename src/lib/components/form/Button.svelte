@@ -36,6 +36,9 @@
 
     /** Should the button have a shadow? */
     shadow?: boolean;
+
+    /** Additional classes to insert */
+    extraclass?: string;
   }
 
   let {
@@ -48,6 +51,7 @@
     activate_href = false,
     trigger_popup = { event: "click", target: "invalid" },
     shadow = false,
+    extraclass = "",
     ...restProps
   }: ButtonProps = $props();
 </script>
@@ -61,7 +65,7 @@
         ? `variant-filled-${color}`
         : ''} {width} {activate ? 'btn-hover' : ''} {activate_href && is_at_path(href)
         ? 'btn-hover'
-        : ''} {shadow ? 'shadow' : ''}"
+        : ''} {shadow ? 'shadow' : ''} {extraclass}"
       draggable="false"
       {...restProps}>{@render children()}</button
     >
@@ -71,7 +75,7 @@
     type={submit ? "submit" : "button"}
     class="btn select-none px-2 py-2 {color ? `variant-filled-${color}` : ''} {width} {activate
       ? 'btn-hover'
-      : ''} {shadow ? 'shadow' : ''}"
+      : ''} {shadow ? 'shadow' : ''} {extraclass}"
     draggable="false"
     use:popup={trigger_popup}
     {...restProps}>{@render children()}</button
