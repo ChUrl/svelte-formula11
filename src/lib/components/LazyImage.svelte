@@ -57,6 +57,7 @@
         use:img_opacity_handler
         class="bg-surface-100 transition-opacity"
         style="opacity: 0; transition-duration: 300ms; {imgstyle ?? ''}"
+        draggable="false"
         {...restProps}
       />
     {/await}
