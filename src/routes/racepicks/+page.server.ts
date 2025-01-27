@@ -1,4 +1,4 @@
-import type { Driver, Race, RacePick, RaceResult } from "$lib/schema";
+import type { Driver, Graphic, Race, RacePick, RaceResult } from "$lib/schema";
 import type { PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, locals }) => {
@@ -62,11 +62,25 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     return races;
   };
 
+  // TODO: Duplicated code from data/season/+layout.server.ts
+  const fetch_graphics = async (): Promise<Graphic[]> => {
+    const graphics: Graphic[] = await locals.pb
+      .collection("graphics")
+      .getFullList({ fetch: fetch });
+
+    graphics.map((graphic: Graphic) => {
+      graphic.file_url = locals.pb.files.getURL(graphic, graphic.file);
+    });
+
+    return graphics;
+  };
+
   return {
     racepicks: await fetch_racepicks(),
     currentrace: await fetch_currentrace(),
     raceresults: await fetch_raceresults(),
     drivers: await fetch_drivers(),
     races: await fetch_races(),
+    graphics: await fetch_graphics(),
   };
 };
