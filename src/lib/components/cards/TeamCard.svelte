@@ -108,7 +108,7 @@
         disabled={disable_inputs}
         required={require_inputs}
       >
-        <svelte:fragment slot="message"><b>Upload Banner</b></svelte:fragment>
+        <svelte:fragment slot="message"><span class="font-bold">Upload Banner</span></svelte:fragment>
       </FileDropzone>
 
       <!-- Logo upload -->
@@ -123,7 +123,7 @@
       >
         <svelte:fragment slot="message">
           <div class="inline-flex flex-nowrap items-center gap-2">
-            <b>Upload Logo</b>
+            <span class="font-bold">Upload Logo</span>
             <LazyImage
               src={team?.logo_url ?? logo_template}
               id="update_team_logo_preview_{team?.id ?? 'create'}"

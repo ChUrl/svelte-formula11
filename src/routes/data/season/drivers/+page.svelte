@@ -101,7 +101,7 @@
 
 <div class="pb-2">
   <Button width="w-full" color="tertiary" onclick={create_driver_handler}>
-    <b>Create New Driver</b>
+    <span class="font-bold">Create New Driver</span>
   </Button>
 </div>
 {#await data.drivers then drivers}

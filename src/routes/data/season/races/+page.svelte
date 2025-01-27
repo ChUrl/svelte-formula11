@@ -73,7 +73,7 @@
 
 <div class="pb-2">
   <Button width="w-full" color="tertiary" onclick={create_race_handler}>
-    <b>Create New Race</b>
+    <span class="font-bold">Create New Race</span>
   </Button>
 </div>
 {#await data.races then races}

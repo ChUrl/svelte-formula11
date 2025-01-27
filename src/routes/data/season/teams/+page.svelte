@@ -60,7 +60,7 @@
 
 <div class="pb-2">
   <Button width="w-full" color="tertiary" onclick={create_team_handler}>
-    <b>Create New Team</b>
+    <span class="font-bold">Create New Team</span>
   </Button>
 </div>
 <Table data={data.teams} columns={teams_columns} handler={teams_handler} />

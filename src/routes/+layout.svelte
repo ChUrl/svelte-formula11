@@ -225,7 +225,7 @@
           name="avatar"
           onchange={get_avatar_preview_event_handler("user_avatar_preview")}
         >
-          <svelte:fragment slot="message"><b>Upload Avatar</b></svelte:fragment>
+          <svelte:fragment slot="message"><span class="font-bold">Upload Avatar</span></svelte:fragment>
         </FileDropzone>
         <div class="flex justify-end gap-2">
           <Button

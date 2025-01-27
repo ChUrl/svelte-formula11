@@ -130,7 +130,7 @@
 
 <div class="pb-2">
   <Button width="w-full" color="tertiary" onclick={create_substitution_handler}>
-    <b>Create New Substitution</b>
+    <span class="font-bold">Create New Substitution</span>
   </Button>
 </div>
 {#await data.substitutions then substitutions}

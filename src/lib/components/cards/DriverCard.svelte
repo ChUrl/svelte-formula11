@@ -132,7 +132,7 @@
         disabled={disable_inputs}
         required={require_inputs}
       >
-        <svelte:fragment slot="message"><b>Upload Headshot</b></svelte:fragment>
+        <svelte:fragment slot="message"><span class="font-bold">Upload Headshot</span></svelte:fragment>
       </FileDropzone>
 
       <!-- Save/Delete buttons -->
