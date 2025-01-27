@@ -10,6 +10,7 @@ import Search from "./form/Search.svelte";
 import Card from "./cards/Card.svelte";
 import DriverCard from "./cards/DriverCard.svelte";
 import RaceCard from "./cards/RaceCard.svelte";
+import RacePickCard from "./cards/RacePickCard.svelte";
 import SubstitutionCard from "./cards/SubstitutionCard.svelte";
 import TeamCard from "./cards/TeamCard.svelte";
 
@@ -38,6 +39,7 @@ export {
   Card,
   DriverCard,
   RaceCard,
+  RacePickCard,
   SubstitutionCard,
   TeamCard,
 
