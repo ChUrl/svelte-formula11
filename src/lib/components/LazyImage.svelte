@@ -18,6 +18,9 @@
 
     /** Optional extra style for the lazy <div> container */
     containerstyle?: string;
+
+    /** Additional classes to insert */
+    imgclass?: string;
   }
 
   let {
@@ -26,6 +29,7 @@
     imgheight,
     imgstyle = undefined,
     containerstyle = undefined,
+    imgclass = "",
     ...restProps
   }: LazyImageProps = $props();
 
@@ -55,7 +59,7 @@
       <img
         src={data}
         use:img_opacity_handler
-        class="bg-surface-100 transition-opacity"
+        class="bg-surface-100 transition-opacity {imgclass}"
         style="opacity: 0; transition-duration: 300ms; {imgstyle ?? ''}"
         draggable="false"
         {...restProps}
