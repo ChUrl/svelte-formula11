@@ -54,6 +54,7 @@
   style="aspect-ratio: {imgwidth} / {imgheight}; {containerstyle ??
     ''}; max-width: {imgwidth}px; max-height: {imgheight}px"
 >
+  <!-- TODO: If an image disappears and reappears, it will be loaded again... -->
   {#if load}
     {#await fetch_image_base64(src) then data}
       <img
