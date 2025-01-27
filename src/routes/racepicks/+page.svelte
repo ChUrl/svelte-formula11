@@ -113,7 +113,7 @@
             <div class="mt-2 flex flex-col gap-2">
               <div class="flex gap-2">
                 <div class="card w-full bg-tertiary-400 p-2 pb-0 shadow">
-                  <h1 class="text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
+                  <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
                   <LazyImage
                     src={driver(currentpick.pxx ?? "Invalid")?.headshot_url ??
                       get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
@@ -125,7 +125,7 @@
                   />
                 </div>
                 <div class="card w-full bg-tertiary-400 p-2 pb-0 shadow">
-                  <h1 class="text-nowrap font-bold">Your DNF Pick:</h1>
+                  <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
                   <LazyImage
                     src={driver(currentpick.dnf ?? "Invalid")?.headshot_url ??
                       get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
@@ -142,7 +142,7 @@
           <Button
             width="w-full"
             color="tertiary"
-            extraclass="bg-tertiary-400"
+            extraclass="bg-tertiary-400 mt-2"
             onclick={create_guess_handler}
             style="height: 100%;"
             shadow
