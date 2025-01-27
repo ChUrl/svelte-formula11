@@ -1,79 +1,203 @@
 <script lang="ts">
-  import { Button, LazyImage } from "$lib/components";
-  import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
+  import { Button, ChequeredFlagIcon, LazyImage, type DropdownOption } from "$lib/components";
+  import {
+    Accordion,
+    AccordionItem,
+    getModalStore,
+    type ModalSettings,
+    type ModalStore,
+  } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
-  import { RACE_PICTOGRAM_HEIGHT, RACE_PICTOGRAM_WIDTH } from "$lib/config";
-  import type { RacePick } from "$lib/schema";
+  import {
+    DRIVER_HEADSHOT_HEIGHT,
+    DRIVER_HEADSHOT_WIDTH,
+    RACE_PICTOGRAM_HEIGHT,
+    RACE_PICTOGRAM_WIDTH,
+  } from "$lib/config";
+  import type { Driver, Race, RacePick } from "$lib/schema";
+  import { get_by_value } from "$lib/database";
 
   let { data }: { data: PageData } = $props();
 
-  const modalStore: ModalStore = getModalStore();
-  const create_guess_handler = async (event: Event) => {};
-
-  const currentpick: RacePick | null =
+  const currentpick: RacePick | undefined =
     data.racepicks.filter(
       (racepick: RacePick) =>
         racepick.expand.user.username === data.user?.username &&
         racepick.race === data.currentrace?.id,
-    )[0] ?? null;
+    )[0] ?? undefined;
+
+  let pxx_select_value: string = $state(currentpick?.pxx ?? "");
+  let dnf_select_value: string = $state(currentpick?.dnf ?? "");
+
+  // TODO: Duplicated code in cards/substitutioncard.svelte
+  const driver_dropdown_options: DropdownOption[] = [];
+  data.drivers.forEach((driver: Driver) => {
+    driver_dropdown_options.push({
+      label: driver.code,
+      value: driver.id,
+      icon_url: driver.headshot_url,
+      icon_width: DRIVER_HEADSHOT_WIDTH,
+      icon_height: DRIVER_HEADSHOT_HEIGHT,
+    });
+  });
+
+  const modalStore: ModalStore = getModalStore();
+  const create_guess_handler = async (event: Event) => {
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "racePickCard",
+      meta: {
+        racepick: currentpick,
+        currentrace: data.currentrace,
+        user: data.user,
+        drivers: data.drivers,
+        disable_inputs: false, // TODO: Datelock
+        headshot_template:
+          get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? "Invalid",
+        pxx_select_value: pxx_select_value,
+        dnf_select_value: dnf_select_value,
+        driver_select_options: driver_dropdown_options,
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
+
+  const race = (id: string): Race | undefined => get_by_value(data.races, "id", id);
+  const driver = (id: string): Driver | undefined => get_by_value(data.drivers, "id", id);
+
+  // const pickedusers = data.currentpickedusers.filter(
+  //   (currentpickeduser: CurrentPickedUser) => currentpickeduser.picked,
+  // );
+  // const outstandingusers = data.currentpickedusers.filter(
+  //   (currentpickeduser: CurrentPickedUser) => !currentpickeduser.picked,
+  // );
 </script>
 
 <!-- TODO: This thing must display the boxes as a column on mobile -->
 {#if data.currentrace}
-  <div class="flex w-full gap-2">
-    <!-- Next Guess Box -->
-    <!-- TODO: Countdown -->
-    <div class="w-full bg-tertiary-500 p-2 shadow rounded-container-token">
-      <h1 class="text-lg font-bold">Next Race</h1>
-      <div class="mt-2 flex w-full gap-2">
-        <div class="border border-black p-2 rounded-container-token">
-          <LazyImage
-            src={data.currentrace.pictogram_url ?? "Invalid"}
-            imgwidth={RACE_PICTOGRAM_WIDTH}
-            imgheight={RACE_PICTOGRAM_HEIGHT}
-            containerstyle="width: 175px;"
-            imgstyle="background: transparent;"
-          />
-        </div>
-        <div class="flex flex-col border border-black p-2 rounded-container-token">
-          <!-- TODO: Replace the <b></b> usages with class="font-bold" elsewhere -->
-          <span class="font-bold">Step {data.currentrace.step}: {data.currentrace.name}</span>
-          {#if data.currentrace.sprintqualidate}
-            <span>Sprint Quali: {data.currentrace.sprintqualidate}</span>
-            <span>Sprint Race: {data.currentrace.sprintdate}</span>
-          {:else}
-            <span>Sprint: No Sprint :)</span>
-          {/if}
-          <span>Quali: {data.currentrace.qualidate}</span>
-          <span>Race: {data.currentrace.racedate}</span>
-        </div>
-      </div>
-    </div>
-
-    <!-- Your Pick Box -->
-    {#if currentpick}
-      <div class="flex flex-col gap-2">
-        <div class="w-full bg-tertiary-500 p-2 shadow rounded-container-token">
-          <h1 class="text-lg font-bold">Your Pick:</h1>
-          <div class="mt-2 flex flex-col border border-black p-2 rounded-container-token">
-            <span class="text-nowrap">P{data.currentrace.pxx}: {currentpick.pxx}</span>
-            <span class="text-nowrap">DNF: {currentpick.dnf}</span>
+  <Accordion class="card bg-tertiary-500 shadow" regionPanel="pt-0" width="w-auto">
+    <AccordionItem>
+      <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
+      <svelte:fragment slot="summary">
+        <span class="font-bold">Next Race Guess</span>
+      </svelte:fragment>
+      <svelte:fragment slot="content">
+        <div class="gap-2 lg:flex">
+          <!-- TODO: Make the contents into 2 columns -->
+          <div class="card mt-2 flex flex-col bg-tertiary-400 p-2 shadow">
+            <span class="text-nowrap font-bold">
+              Step {data.currentrace.step}: {data.currentrace.name}
+            </span>
+            {#if data.currentrace.sprintqualidate}
+              <span class="text-nowrap">Sprint Quali: {data.currentrace.sprintqualidate}</span>
+              <span class="text-nowrap">Sprint Race: {data.currentrace.sprintdate}</span>
+            {:else}
+              <span class="text-nowrap">Sprint: No Sprint :)</span>
+            {/if}
+            <span class="text-nowrap">Quali: {data.currentrace.qualidate}</span>
+            <span class="text-nowrap">Race: {data.currentrace.racedate}</span>
           </div>
-        </div>
+          <div class="card mt-2 bg-tertiary-400 p-2 shadow">
+            <span class="text-nowrap font-bold">Track Layout:</span>
+            <LazyImage
+              src={data.currentrace.pictogram_url ?? "Invalid"}
+              imgwidth={RACE_PICTOGRAM_WIDTH}
+              imgheight={RACE_PICTOGRAM_HEIGHT}
+              containerstyle="height: 150px; margin: auto;"
+              imgstyle="background: transparent;"
+            />
+          </div>
 
-        <!-- TODO: Add other button shadows -->
-        <Button
-          width="w-full"
-          color="tertiary"
-          onclick={create_guess_handler}
-          style="height: 100%;"
-          shadow
-        >
-          <b>{currentpick ? "Edit Pick" : "Make Pick"}</b>
-        </Button>
-      </div>
-    {/if}
-  </div>
+          {#if currentpick}
+            <div class="mt-2 flex flex-col gap-2">
+              <div class="flex gap-2">
+                <div class="card w-full bg-tertiary-400 p-2 pb-0 shadow">
+                  <h1 class="text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
+                  <LazyImage
+                    src={driver(currentpick.pxx ?? "Invalid")?.headshot_url ??
+                      get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
+                      "Invalid"}
+                    imgwidth={DRIVER_HEADSHOT_WIDTH}
+                    imgheight={DRIVER_HEADSHOT_HEIGHT}
+                    containerstyle="height: 150px; margin: auto;"
+                    imgstyle="background: transparent;"
+                  />
+                </div>
+                <div class="card w-full bg-tertiary-400 p-2 pb-0 shadow">
+                  <h1 class="text-nowrap font-bold">Your DNF Pick:</h1>
+                  <LazyImage
+                    src={driver(currentpick.dnf ?? "Invalid")?.headshot_url ??
+                      get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
+                      "Invalid"}
+                    imgwidth={DRIVER_HEADSHOT_WIDTH}
+                    imgheight={DRIVER_HEADSHOT_HEIGHT}
+                    containerstyle="height: 150px; margin: auto;"
+                    imgstyle="background: transparent;"
+                  />
+                </div>
+              </div>
+            </div>
+          {/if}
+          <Button
+            width="w-full"
+            color="tertiary"
+            extraclass="bg-tertiary-400"
+            onclick={create_guess_handler}
+            style="height: 100%;"
+            shadow
+          >
+            <span class="font-bold">{currentpick ? "Edit Picks" : "Make Picks"}</span>
+          </Button>
+
+          <!-- <div class="mt-2 flex gap-2"> -->
+          <!--   <div class="card w-full bg-tertiary-400 p-2 shadow"> -->
+          <!--     <h1 class="text-nowrap font-bold"> -->
+          <!--       Picked ({pickedusers.length}/{data.currentpickedusers.length}): -->
+          <!--     </h1> -->
+          <!-- Width: 50px * 4 + 8px * 3 -->
+          <!--     <div class="grid grid-cols-2 gap-2 lg:grid-cols-4"> -->
+          <!--       {#each pickedusers as user} -->
+          <!--         <LazyImage -->
+          <!--           src={user.avatar_url ?? -->
+          <!--             get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? -->
+          <!--             "Invalid"} -->
+          <!--           imgwidth={AVATAR_WIDTH} -->
+          <!--           imgheight={AVATAR_HEIGHT} -->
+          <!--           containerstyle="height: 50px; width: 50px;" -->
+          <!--           imgclass="shadow bg-transparent rounded-full" -->
+          <!--         /> -->
+          <!--       {/each} -->
+          <!--     </div> -->
+          <!--   </div> -->
+          <!--   <div class="card w-full bg-tertiary-400 p-2 shadow"> -->
+          <!--     <h1 class="text-nowrap font-bold"> -->
+          <!--       Outstanding ({outstandingusers.length}/{data.currentpickedusers.length}): -->
+          <!--     </h1> -->
+          <!--     <div class="grid grid-cols-2 gap-2 lg:grid-cols-4"> -->
+          <!--       {#each outstandingusers as user} -->
+          <!--         <LazyImage -->
+          <!--           src={user.avatar_url ?? -->
+          <!--             get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? -->
+          <!--             "Invalid"} -->
+          <!--           imgwidth={AVATAR_WIDTH} -->
+          <!--           imgheight={AVATAR_HEIGHT} -->
+          <!--           containerstyle="height: 50px; width: 50px;" -->
+          <!--           imgclass="shadow bg-transparent rounded-full" -->
+          <!--         /> -->
+          <!--       {/each} -->
+          <!--     </div> -->
+          <!--   </div> -->
+          <!-- </div> -->
+
+          <!-- Spacer -->
+          <!-- <div class="w-full"></div> -->
+          <!-- TODO: Track weather report? -->
+          <!-- <div class="mt-2">{data.currentracepicks.length}</div> -->
+        </div>
+      </svelte:fragment>
+    </AccordionItem>
+  </Accordion>
 {/if}
 
 <!-- "Make Guess"/"Update Guess" button at the top -->
