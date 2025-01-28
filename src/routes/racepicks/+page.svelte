@@ -93,7 +93,7 @@
       </svelte:fragment>
       <svelte:fragment slot="content">
         <!-- Show information about the next race -->
-        <div class="gap-2 xl:flex">
+        <div class="justify-center gap-2 xl:flex">
           <div class="mt-2 flex gap-2">
             <!-- TODO: Make the contents into 2 columns -->
             <div class="card flex w-full flex-col p-2 shadow">
