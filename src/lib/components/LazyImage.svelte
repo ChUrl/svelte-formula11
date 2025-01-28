@@ -21,6 +21,9 @@
 
     /** Additional classes to insert */
     imgclass?: string;
+
+    /** Slightly zoom the image on mouse-hover */
+    hoverzoom?: boolean;
   }
 
   let {
@@ -30,6 +33,7 @@
     imgstyle = undefined,
     containerstyle = undefined,
     imgclass = "",
+    hoverzoom = false,
     ...restProps
   }: LazyImageProps = $props();
 
@@ -51,16 +55,16 @@
 <div
   use:lazyload
   onLazyVisible={lazy_visible_handler}
+  class="overflow-hidden"
   style="aspect-ratio: {imgwidth} / {imgheight}; {containerstyle ??
     ''}; max-width: {imgwidth}px; max-height: {imgheight}px"
 >
-  <!-- TODO: If an image disappears and reappears, it will be loaded again... -->
   {#if load}
     {#await fetch_image_base64(src) then data}
       <img
         src={data}
         use:img_opacity_handler
-        class="bg-surface-100 transition-opacity {imgclass}"
+        class="bg-surface-100 transition-all {imgclass} {hoverzoom ? 'hover:scale-105' : ''}"
         style="opacity: 0; transition-duration: 300ms; {imgstyle ?? ''}"
         draggable="false"
         {...restProps}
