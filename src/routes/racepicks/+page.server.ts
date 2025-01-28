@@ -28,22 +28,22 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     return currentrace[0];
   };
 
-  // const fetch_currentpickedusers = async (): Promise<CurrentPickedUser[]> => {
-  //   const currentpickedusers: CurrentPickedUser[] = await locals.pb
-  //     .collection("currentpickedusers")
-  //     .getFullList();
-  //
-  //   currentpickedusers.map((currentpickeduser: CurrentPickedUser) => {
-  //     if (currentpickeduser.avatar) {
-  //       currentpickeduser.avatar_url = locals.pb.files.getURL(
-  //         currentpickeduser,
-  //         currentpickeduser.avatar,
-  //       );
-  //     }
-  //   });
-  //
-  //   return currentpickedusers;
-  // };
+  const fetch_currentpickedusers = async (): Promise<CurrentPickedUser[]> => {
+    const currentpickedusers: CurrentPickedUser[] = await locals.pb
+      .collection("currentpickedusers")
+      .getFullList();
+
+    currentpickedusers.map((currentpickeduser: CurrentPickedUser) => {
+      if (currentpickeduser.avatar) {
+        currentpickeduser.avatar_url = locals.pb.files.getURL(
+          currentpickeduser,
+          currentpickeduser.avatar,
+        );
+      }
+    });
+
+    return currentpickedusers;
+  };
 
   const fetch_raceresults = async (): Promise<RaceResult[]> => {
     // Don't expand races/pxxs/dnfs since we already fetched those
@@ -96,7 +96,7 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
   return {
     racepicks: await fetch_racepicks(),
     currentrace: await fetch_currentrace(),
-    // currentpickedusers: await fetch_currentpickedusers(),
+    currentpickedusers: await fetch_currentpickedusers(),
     raceresults: await fetch_raceresults(),
     drivers: await fetch_drivers(),
     races: await fetch_races(),
