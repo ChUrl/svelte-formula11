@@ -76,9 +76,6 @@ export interface RacePick {
   pxx?: string;
   dnf?: string;
   expand: {
-    dnf: Driver;
-    pxx: Driver;
-    race: Race;
     user: User;
   };
 }
@@ -88,11 +85,6 @@ export interface RaceResult {
   race: string;
   pxxs: string[];
   dnfs: string[];
-  expand: {
-    dnfs: Driver[];
-    pxxs: Driver[];
-    race: Race;
-  };
 }
 
 export interface CurrentPickedUser {
