@@ -9,12 +9,14 @@
   } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
   import {
+    AVATAR_HEIGHT,
+    AVATAR_WIDTH,
     DRIVER_HEADSHOT_HEIGHT,
     DRIVER_HEADSHOT_WIDTH,
     RACE_PICTOGRAM_HEIGHT,
     RACE_PICTOGRAM_WIDTH,
   } from "$lib/config";
-  import type { Driver, Race, RacePick } from "$lib/schema";
+  import type { CurrentPickedUser, Driver, Race, RacePick } from "$lib/schema";
   import { get_by_value } from "$lib/database";
 
   let { data }: { data: PageData } = $props();
@@ -66,24 +68,27 @@
   const race = (id: string): Race | undefined => get_by_value(data.races, "id", id);
   const driver = (id: string): Driver | undefined => get_by_value(data.drivers, "id", id);
 
-  // const pickedusers = data.currentpickedusers.filter(
-  //   (currentpickeduser: CurrentPickedUser) => currentpickeduser.picked,
-  // );
-  // const outstandingusers = data.currentpickedusers.filter(
-  //   (currentpickeduser: CurrentPickedUser) => !currentpickeduser.picked,
-  // );
+  const pickedusers = data.currentpickedusers.filter(
+    (currentpickeduser: CurrentPickedUser) => currentpickeduser.picked,
+  );
+  const outstandingusers = data.currentpickedusers.filter(
+    (currentpickeduser: CurrentPickedUser) => !currentpickeduser.picked,
+  );
 </script>
 
-<!-- TODO: This thing must display the boxes as a column on mobile -->
 {#if data.currentrace}
-  <Accordion class="card bg-tertiary-500 shadow" regionPanel="pt-0" width="w-auto">
-    <AccordionItem>
+  <Accordion
+    class="card mx-auto bg-tertiary-500 shadow"
+    regionPanel="pt-0"
+    width="w-full xl:w-[1211px]"
+  >
+    <AccordionItem open>
       <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
       <svelte:fragment slot="summary">
         <span class="font-bold">Next Race Guess</span>
       </svelte:fragment>
       <svelte:fragment slot="content">
-        <div class="gap-2 lg:flex">
+        <div class="gap-2 xl:flex">
           <!-- TODO: Make the contents into 2 columns -->
           <div class="card mt-2 flex flex-col bg-tertiary-400 p-2 shadow">
             <span class="text-nowrap font-bold">
@@ -110,91 +115,83 @@
           </div>
 
           {#if currentpick}
-            <div class="mt-2 flex flex-col gap-2">
-              <div class="flex gap-2">
-                <div class="card w-full bg-tertiary-400 p-2 pb-0 shadow">
-                  <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
-                  <LazyImage
-                    src={driver(currentpick.pxx ?? "Invalid")?.headshot_url ??
-                      get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
-                      "Invalid"}
-                    imgwidth={DRIVER_HEADSHOT_WIDTH}
-                    imgheight={DRIVER_HEADSHOT_HEIGHT}
-                    containerstyle="height: 150px; margin: auto;"
-                    imgstyle="background: transparent;"
-                  />
-                </div>
-                <div class="card w-full bg-tertiary-400 p-2 pb-0 shadow">
-                  <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
-                  <LazyImage
-                    src={driver(currentpick.dnf ?? "Invalid")?.headshot_url ??
-                      get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
-                      "Invalid"}
-                    imgwidth={DRIVER_HEADSHOT_WIDTH}
-                    imgheight={DRIVER_HEADSHOT_HEIGHT}
-                    containerstyle="height: 150px; margin: auto;"
-                    imgstyle="background: transparent;"
-                  />
-                </div>
+            <div class="mt-2 flex gap-2">
+              <div class="card w-full bg-tertiary-400 p-2 pb-0 shadow">
+                <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
+                <LazyImage
+                  src={driver(currentpick.pxx ?? "Invalid")?.headshot_url ??
+                    get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
+                    "Invalid"}
+                  imgwidth={DRIVER_HEADSHOT_WIDTH}
+                  imgheight={DRIVER_HEADSHOT_HEIGHT}
+                  containerstyle="height: 150px; margin: auto;"
+                  imgstyle="background: transparent;"
+                />
+              </div>
+              <div class="card w-full bg-tertiary-400 p-2 pb-0 shadow">
+                <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
+                <LazyImage
+                  src={driver(currentpick.dnf ?? "Invalid")?.headshot_url ??
+                    get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
+                    "Invalid"}
+                  imgwidth={DRIVER_HEADSHOT_WIDTH}
+                  imgheight={DRIVER_HEADSHOT_HEIGHT}
+                  containerstyle="height: 150px; margin: auto;"
+                  imgstyle="background: transparent;"
+                />
               </div>
             </div>
           {/if}
-          <Button
-            width="w-full"
-            color="tertiary"
-            extraclass="bg-tertiary-400 mt-2"
-            onclick={create_guess_handler}
-            style="height: 100%;"
-            shadow
-          >
-            <span class="font-bold">{currentpick ? "Edit Picks" : "Make Picks"}</span>
-          </Button>
 
-          <!-- <div class="mt-2 flex gap-2"> -->
-          <!--   <div class="card w-full bg-tertiary-400 p-2 shadow"> -->
-          <!--     <h1 class="text-nowrap font-bold"> -->
-          <!--       Picked ({pickedusers.length}/{data.currentpickedusers.length}): -->
-          <!--     </h1> -->
-          <!-- Width: 50px * 4 + 8px * 3 -->
-          <!--     <div class="grid grid-cols-2 gap-2 lg:grid-cols-4"> -->
-          <!--       {#each pickedusers as user} -->
-          <!--         <LazyImage -->
-          <!--           src={user.avatar_url ?? -->
-          <!--             get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? -->
-          <!--             "Invalid"} -->
-          <!--           imgwidth={AVATAR_WIDTH} -->
-          <!--           imgheight={AVATAR_HEIGHT} -->
-          <!--           containerstyle="height: 50px; width: 50px;" -->
-          <!--           imgclass="shadow bg-transparent rounded-full" -->
-          <!--         /> -->
-          <!--       {/each} -->
-          <!--     </div> -->
-          <!--   </div> -->
-          <!--   <div class="card w-full bg-tertiary-400 p-2 shadow"> -->
-          <!--     <h1 class="text-nowrap font-bold"> -->
-          <!--       Outstanding ({outstandingusers.length}/{data.currentpickedusers.length}): -->
-          <!--     </h1> -->
-          <!--     <div class="grid grid-cols-2 gap-2 lg:grid-cols-4"> -->
-          <!--       {#each outstandingusers as user} -->
-          <!--         <LazyImage -->
-          <!--           src={user.avatar_url ?? -->
-          <!--             get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? -->
-          <!--             "Invalid"} -->
-          <!--           imgwidth={AVATAR_WIDTH} -->
-          <!--           imgheight={AVATAR_HEIGHT} -->
-          <!--           containerstyle="height: 50px; width: 50px;" -->
-          <!--           imgclass="shadow bg-transparent rounded-full" -->
-          <!--         /> -->
-          <!--       {/each} -->
-          <!--     </div> -->
-          <!--   </div> -->
-          <!-- </div> -->
-
-          <!-- Spacer -->
-          <!-- <div class="w-full"></div> -->
-          <!-- TODO: Track weather report? -->
-          <!-- <div class="mt-2">{data.currentracepicks.length}</div> -->
+          <div class="mt-2 flex gap-2">
+            <div class="card w-full bg-tertiary-400 p-2 shadow">
+              <h1 class="text-nowrap font-bold">
+                Picked ({pickedusers.length}/{data.currentpickedusers.length}):
+              </h1>
+              <div class="mt-1 grid grid-cols-4 gap-x-2 gap-y-0.5">
+                {#each pickedusers.slice(0, 16) as user}
+                  <LazyImage
+                    src={user.avatar_url ??
+                      get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
+                      "Invalid"}
+                    imgwidth={AVATAR_WIDTH}
+                    imgheight={AVATAR_HEIGHT}
+                    containerstyle="height: 35px; width: 35px;"
+                    imgclass="shadow bg-transparent rounded-full"
+                  />
+                {/each}
+              </div>
+            </div>
+            <div class="card w-full bg-tertiary-400 p-2 shadow">
+              <h1 class="text-nowrap font-bold">
+                Outstanding ({outstandingusers.length}/{data.currentpickedusers.length}):
+              </h1>
+              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                {#each outstandingusers.slice(0, 16) as user}
+                  <LazyImage
+                    src={user.avatar_url ??
+                      get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
+                      "Invalid"}
+                    imgwidth={AVATAR_WIDTH}
+                    imgheight={AVATAR_HEIGHT}
+                    containerstyle="height: 35px; width: 35px;"
+                    imgclass="shadow bg-transparent rounded-full"
+                  />
+                {/each}
+              </div>
+            </div>
+          </div>
         </div>
+        <Button
+          width="w-full"
+          color="tertiary"
+          extraclass="bg-tertiary-400 mt-2"
+          onclick={create_guess_handler}
+          style="height: 100%;"
+          shadow
+        >
+          <span class="font-bold">{currentpick ? "Edit Picks" : "Make Picks"}</span>
+        </Button>
       </svelte:fragment>
     </AccordionItem>
   </Accordion>
