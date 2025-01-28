@@ -82,7 +82,7 @@
     regionPanel="pt-0"
     width="w-full xl:w-[1211px]"
   >
-    <AccordionItem open>
+    <AccordionItem>
       <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
       <svelte:fragment slot="summary">
         <span class="font-bold">Next Race Guess</span>
