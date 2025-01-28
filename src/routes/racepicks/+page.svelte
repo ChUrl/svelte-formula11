@@ -65,22 +65,26 @@
     modalStore.trigger(modalSettings);
   };
 
-  const race = (id: string): Race | undefined => get_by_value(data.races, "id", id);
-  const driver = (id: string): Driver | undefined => get_by_value(data.drivers, "id", id);
+  const getrace = (id: string): Race | undefined => get_by_value(data.races, "id", id);
+  const getdriver = (id: string): Driver | undefined => get_by_value(data.drivers, "id", id);
 
   const pickedusers = data.currentpickedusers.filter(
     (currentpickeduser: CurrentPickedUser) => currentpickeduser.picked,
   );
+  // pickedusers = pickedusers.concat(pickedusers, pickedusers);
   const outstandingusers = data.currentpickedusers.filter(
     (currentpickeduser: CurrentPickedUser) => !currentpickeduser.picked,
   );
+
+  const graphicfallback = (graphic: string | undefined, fallback: string): string =>
+    graphic ?? get_by_value(data.graphics, "name", fallback)?.file_url ?? "Invalid";
 </script>
 
 {#if data.currentrace}
   <Accordion
-    class="card mx-auto bg-tertiary-500 shadow"
+    class="card mx-auto bg-surface-500 shadow"
     regionPanel="pt-0"
-    width="w-full xl:w-[1211px]"
+    width="w-full xl:w-[1090px]"
   >
     <AccordionItem>
       <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
@@ -88,72 +92,75 @@
         <span class="font-bold">Next Race Guess</span>
       </svelte:fragment>
       <svelte:fragment slot="content">
+        <!-- Show information about the next race -->
         <div class="gap-2 xl:flex">
-          <!-- TODO: Make the contents into 2 columns -->
-          <div class="card mt-2 flex flex-col bg-tertiary-400 p-2 shadow">
-            <span class="text-nowrap font-bold">
-              Step {data.currentrace.step}: {data.currentrace.name}
-            </span>
-            {#if data.currentrace.sprintqualidate}
-              <span class="text-nowrap">Sprint Quali: {data.currentrace.sprintqualidate}</span>
-              <span class="text-nowrap">Sprint Race: {data.currentrace.sprintdate}</span>
-            {:else}
-              <span class="text-nowrap">Sprint: No Sprint :)</span>
-            {/if}
-            <span class="text-nowrap">Quali: {data.currentrace.qualidate}</span>
-            <span class="text-nowrap">Race: {data.currentrace.racedate}</span>
-          </div>
-          <div class="card mt-2 bg-tertiary-400 p-2 shadow">
-            <span class="text-nowrap font-bold">Track Layout:</span>
-            <LazyImage
-              src={data.currentrace.pictogram_url ?? "Invalid"}
-              imgwidth={RACE_PICTOGRAM_WIDTH}
-              imgheight={RACE_PICTOGRAM_HEIGHT}
-              containerstyle="height: 150px; margin: auto;"
-              imgstyle="background: transparent;"
-            />
+          <div class="mt-2 flex gap-2">
+            <!-- TODO: Make the contents into 2 columns -->
+            <div class="card flex w-full flex-col p-2 shadow">
+              <span class="font-bold">
+                Step {data.currentrace.step}: {data.currentrace.name}
+              </span>
+              <span class="">Race: {data.currentrace.racedate}</span>
+              <!-- TODO: Countdown -->
+            </div>
+            <div class="card w-full p-2 shadow">
+              <span class="text-nowrap font-bold">Track Layout:</span>
+              <LazyImage
+                src={data.currentrace.pictogram_url ?? "Invalid"}
+                imgwidth={RACE_PICTOGRAM_WIDTH}
+                imgheight={RACE_PICTOGRAM_HEIGHT}
+                containerstyle="height: 115px; margin: auto;"
+                imgstyle="background: transparent;"
+              />
+            </div>
           </div>
 
-          {#if currentpick}
+          <!-- Only show the userguess if signed in -->
+          {#if data.user}
             <div class="mt-2 flex gap-2">
-              <div class="card w-full bg-tertiary-400 p-2 pb-0 shadow">
+              <div class="card w-full p-2 pb-0 shadow">
                 <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
                 <LazyImage
-                  src={driver(currentpick.pxx ?? "Invalid")?.headshot_url ??
-                    get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
-                    "Invalid"}
+                  src={graphicfallback(
+                    getdriver(currentpick?.pxx ?? "")?.headshot_url,
+                    "driver_headshot_template",
+                  )}
                   imgwidth={DRIVER_HEADSHOT_WIDTH}
                   imgheight={DRIVER_HEADSHOT_HEIGHT}
-                  containerstyle="height: 150px; margin: auto;"
-                  imgstyle="background: transparent;"
+                  containerstyle="height: 115px; margin: auto;"
+                  imgclass="bg-transparent cursor-pointer"
+                  hoverzoom
+                  onclick={create_guess_handler}
                 />
               </div>
-              <div class="card w-full bg-tertiary-400 p-2 pb-0 shadow">
+              <div class="card w-full p-2 pb-0 shadow">
                 <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
                 <LazyImage
-                  src={driver(currentpick.dnf ?? "Invalid")?.headshot_url ??
-                    get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
-                    "Invalid"}
+                  src={graphicfallback(
+                    getdriver(currentpick?.dnf ?? "")?.headshot_url,
+                    "driver_headshot_template",
+                  )}
                   imgwidth={DRIVER_HEADSHOT_WIDTH}
                   imgheight={DRIVER_HEADSHOT_HEIGHT}
-                  containerstyle="height: 150px; margin: auto;"
-                  imgstyle="background: transparent;"
+                  containerstyle="height: 115px; margin: auto;"
+                  imgclass="bg-transparent cursor-pointer"
+                  hoverzoom
+                  onclick={create_guess_handler}
                 />
               </div>
             </div>
           {/if}
 
+          <!-- Show users that have and have not picked yet -->
           <div class="mt-2 flex gap-2">
-            <div class="card w-full bg-tertiary-400 p-2 shadow">
+            <div class="card w-full p-2 shadow">
               <h1 class="text-nowrap font-bold">
                 Picked ({pickedusers.length}/{data.currentpickedusers.length}):
               </h1>
               <div class="mt-1 grid grid-cols-4 gap-x-2 gap-y-0.5">
                 {#each pickedusers.slice(0, 16) as user}
                   <LazyImage
-                    src={user.avatar_url ??
-                      get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
-                      "Invalid"}
+                    src={graphicfallback(user.avatar_url, "driver_headshot_template")}
                     imgwidth={AVATAR_WIDTH}
                     imgheight={AVATAR_HEIGHT}
                     containerstyle="height: 35px; width: 35px;"
@@ -162,16 +169,14 @@
                 {/each}
               </div>
             </div>
-            <div class="card w-full bg-tertiary-400 p-2 shadow">
+            <div class="card w-full p-2 shadow">
               <h1 class="text-nowrap font-bold">
                 Outstanding ({outstandingusers.length}/{data.currentpickedusers.length}):
               </h1>
               <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
                 {#each outstandingusers.slice(0, 16) as user}
                   <LazyImage
-                    src={user.avatar_url ??
-                      get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ??
-                      "Invalid"}
+                    src={graphicfallback(user.avatar_url, "driver_headshot_template")}
                     imgwidth={AVATAR_WIDTH}
                     imgheight={AVATAR_HEIGHT}
                     containerstyle="height: 35px; width: 35px;"
@@ -182,26 +187,75 @@
             </div>
           </div>
         </div>
-        <Button
-          width="w-full"
-          color="tertiary"
-          extraclass="bg-tertiary-400 mt-2"
-          onclick={create_guess_handler}
-          style="height: 100%;"
-          shadow
-        >
-          <span class="font-bold">{currentpick ? "Edit Picks" : "Make Picks"}</span>
-        </Button>
       </svelte:fragment>
     </AccordionItem>
   </Accordion>
 {/if}
 
-<!-- "Make Guess"/"Update Guess" button at the top -->
+<!-- The fookin table -->
+<div class="flex">
+  <div>
+    <!-- Make space for the avatars in the guess columns. -->
+    <!-- Use mt-4 to account for 2x padding around the avatar. -->
+    <div class="mt-4 h-10"></div>
 
-<!-- Full-Width box with information about the upcoming race: -->
-<!-- - Name, step, track pictogram, date of (squali), (srace), quali and race -->
-<!-- - Countdown to next step (either squali, srace, quali or race) -->
+    {#each data.raceresults as result}
+      {@const race = getrace(result.race)}
+
+      <div class="card mt-2 flex h-20 w-7 flex-col bg-surface-400 p-2 shadow lg:w-36">
+        <span class="hidden text-sm font-bold lg:block">
+          {race?.step}: {race?.name}
+        </span>
+        <span class="block rotate-90 text-sm font-bold lg:hidden">
+          {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
+        </span>
+        <span class="hidden text-sm lg:block">{race?.racedate}</span>
+      </div>
+    {/each}
+  </div>
+
+  <div class="hide-scrollbar flex w-full overflow-x-scroll pb-2">
+    <!-- Not ideal but currentpickedusers contains all users, so we do not need to fetch the users separately -->
+    {#each data.currentpickedusers as user}
+      {@const picks = data.racepicks.filter((pick: RacePick) => pick.user === user.id)}
+
+      <div class="card ml-1 mt-2 w-full p-1 shadow lg:ml-2 lg:p-2">
+        <!-- Avatar + name display at the top -->
+        <div class="mx-auto flex h-10 w-fit">
+          <LazyImage
+            src={graphicfallback(user.avatar_url, "driver_headshot_template")}
+            imgwidth={AVATAR_WIDTH}
+            imgheight={AVATAR_HEIGHT}
+            containerstyle="height: 35px; width: 35px;"
+            imgclass="shadow bg-transparent rounded-full"
+          />
+          <div
+            style="height: 35px; line-height: 35px;"
+            class="ml-2 hidden text-nowrap text-center align-middle lg:block"
+          >
+            {user.username}
+          </div>
+        </div>
+
+        {#each data.raceresults as result}
+          {@const race = getrace(result.race)}
+          {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
+
+          {#if pick}
+            <div class="card mt-2 h-20 w-full bg-surface-400 p-1 lg:p-2">
+              <div class="mx-auto flex h-full w-fit flex-col justify-center">
+                <span class="text-sm">PXX: {getdriver(pick?.pxx ?? "")?.code}</span>
+                <span class="text-sm">DNF: {getdriver(pick?.dnf ?? "")?.code}</span>
+              </div>
+            </div>
+          {:else}
+            <div class="mt-2 h-20 w-full"></div>
+          {/if}
+        {/each}
+      </div>
+    {/each}
+  </div>
+</div>
 
 <!-- "Table" of past guesses (not an actual table this time): -->
 <!-- - Left column (rounded div column with race information: name, step, pxx) -->
