@@ -197,12 +197,12 @@
   <div>
     <!-- Make space for the avatars in the guess columns. -->
     <!-- Use mt-4 to account for 2x padding around the avatar. -->
-    <div class="mt-4 h-10"></div>
+    <div class="mt-3 h-10 lg:mt-4"></div>
 
     {#each data.raceresults as result}
       {@const race = getrace(result.race)}
 
-      <div class="card mt-2 flex h-20 w-7 flex-col bg-surface-400 p-2 shadow lg:w-36">
+      <div class="card mt-2 flex h-20 w-7 flex-col bg-surface-300 p-2 shadow lg:w-36">
         <span class="hidden text-sm font-bold lg:block">
           {race?.step}: {race?.name}
         </span>
@@ -242,7 +242,7 @@
           {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
 
           {#if pick}
-            <div class="card mt-2 h-20 w-full bg-surface-400 p-1 lg:p-2">
+            <div class="card mt-2 h-20 w-full bg-surface-300 p-1 lg:p-2">
               <div class="mx-auto flex h-full w-fit flex-col justify-center">
                 <span class="text-sm">PXX: {getdriver(pick?.pxx ?? "")?.code}</span>
                 <span class="text-sm">DNF: {getdriver(pick?.dnf ?? "")?.code}</span>
