@@ -47,7 +47,7 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
 
   const fetch_raceresults = async (): Promise<RaceResult[]> => {
     // Don't expand races/pxxs/dnfs since we already fetched those
-    const raceresults: RaceResult[] = await locals.pb.collection("raceresults").getFullList();
+    const raceresults: RaceResult[] = await locals.pb.collection("raceresultsdesc").getFullList();
 
     return raceresults;
   };
