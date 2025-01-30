@@ -11,8 +11,10 @@
     Accordion,
     AccordionItem,
     getModalStore,
+    popup,
     type ModalSettings,
     type ModalStore,
+    type PopupSettings,
   } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
   import {
@@ -90,6 +92,14 @@
   const graphicfallback = (graphic: string | undefined, fallback: string): string =>
     graphic ?? get_by_value(data.graphics, "name", fallback)?.file_url ?? "Invalid";
 
+  const race_popupsettings = (target: string): PopupSettings => {
+    return {
+      event: "click",
+      target: target,
+      placement: "right",
+    };
+  };
+
   // Define the background colors the picks will have depending on the raceresult
   const pxxcolors: string[] = [];
   pxxcolors[-1] = "auto";
@@ -143,7 +153,6 @@
                 <span class="w-12">Race:</span>
                 <span>{formatdate(data.currentrace.racedate)}</span>
               </div>
-              <!-- TODO: Countdown to next sq/sr/q/race -->
               <div class="my-auto flex">
                 <div class="mr-1 mt-1">
                   <StopwatchIcon />
@@ -291,7 +300,10 @@
     {#each data.raceresults as result}
       {@const race = getrace(result.race)}
 
-      <div class="card mt-1 flex h-20 w-7 flex-col bg-surface-300 p-2 shadow lg:mt-2 lg:w-36">
+      <div
+        use:popup={race_popupsettings(race?.id ?? "Invalid")}
+        class="card mt-1 flex h-20 w-7 flex-col bg-surface-300 p-2 shadow lg:mt-2 lg:w-36"
+      >
         <span class="hidden text-sm font-bold lg:block">
           {race?.step}: {race?.name}
         </span>
@@ -299,6 +311,30 @@
           {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
         </span>
         <span class="hidden text-sm lg:block">{race?.racedate}</span>
+      </div>
+      <!-- The race result popup is triggered on click on the race -->
+      <div data-popup={race?.id ?? "Invalid"} class="card z-10 p-2 shadow">
+        <div class="flex flex-col gap-1">
+          {#each result.pxxs as pxx, index}
+            {@const driver = getdriver(pxx)}
+            <div class="flex gap-2">
+              <span class="w-8">P{(race?.pxx ?? -100) - 3 + index}:</span>
+              <span class="badge w-10 p-1" style="background: {pxxcolors[index]};">
+                {driver?.code}
+              </span>
+            </div>
+          {/each}
+
+          {#each result.dnfs as dnf}
+            {@const driver = getdriver(dnf)}
+            <div class="flex gap-2">
+              <span class="w-8">DNF:</span>
+              <span class="badge w-10 p-1" style="background: {dnfcolors[0]};">
+                {driver?.code}
+              </span>
+            </div>
+          {/each}
+        </div>
       </div>
     {/each}
   </div>
@@ -315,11 +351,11 @@
             src={graphicfallback(user.avatar_url, "driver_headshot_template")}
             imgwidth={AVATAR_WIDTH}
             imgheight={AVATAR_HEIGHT}
-            containerstyle="height: 35px; width: 35px;"
+            containerstyle="height: 40px; width: 40px;"
             imgclass="bg-surface-400 rounded-full"
           />
           <div
-            style="height: 35px; line-height: 35px;"
+            style="height: 40px; line-height: 40px;"
             class="ml-2 hidden text-nowrap text-center align-middle lg:block"
           >
             {user.username}
