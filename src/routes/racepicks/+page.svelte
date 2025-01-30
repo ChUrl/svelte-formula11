@@ -89,6 +89,21 @@
 
   const graphicfallback = (graphic: string | undefined, fallback: string): string =>
     graphic ?? get_by_value(data.graphics, "name", fallback)?.file_url ?? "Invalid";
+
+  // Define the background colors the picks will have depending on the raceresult
+  const pxxcolors: string[] = [];
+  pxxcolors[-1] = "auto";
+  pxxcolors[0] = "#C2FBCC"; // 1 Point
+  pxxcolors[6] = "#C2FBCC";
+  pxxcolors[1] = "#6CDB7E"; // 3 Points
+  pxxcolors[5] = "#6CDB7E";
+  pxxcolors[2] = "#07B725"; // 6 Points
+  pxxcolors[4] = "#07B725";
+  pxxcolors[3] = "#EFBF04"; // 10 Points
+
+  const dnfcolors: string[] = [];
+  dnfcolors[-1] = "auto";
+  dnfcolors[0] = "#EFBF04";
 </script>
 
 {#if data.currentrace}
@@ -273,12 +288,19 @@
         {#each data.raceresults as result}
           {@const race = getrace(result.race)}
           {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
+          {@const pxxcolor = pxxcolors[result.pxxs.indexOf(pick?.pxx ?? "Invalid")]}
+          {@const dnfcolor =
+            result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? dnfcolors[0] : dnfcolors[-1]}
 
           {#if pick}
             <div class="card mt-1 h-20 w-full bg-surface-300 p-1 lg:mt-2 lg:p-2">
-              <div class="mx-auto flex h-full w-fit flex-col justify-center">
-                <span class="text-sm">PXX: {getdriver(pick?.pxx ?? "")?.code}</span>
-                <span class="text-sm">DNF: {getdriver(pick?.dnf ?? "")?.code}</span>
+              <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
+                <span class="p-1 text-sm rounded-container-token" style="background: {pxxcolor};">
+                  {getdriver(pick?.pxx ?? "")?.code}
+                </span>
+                <span class="p-1 text-sm rounded-container-token" style="background: {dnfcolor};">
+                  {getdriver(pick?.dnf ?? "")?.code}
+                </span>
               </div>
             </div>
           {:else}
