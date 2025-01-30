@@ -117,11 +117,7 @@
 </script>
 
 {#if data.currentrace}
-  <Accordion
-    class="card mx-auto bg-surface-500 shadow"
-    regionPanel="pt-0"
-    width="w-full xl:w-[1090px]"
-  >
+  <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-0" width="w-full">
     <AccordionItem>
       <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
       <svelte:fragment slot="summary">
@@ -129,7 +125,7 @@
       </svelte:fragment>
       <svelte:fragment slot="content">
         <!-- Show information about the next race -->
-        <div class="justify-center gap-2 xl:flex">
+        <div class="justify-center gap-2 lg:flex">
           <div class="mt-2 flex gap-2">
             <div class="card flex w-full flex-col p-2 shadow">
               <span class="font-bold">
