@@ -164,7 +164,7 @@
                     imgwidth={AVATAR_WIDTH}
                     imgheight={AVATAR_HEIGHT}
                     containerstyle="height: 35px; width: 35px;"
-                    imgclass="shadow bg-transparent rounded-full"
+                    imgclass="bg-surface-400 rounded-full"
                   />
                 {/each}
               </div>
@@ -180,7 +180,7 @@
                     imgwidth={AVATAR_WIDTH}
                     imgheight={AVATAR_HEIGHT}
                     containerstyle="height: 35px; width: 35px;"
-                    imgclass="shadow bg-transparent rounded-full"
+                    imgclass="bg-surface-400 rounded-full"
                   />
                 {/each}
               </div>
@@ -202,7 +202,7 @@
     {#each data.raceresults as result}
       {@const race = getrace(result.race)}
 
-      <div class="card mt-2 flex h-20 w-7 flex-col bg-surface-300 p-2 shadow lg:w-36">
+      <div class="card mt-1 flex h-20 w-7 flex-col bg-surface-300 p-2 shadow lg:mt-2 lg:w-36">
         <span class="hidden text-sm font-bold lg:block">
           {race?.step}: {race?.name}
         </span>
@@ -227,7 +227,7 @@
             imgwidth={AVATAR_WIDTH}
             imgheight={AVATAR_HEIGHT}
             containerstyle="height: 35px; width: 35px;"
-            imgclass="shadow bg-transparent rounded-full"
+            imgclass="bg-surface-400 rounded-full"
           />
           <div
             style="height: 35px; line-height: 35px;"
@@ -242,14 +242,14 @@
           {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
 
           {#if pick}
-            <div class="card mt-2 h-20 w-full bg-surface-300 p-1 lg:p-2">
+            <div class="card mt-1 h-20 w-full bg-surface-300 p-1 lg:mt-2 lg:p-2">
               <div class="mx-auto flex h-full w-fit flex-col justify-center">
                 <span class="text-sm">PXX: {getdriver(pick?.pxx ?? "")?.code}</span>
                 <span class="text-sm">DNF: {getdriver(pick?.dnf ?? "")?.code}</span>
               </div>
             </div>
           {:else}
-            <div class="mt-2 h-20 w-full"></div>
+            <div class="mt-1 h-20 w-full lg:mt-2"></div>
           {/if}
         {/each}
       </div>
