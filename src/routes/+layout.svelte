@@ -290,8 +290,9 @@
           </div>
 
           <!-- Site logo -->
-          <Button href="/" color="primary"><span class="text-xl font-bold">Formula 11</span></Button
-          >
+          <Button href="/racepicks" color="primary">
+            <span class="text-xl font-bold">Formula 11</span>
+          </Button>
         </div>
       </svelte:fragment>
 
