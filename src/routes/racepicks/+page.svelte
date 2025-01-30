@@ -245,7 +245,48 @@
   <div>
     <!-- Make space for the avatars in the guess columns. -->
     <!-- Use mt-4 to account for 2x padding around the avatar. -->
-    <div class="mt-3 h-10 lg:mt-4"></div>
+    <div class="mt-3 h-10 lg:mt-4">
+      <div class="hidden h-5 text-sm font-bold lg:block">Points:</div>
+      <div class="flex h-full flex-col lg:h-5 lg:flex-row lg:gap-2">
+        <!-- Large Screens: -->
+        <span
+          class="hidden h-full w-full text-center align-middle text-sm rounded-container-token lg:block"
+          style="background: {pxxcolors[3]}; line-height: 20px;"
+        >
+          10
+        </span>
+        <span
+          class="hidden h-full w-full text-center align-middle text-sm rounded-container-token lg:block"
+          style="background: {pxxcolors[4]}; line-height: 20px;"
+        >
+          6
+        </span>
+        <span
+          class="hidden h-full w-full text-center align-middle text-sm rounded-container-token lg:block"
+          style="background: {pxxcolors[5]}; line-height: 20px;"
+        >
+          3
+        </span>
+        <span
+          class="hidden h-full w-full text-center align-middle text-sm rounded-container-token lg:block"
+          style="background: {pxxcolors[6]}; line-height: 20px;"
+        >
+          1
+        </span>
+
+        <!-- Small Screens: -->
+        <span
+          class="block h-full w-full rounded-tl-lg rounded-tr-lg lg:hidden"
+          style="background: {pxxcolors[3]};"
+        ></span>
+        <span class="block h-full w-full lg:hidden" style="background: {pxxcolors[4]};"></span>
+        <span class="block h-full w-full lg:hidden" style="background: {pxxcolors[5]};"></span>
+        <span
+          class="block h-full w-full rounded-bl-lg rounded-br-lg lg:hidden"
+          style="background: {pxxcolors[6]};"
+        ></span>
+      </div>
+    </div>
 
     {#each data.raceresults as result}
       {@const race = getrace(result.race)}
