@@ -1,5 +1,12 @@
 <script lang="ts">
-  import { Button, ChequeredFlagIcon, LazyImage, type DropdownOption } from "$lib/components";
+  import {
+    Button,
+    ChequeredFlagIcon,
+    Countdown,
+    LazyImage,
+    StopwatchIcon,
+    type DropdownOption,
+  } from "$lib/components";
   import {
     Accordion,
     AccordionItem,
@@ -18,6 +25,7 @@
   } from "$lib/config";
   import type { CurrentPickedUser, Driver, Race, RacePick } from "$lib/schema";
   import { get_by_value } from "$lib/database";
+  import { format } from "date-fns";
 
   let { data }: { data: PageData } = $props();
 
@@ -76,6 +84,9 @@
     (currentpickeduser: CurrentPickedUser) => !currentpickeduser.picked,
   );
 
+  const dateformat: string = "dd.MM' 'HH:mm";
+  const formatdate = (date: string): string => format(new Date(date), dateformat);
+
   const graphicfallback = (graphic: string | undefined, fallback: string): string =>
     graphic ?? get_by_value(data.graphics, "name", fallback)?.file_url ?? "Invalid";
 </script>
@@ -95,13 +106,35 @@
         <!-- Show information about the next race -->
         <div class="justify-center gap-2 xl:flex">
           <div class="mt-2 flex gap-2">
-            <!-- TODO: Make the contents into 2 columns -->
             <div class="card flex w-full flex-col p-2 shadow">
               <span class="font-bold">
                 Step {data.currentrace.step}: {data.currentrace.name}
               </span>
-              <span class="">Race: {data.currentrace.racedate}</span>
+              {#if data.currentrace.sprintdate}
+                <div class="flex gap-2">
+                  <span class="w-12">SQuali:</span>
+                  <span>{formatdate(data.currentrace.sprintqualidate)}</span>
+                </div>
+                <div class="flex gap-2">
+                  <span class="w-12">SRace:</span>
+                  <span>{formatdate(data.currentrace.sprintdate)}</span>
+                </div>
+              {/if}
+              <div class="flex gap-2">
+                <span class="w-12">Quali:</span>
+                <span>{formatdate(data.currentrace.qualidate)}</span>
+              </div>
+              <div class="flex gap-2">
+                <span class="w-12">Race:</span>
+                <span>{formatdate(data.currentrace.racedate)}</span>
+              </div>
               <!-- TODO: Countdown to next sq/sr/q/race -->
+              <div class="my-auto flex">
+                <div class="mr-1 mt-1">
+                  <StopwatchIcon />
+                </div>
+                <Countdown date={data.currentrace.racedate} extraclass="font-bold" />
+              </div>
             </div>
             <div class="card w-full p-2 shadow">
               <span class="text-nowrap font-bold">Track Layout:</span>
