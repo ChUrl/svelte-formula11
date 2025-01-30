@@ -312,6 +312,7 @@
         </span>
         <span class="hidden text-sm lg:block">{race?.racedate}</span>
       </div>
+
       <!-- The race result popup is triggered on click on the race -->
       <div data-popup={race?.id ?? "Invalid"} class="card z-10 p-2 shadow">
         <div class="flex flex-col gap-1">
@@ -344,7 +345,12 @@
     {#each data.currentpickedusers as user}
       {@const picks = data.racepicks.filter((pick: RacePick) => pick.user === user.id)}
 
-      <div class="card ml-1 mt-2 w-full p-1 shadow lg:ml-2 lg:p-2">
+      <div
+        class="card ml-1 mt-2 w-full p-1 shadow lg:ml-2 lg:p-2 {data.user &&
+        data.user.username === user.username
+          ? 'bg-primary-500'
+          : ''}"
+      >
         <!-- Avatar + name display at the top -->
         <div class="mx-auto flex h-10 w-fit">
           <LazyImage
