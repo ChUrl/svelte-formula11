@@ -80,7 +80,7 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     return races;
   };
 
-  // TODO: Duplicated code from data/season/+layout.server.ts
+  // TODO: Duplicated code from data/season/+layout.server.ts + users/+page.server.ts
   const fetch_graphics = async (): Promise<Graphic[]> => {
     const graphics: Graphic[] = await locals.pb
       .collection("graphics")

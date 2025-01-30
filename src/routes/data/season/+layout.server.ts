@@ -3,7 +3,7 @@ import type { LayoutServerLoad } from "./$types";
 
 // This "load" function runs serverside only, as it's located inside +layout.server.ts
 export const load: LayoutServerLoad = async ({ fetch, locals }) => {
-  // TODO: Duplicated code from racepicks/+page.server.ts
+  // TODO: Duplicated code from racepicks/+page.server.ts + users/+page.server.ts
   const fetch_graphics = async (): Promise<Graphic[]> => {
     const graphics: Graphic[] = await locals.pb
       .collection("graphics")

@@ -101,7 +101,7 @@
                 Step {data.currentrace.step}: {data.currentrace.name}
               </span>
               <span class="">Race: {data.currentrace.racedate}</span>
-              <!-- TODO: Countdown -->
+              <!-- TODO: Countdown to next sq/sr/q/race -->
             </div>
             <div class="card w-full p-2 shadow">
               <span class="text-nowrap font-bold">Track Layout:</span>
