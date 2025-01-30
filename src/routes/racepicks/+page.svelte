@@ -384,10 +384,16 @@
           {#if pick}
             <div class="card mt-1 h-20 w-full bg-surface-300 p-1 lg:mt-2 lg:p-2">
               <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
-                <span class="p-1 text-sm rounded-container-token" style="background: {pxxcolor};">
+                <span
+                  class="p-1 text-center text-sm rounded-container-token"
+                  style="background: {pxxcolor};"
+                >
                   {getdriver(pick?.pxx ?? "")?.code}
                 </span>
-                <span class="p-1 text-sm rounded-container-token" style="background: {dnfcolor};">
+                <span
+                  class="p-1 text-center text-sm rounded-container-token"
+                  style="background: {dnfcolor};"
+                >
                   {getdriver(pick?.dnf ?? "")?.code}
                 </span>
               </div>
