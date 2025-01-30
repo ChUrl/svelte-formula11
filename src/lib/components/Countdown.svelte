@@ -33,7 +33,7 @@
 
 <span class={extraclass}>
   {#if distance > 0}
-    {days + "d " + hours + "h " + minutes + "m " + seconds + "s"}
+    {days + "d " + hours + "h " + minutes + "m "}
   {:else}
     GO GO GO GO
   {/if}
