@@ -21,6 +21,7 @@ import ChequeredFlagIcon from "./svg/ChequeredFlagIcon.svelte";
 import MenuDrawerIcon from "./svg/MenuDrawerIcon.svelte";
 import NameIcon from "./svg/NameIcon.svelte";
 import PasswordIcon from "./svg/PasswordIcon.svelte";
+import StopwatchIcon from "./svg/StopwatchIcon.svelte";
 import UserIcon from "./svg/UserIcon.svelte";
 
 export {
@@ -52,5 +53,6 @@ export {
   NameIcon,
   MenuDrawerIcon,
   PasswordIcon,
+  StopwatchIcon,
   UserIcon,
 };
