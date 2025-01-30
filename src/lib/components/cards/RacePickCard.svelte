@@ -112,7 +112,7 @@
         input_variable={pxx_select_value}
         action={register_pxx_preview_handler}
         options={driver_select_options}
-        labelwidth="120px"
+        labelwidth="60px"
         disabled={disable_inputs}
       >
         P{currentrace?.pxx ?? "XX"}
@@ -123,7 +123,7 @@
         name="dnf"
         input_variable={dnf_select_value}
         options={driver_select_options}
-        labelwidth="120px"
+        labelwidth="60px"
         disabled={disable_inputs}
       >
         DNF
