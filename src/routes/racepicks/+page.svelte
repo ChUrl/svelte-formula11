@@ -310,12 +310,14 @@
         <span class="block rotate-90 text-sm font-bold lg:hidden">
           {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
         </span>
-        <span class="hidden text-sm lg:block">{race?.racedate}</span>
+        <span class="hidden text-sm lg:block">Date: {formatdate(race?.racedate ?? "")}</span>
+        <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
       </div>
 
       <!-- The race result popup is triggered on click on the race -->
       <div data-popup={race?.id ?? "Invalid"} class="card z-10 p-2 shadow">
-        <div class="flex flex-col gap-1">
+        <span class="font-bold">Result:</span>
+        <div class="mt-2 flex flex-col gap-1">
           {#each result.pxxs as pxx, index}
             {@const driver = getdriver(pxx)}
             <div class="flex gap-2">
@@ -325,6 +327,10 @@
               </span>
             </div>
           {/each}
+
+          {#if result.dnfs.length > 0}
+            <hr class="border-black" style="border-style: inset;" />
+          {/if}
 
           {#each result.dnfs as dnf}
             {@const driver = getdriver(dnf)}
