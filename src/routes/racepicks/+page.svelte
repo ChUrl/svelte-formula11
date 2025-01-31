@@ -149,7 +149,7 @@
                 <span class="w-12">Race:</span>
                 <span>{formatdate(data.currentrace.racedate)}</span>
               </div>
-              <div class="my-auto flex">
+              <div class="m-auto flex">
                 <div class="mr-1 mt-1">
                   <StopwatchIcon />
                 </div>
