@@ -45,6 +45,7 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     return currentpickedusers;
   };
 
+  // TODO: Duplicated code from data/raceresults/+page.server.ts
   const fetch_raceresults = async (): Promise<RaceResult[]> => {
     // Don't expand races/pxxs/dnfs since we already fetched those
     const raceresults: RaceResult[] = await locals.pb.collection("raceresultsdesc").getFullList();
@@ -52,7 +53,7 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     return raceresults;
   };
 
-  // TODO: Duplicated code from data/season/+layout.server.ts
+  // TODO: Duplicated code from data/season/+layout.server.ts and data/raceresults/+page.server.ts
   const fetch_drivers = async (): Promise<Driver[]> => {
     const drivers: Driver[] = await locals.pb.collection("drivers").getFullList({
       sort: "+code",
@@ -66,7 +67,7 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     return drivers;
   };
 
-  // TODO: Duplicated code from data/season/+layout.server.ts
+  // TODO: Duplicated code from data/season/+layout.server.ts and data/raceresults/+page.server.ts
   const fetch_races = async (): Promise<Race[]> => {
     const races: Race[] = await locals.pb.collection("races").getFullList({
       sort: "+step",

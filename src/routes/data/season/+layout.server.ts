@@ -30,7 +30,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals }) => {
     return teams;
   };
 
-  // TODO: Duplicated code from racepicks/+page.server.ts
+  // TODO: Duplicated code from racepicks/+page.server.ts and data/raceresults/+page.server.ts
   const fetch_drivers = async (): Promise<Driver[]> => {
     const drivers: Driver[] = await locals.pb.collection("drivers").getFullList({
       sort: "+code",
@@ -44,7 +44,7 @@ export const load: LayoutServerLoad = async ({ fetch, locals }) => {
     return drivers;
   };
 
-  // TODO: Duplicated code from racepicks/+page.server.ts
+  // TODO: Duplicated code from racepicks/+page.server.ts and data/raceresults/+page.server.ts
   const fetch_races = async (): Promise<Race[]> => {
     const races: Race[] = await locals.pb.collection("races").getFullList({
       sort: "+step",
