@@ -19,7 +19,7 @@
       data_value_name: "race",
       label: "Race",
       valuefun: async (value: string): Promise<string> =>
-        `<span class='badge variant-filled-surface'>${get_by_value(data.races, "id", value)?.name}</span>`,
+        `<span>${get_by_value(data.races, "id", value)?.name}</span>`,
     },
     {
       data_value_name: "race",
@@ -34,7 +34,7 @@
         const pxxs_array: string[] = value.toString().split(",");
         const pxxs_codes: string[] = pxxs_array.map(
           (id: string, index: number) =>
-            `<span class='badge mr-2' style='background: ${PXX_COLORS[index]};'>${get_by_value(data.drivers, "id", id)?.code ?? "Invalid"}</span>`,
+            `<span class='w-10 badge mr-2 text-center' style='background: ${PXX_COLORS[index]};'>${get_by_value(data.drivers, "id", id)?.code ?? "Invalid"}</span>`,
         );
 
         return pxxs_codes.join("");
@@ -49,7 +49,7 @@
         const dnfs_array: string[] = value.toString().split(",");
         const dnfs_codes: string[] = dnfs_array.map(
           (id: string) =>
-            `<span class='badge mr-2' style='background: ${PXX_COLORS[3]}'>${get_by_value(data.drivers, "id", id)?.code ?? "Invalid"}</span>`,
+            `<span class='w-10 text-center badge mr-2' style='background: ${PXX_COLORS[3]}'>${get_by_value(data.drivers, "id", id)?.code ?? "Invalid"}</span>`,
         );
 
         return dnfs_codes.join("");
@@ -80,6 +80,8 @@
         disable_inputs: !data.admin,
       },
     };
+
+    modalStore.trigger(modalSettings);
   };
 </script>
 
