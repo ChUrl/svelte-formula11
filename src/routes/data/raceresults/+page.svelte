@@ -4,6 +4,7 @@
   import { Button, Table, type TableColumn } from "$lib/components";
   import { get_by_value } from "$lib/database";
   import type { Driver } from "$lib/schema";
+  import { PXX_COLORS } from "$lib/config";
 
   let { data }: { data: PageData } = $props();
 
@@ -32,10 +33,11 @@
       valuefun: async (value: string): Promise<string> => {
         const pxxs_array: string[] = value.toString().split(",");
         const pxxs_codes: string[] = pxxs_array.map(
-          (id: string) => get_by_value(data.drivers, "id", id)?.code ?? "Invalid",
+          (id: string, index: number) =>
+            `<span class='badge mr-2' style='background: ${PXX_COLORS[index]};'>${get_by_value(data.drivers, "id", id)?.code ?? "Invalid"}</span>`,
         );
 
-        return pxxs_codes.join(" - ");
+        return pxxs_codes.join("");
       },
     },
     {
@@ -46,10 +48,11 @@
 
         const dnfs_array: string[] = value.toString().split(",");
         const dnfs_codes: string[] = dnfs_array.map(
-          (id: string) => get_by_value(data.drivers, "id", id)?.code ?? "Invalid",
+          (id: string) =>
+            `<span class='badge mr-2' style='background: ${PXX_COLORS[3]}'>${get_by_value(data.drivers, "id", id)?.code ?? "Invalid"}</span>`,
         );
 
-        return dnfs_codes.join(" - ");
+        return dnfs_codes.join("");
       },
     },
   ];
