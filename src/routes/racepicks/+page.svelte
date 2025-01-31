@@ -248,48 +248,44 @@
 <!-- The fookin table -->
 <div class="flex">
   <div>
-    <!-- Make space for the avatars in the guess columns. -->
-    <!-- Use mt-4 to account for 2x padding around the avatar. -->
-    <div class="mt-3 h-10 lg:mt-4">
+    <!-- Points color coding legend -->
+    <!-- Use mt-3/mt-4 to account for 2x padding around the avatar. -->
+    <div class="mt-4 h-10">
       <div class="hidden h-5 text-sm font-bold lg:block">Points:</div>
-      <div class="flex h-full flex-col lg:h-5 lg:flex-row lg:gap-2">
+      <div
+        class="flex h-full flex-col overflow-hidden rounded-b-lg rounded-t-lg shadow lg:h-5 lg:flex-row lg:!rounded-l-lg lg:!rounded-r-lg lg:rounded-b-none lg:rounded-t-none"
+      >
         <!-- Large Screens: -->
         <span
-          class="hidden h-full w-full text-center align-middle text-sm rounded-container-token lg:block"
+          class="hidden h-full w-full text-center align-middle text-sm lg:block"
           style="background: {pxxcolors[3]}; line-height: 20px;"
         >
           10
         </span>
         <span
-          class="hidden h-full w-full text-center align-middle text-sm rounded-container-token lg:block"
+          class="hidden h-full w-full text-center align-middle text-sm lg:block"
           style="background: {pxxcolors[4]}; line-height: 20px;"
         >
           6
         </span>
         <span
-          class="hidden h-full w-full text-center align-middle text-sm rounded-container-token lg:block"
+          class="hidden h-full w-full text-center align-middle text-sm lg:block"
           style="background: {pxxcolors[5]}; line-height: 20px;"
         >
           3
         </span>
         <span
-          class="hidden h-full w-full text-center align-middle text-sm rounded-container-token lg:block"
+          class="hidden h-full w-full text-center align-middle text-sm lg:block"
           style="background: {pxxcolors[6]}; line-height: 20px;"
         >
           1
         </span>
 
         <!-- Small Screens: -->
-        <span
-          class="block h-full w-full rounded-tl-lg rounded-tr-lg lg:hidden"
-          style="background: {pxxcolors[3]};"
-        ></span>
+        <span class="block h-full w-full lg:hidden" style="background: {pxxcolors[3]};"></span>
         <span class="block h-full w-full lg:hidden" style="background: {pxxcolors[4]};"></span>
         <span class="block h-full w-full lg:hidden" style="background: {pxxcolors[5]};"></span>
-        <span
-          class="block h-full w-full rounded-bl-lg rounded-br-lg lg:hidden"
-          style="background: {pxxcolors[6]};"
-        ></span>
+        <span class="block h-full w-full lg:hidden" style="background: {pxxcolors[6]};"></span>
       </div>
     </div>
 
@@ -298,7 +294,7 @@
 
       <div
         use:popup={race_popupsettings(race?.id ?? "Invalid")}
-        class="card mt-1 flex h-20 w-7 flex-col bg-surface-300 p-2 shadow lg:mt-2 lg:w-36"
+        class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
       >
         <span class="hidden text-sm font-bold lg:block">
           {race?.step}: {race?.name}
@@ -348,7 +344,7 @@
       {@const picks = data.racepicks.filter((pick: RacePick) => pick.user === user.id)}
 
       <div
-        class="card ml-1 mt-2 w-full p-1 shadow lg:ml-2 lg:p-2 {data.user &&
+        class="card ml-1 mt-2 w-full overflow-hidden py-2 lg:ml-2 {data.user &&
         data.user.username === user.username
           ? 'bg-primary-500'
           : ''}"
@@ -378,7 +374,7 @@
             result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? dnfcolors[0] : dnfcolors[-1]}
 
           {#if pick}
-            <div class="card mt-1 h-20 w-full bg-surface-300 p-1 lg:mt-2 lg:p-2">
+            <div class="mt-2 h-20 w-full border-b border-t bg-surface-300 p-1 shadow lg:p-2">
               <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
                 <span
                   class="p-1 text-center text-sm rounded-container-token"
@@ -395,7 +391,7 @@
               </div>
             </div>
           {:else}
-            <div class="mt-1 h-20 w-full lg:mt-2"></div>
+            <div class="mt-2 h-20 w-full"></div>
           {/if}
         {/each}
       </div>
