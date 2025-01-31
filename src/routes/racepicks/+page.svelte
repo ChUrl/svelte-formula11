@@ -300,7 +300,7 @@
             {@const driver = getdriver(pxx)}
             <div class="flex gap-2">
               <span class="w-8">P{(race?.pxx ?? -100) - 3 + index}:</span>
-              <span class="badge w-10 p-1" style="background: {PXX_COLORS[index]};">
+              <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[index]};">
                 {driver?.code}
               </span>
             </div>
@@ -314,7 +314,7 @@
             {@const driver = getdriver(dnf)}
             <div class="flex gap-2">
               <span class="w-8">DNF:</span>
-              <span class="badge w-10 p-1" style="background: {PXX_COLORS[3]};">
+              <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[3]};">
                 {driver?.code}
               </span>
             </div>
