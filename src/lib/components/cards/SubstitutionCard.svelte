@@ -170,7 +170,13 @@
             Delete
           </Button>
         {:else}
-          <Button formaction="?/create_substitution" color="tertiary" submit width="w-full">
+          <Button
+            formaction="?/create_substitution"
+            color="tertiary"
+            submit
+            width="w-full"
+            disabled={disable_inputs}
+          >
             Create Substitution
           </Button>
         {/if}

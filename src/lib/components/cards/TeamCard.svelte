@@ -108,7 +108,9 @@
         disabled={disable_inputs}
         required={require_inputs}
       >
-        <svelte:fragment slot="message"><span class="font-bold">Upload Banner</span></svelte:fragment>
+        <svelte:fragment slot="message"
+          ><span class="font-bold">Upload Banner</span></svelte:fragment
+        >
       </FileDropzone>
 
       <!-- Logo upload -->
@@ -156,9 +158,15 @@
             Delete
           </Button>
         {:else}
-          <Button formaction="?/create_team" color="tertiary" submit width="w-full"
-            >Create Team</Button
+          <Button
+            formaction="?/create_team"
+            color="tertiary"
+            submit
+            width="w-full"
+            disabled={disable_inputs}
           >
+            Create Team
+          </Button>
         {/if}
       </div>
     </div>
