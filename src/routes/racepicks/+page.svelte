@@ -22,6 +22,7 @@
     AVATAR_WIDTH,
     DRIVER_HEADSHOT_HEIGHT,
     DRIVER_HEADSHOT_WIDTH,
+    PXX_COLORS,
     RACE_PICTOGRAM_HEIGHT,
     RACE_PICTOGRAM_WIDTH,
   } from "$lib/config";
@@ -99,21 +100,6 @@
       placement: "right",
     };
   };
-
-  // Define the background colors the picks will have depending on the raceresult
-  const pxxcolors: string[] = [];
-  pxxcolors[-1] = "auto";
-  pxxcolors[0] = "#C2FBCC"; // 1 Point
-  pxxcolors[6] = "#C2FBCC";
-  pxxcolors[1] = "#6CDB7E"; // 3 Points
-  pxxcolors[5] = "#6CDB7E";
-  pxxcolors[2] = "#07B725"; // 6 Points
-  pxxcolors[4] = "#07B725";
-  pxxcolors[3] = "#EFBF04"; // 10 Points
-
-  const dnfcolors: string[] = [];
-  dnfcolors[-1] = "auto";
-  dnfcolors[0] = "#EFBF04";
 </script>
 
 {#if data.currentrace}
@@ -258,34 +244,34 @@
         <!-- Large Screens: -->
         <span
           class="hidden h-full w-full text-center align-middle text-sm lg:block"
-          style="background: {pxxcolors[3]}; line-height: 20px;"
+          style="background: {PXX_COLORS[3]}; line-height: 20px;"
         >
           10
         </span>
         <span
           class="hidden h-full w-full text-center align-middle text-sm lg:block"
-          style="background: {pxxcolors[4]}; line-height: 20px;"
+          style="background: {PXX_COLORS[4]}; line-height: 20px;"
         >
           6
         </span>
         <span
           class="hidden h-full w-full text-center align-middle text-sm lg:block"
-          style="background: {pxxcolors[5]}; line-height: 20px;"
+          style="background: {PXX_COLORS[5]}; line-height: 20px;"
         >
           3
         </span>
         <span
           class="hidden h-full w-full text-center align-middle text-sm lg:block"
-          style="background: {pxxcolors[6]}; line-height: 20px;"
+          style="background: {PXX_COLORS[6]}; line-height: 20px;"
         >
           1
         </span>
 
         <!-- Small Screens: -->
-        <span class="block h-full w-full lg:hidden" style="background: {pxxcolors[3]};"></span>
-        <span class="block h-full w-full lg:hidden" style="background: {pxxcolors[4]};"></span>
-        <span class="block h-full w-full lg:hidden" style="background: {pxxcolors[5]};"></span>
-        <span class="block h-full w-full lg:hidden" style="background: {pxxcolors[6]};"></span>
+        <span class="block h-full w-full lg:hidden" style="background: {PXX_COLORS[3]};"></span>
+        <span class="block h-full w-full lg:hidden" style="background: {PXX_COLORS[4]};"></span>
+        <span class="block h-full w-full lg:hidden" style="background: {PXX_COLORS[5]};"></span>
+        <span class="block h-full w-full lg:hidden" style="background: {PXX_COLORS[6]};"></span>
       </div>
     </div>
 
@@ -314,7 +300,7 @@
             {@const driver = getdriver(pxx)}
             <div class="flex gap-2">
               <span class="w-8">P{(race?.pxx ?? -100) - 3 + index}:</span>
-              <span class="badge w-10 p-1" style="background: {pxxcolors[index]};">
+              <span class="badge w-10 p-1" style="background: {PXX_COLORS[index]};">
                 {driver?.code}
               </span>
             </div>
@@ -328,7 +314,7 @@
             {@const driver = getdriver(dnf)}
             <div class="flex gap-2">
               <span class="w-8">DNF:</span>
-              <span class="badge w-10 p-1" style="background: {dnfcolors[0]};">
+              <span class="badge w-10 p-1" style="background: {PXX_COLORS[3]};">
                 {driver?.code}
               </span>
             </div>
@@ -369,9 +355,9 @@
         {#each data.raceresults as result}
           {@const race = getrace(result.race)}
           {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
-          {@const pxxcolor = pxxcolors[result.pxxs.indexOf(pick?.pxx ?? "Invalid")]}
+          {@const pxxcolor = PXX_COLORS[result.pxxs.indexOf(pick?.pxx ?? "Invalid")]}
           {@const dnfcolor =
-            result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? dnfcolors[0] : dnfcolors[-1]}
+            result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? PXX_COLORS[3] : PXX_COLORS[-1]}
 
           {#if pick}
             <div class="mt-2 h-20 w-full border-b border-t bg-surface-300 p-1 shadow lg:p-2">

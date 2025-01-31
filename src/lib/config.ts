@@ -32,3 +32,14 @@ export const RACE_PICTOGRAM_HEIGHT: number = 384;
 
 // export const SUBSTITUTION_CARD_ASPECT_WIDTH: number = 413;
 // export const SUBSTITUTION_CARD_ASPECT_HEIGHT: number = 625;
+
+// Define the background colors the picks will have depending on the raceresult
+export const PXX_COLORS: string[] = [];
+PXX_COLORS[-1] = "auto";
+PXX_COLORS[0] = "#C2FBCC"; // 1 Point
+PXX_COLORS[6] = "#C2FBCC";
+PXX_COLORS[1] = "#6CDB7E"; // 3 Points
+PXX_COLORS[5] = "#6CDB7E";
+PXX_COLORS[2] = "#07B725"; // 6 Points
+PXX_COLORS[4] = "#07B725";
+PXX_COLORS[3] = "#EFBF04"; // 10 Points
