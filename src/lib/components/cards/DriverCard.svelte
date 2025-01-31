@@ -173,7 +173,7 @@
             color="tertiary"
             submit
             width="w-full"
-            disable={disable_inputs}
+            disabled={disable_inputs}
           >
             Create Driver
           </Button>
