@@ -1,0 +1,32 @@
+name: Build Pocketbase Docker Image
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - ".gitea/workflows/pocketbase-docker.yaml"
+      - "pocketbase.dockerfile"
+
+env:
+  PB_VERSION: 0.25.0
+
+
+jobs:
+  pocketbase-docker:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Login to container registry
+        uses: docker/login-action@v3
+        with:
+          registry: gitea.vps.chriphost.de
+          username: ${{ secrets.CONTAINER_REGISTRY_USER }}
+          password: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
+      - name: Build Docker Image
+        run: docker build . \
+                 --build-arg PB_VERSION=${{ PB_VERSION }} \
+                 --file pocketbase.dockerfile \
+                 --tag gitea.vps.chriphost.de/christoph/pocketbase:${{ PB_VERSION }}
+      - name: Push Docker Image
+        run: docker push gitea.vps.chriphost.de/christoph/pocketbase:${{ PB_VERSION }}
