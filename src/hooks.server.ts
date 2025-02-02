@@ -1,5 +1,6 @@
 import type { Graphic, User } from "$lib/schema";
 import type { Handle } from "@sveltejs/kit";
+import { env } from "$env/dynamic/private";
 import PocketBase from "pocketbase";
 
 // This function will run serverside on each request.
@@ -10,7 +11,15 @@ import PocketBase from "pocketbase";
 export const handle: Handle = async ({ event, resolve }) => {
   const requestStartTime: number = Date.now();
 
-  event.locals.pb = new PocketBase("http://192.168.86.50:8090");
+  // If env variables are defined (e.g. in the prod environment), use those.
+  // Otherwise use the default local development IP:Port.
+  // Because we imported "$env/dynamic/private",
+  // the variables will only be available to the server (e.g. .server.ts files).
+  const pb_url =
+    env.PB_HOST && env.PB_PORT
+      ? `http://${env.PB_HOST}:${env.PB_PORT}`
+      : "http://192.168.86.50:8090";
+  event.locals.pb = new PocketBase(pb_url);
 
   // Load the most recent authentication data from a cookie (is updated below)
   event.locals.pb.authStore.loadFromCookie(event.request.headers.get("cookie") || "");
