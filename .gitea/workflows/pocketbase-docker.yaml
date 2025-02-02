@@ -23,10 +23,10 @@ jobs:
           registry: gitea.vps.chriphost.de
           username: ${{ secrets.CONTAINER_REGISTRY_USER }}
           password: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
-      - name: Build Docker Image
+      - name: Build Pocketbase Docker Image
         run: docker build . \
                  --build-arg PB_VERSION=${{ PB_VERSION }} \
                  --file pocketbase.dockerfile \
                  --tag gitea.vps.chriphost.de/christoph/pocketbase:${{ PB_VERSION }}
-      - name: Push Docker Image
+      - name: Push Pocketbase Docker Image
         run: docker push gitea.vps.chriphost.de/christoph/pocketbase:${{ PB_VERSION }}
