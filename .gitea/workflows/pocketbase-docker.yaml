@@ -7,10 +7,6 @@ on:
       - ".gitea/workflows/pocketbase-docker.yaml"
       - "pocketbase.dockerfile"
 
-env:
-  PB_VERSION: 0.25.0
-
-
 jobs:
   pocketbase-docker:
     runs-on: ubuntu-22.04
@@ -24,6 +20,6 @@ jobs:
           username: ${{ secrets.CONTAINER_REGISTRY_USER }}
           password: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
       - name: Build Pocketbase Docker Image
-        run: docker build --build-arg PB_VERSION=${{ PB_VERSION }} --file pocketbase.dockerfile --tag gitea.vps.chriphost.de/christoph/pocketbase:${{ PB_VERSION }} .
+        run: docker build --build-arg PB_VERSION=0.25.0 --file pocketbase.dockerfile --tag gitea.vps.chriphost.de/christoph/pocketbase:0.25.0 .
       - name: Push Pocketbase Docker Image
-        run: docker push gitea.vps.chriphost.de/christoph/pocketbase:${{ PB_VERSION }}
+        run: docker push gitea.vps.chriphost.de/christoph/pocketbase:0.25.0
