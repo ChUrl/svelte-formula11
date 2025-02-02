@@ -142,7 +142,7 @@
           {
             name = "check";
             help = "Continuously monitor for SvelteKit issues";
-            command = "svelte-check --watch";
+            command = "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch";
           }
         ];
       };
