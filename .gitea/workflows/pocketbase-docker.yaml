@@ -2,7 +2,7 @@ name: Build Pocketbase Docker Image
 
 on:
   push:
-    branches: [main]
+    branches: [master]
     paths:
       - ".gitea/workflows/pocketbase-docker.yaml"
       - "pocketbase.dockerfile"
