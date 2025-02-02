@@ -6,9 +6,6 @@ COPY package*.json ./
 
 RUN npm ci
 
-# Sharp requires extra shit
-RUN npm install --os=linux --libc=musl --cpu=x64 --include=optional sharp
-
 COPY . .
 
 RUN npm run build
@@ -19,8 +16,7 @@ FROM node:23-alpine
 
 WORKDIR /app
 COPY --from=builder /app/build build/
-# If all deps are devDependencies, this should theoretically not be required
-# COPY --from=builder /app/node_modules node_modules/
+COPY --from=builder /app/node_modules node_modules/
 COPY package.json .
 
 EXPOSE 5173
