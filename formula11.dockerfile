@@ -7,7 +7,7 @@ COPY package*.json ./
 RUN npm ci
 
 # Sharp requires extra shit
-RUN npm install --include=optional sharp
+RUN npm install --os=linux --libc=musl --cpu=x64 --include=optional sharp
 
 COPY . .
 
