@@ -1,4 +1,6 @@
-FROM docker.io/library/alpine:latest
+# Lock the version because I had to pull the image manually,
+# because fucking Docker thinks "toomanyrequests". Fuckers
+FROM docker.io/library/alpine:3.21.2
 
 ARG PB_VERSION=0.25.0
 
