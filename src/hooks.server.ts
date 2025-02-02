@@ -15,10 +15,14 @@ export const handle: Handle = async ({ event, resolve }) => {
   // Otherwise use the default local development IP:Port.
   // Because we imported "$env/dynamic/private",
   // the variables will only be available to the server (e.g. .server.ts files).
-  const pb_url =
-    env.PB_HOST && env.PB_PORT
-      ? `http://${env.PB_HOST}:${env.PB_PORT}`
-      : "http://192.168.86.50:8090";
+  let pb_url: string = "http://192.168.86.50:8090";
+  if (env.PB_PROTOCOL && env.PB_HOST && env.PB_PORT) {
+    pb_url = `${env.PB_PROTOCOL}://${env.PB_HOST}:${env.PB_PORT}`;
+  }
+  if (env.PB_PROTOCOL && env.PB_URL) {
+    pb_url = `${env.PB_PROTOCOL}://${env.PB_URL}`;
+  }
+
   event.locals.pb = new PocketBase(pb_url);
 
   // Load the most recent authentication data from a cookie (is updated below)
