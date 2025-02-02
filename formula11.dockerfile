@@ -6,6 +6,9 @@ COPY package*.json ./
 
 RUN npm ci
 
+# Sharp requires extra shit
+RUN npm install --include=optional sharp
+
 COPY . .
 
 RUN npm run build
