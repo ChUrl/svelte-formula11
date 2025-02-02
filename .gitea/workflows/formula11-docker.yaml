@@ -1,0 +1,25 @@
+name: Build Formula11 Docker Image
+
+on:
+  push:
+    branches: [master]
+    # paths:
+    #   - ".gitea/workflows/pocketbase-docker.yaml"
+    #   - "pocketbase.dockerfile"
+
+jobs:
+  pocketbase-docker:
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Login to container registry
+        uses: docker/login-action@v3
+        with:
+          registry: gitea.vps.chriphost.de
+          username: ${{ secrets.CONTAINER_REGISTRY_USER }}
+          password: ${{ secrets.CONTAINER_REGISTRY_TOKEN }}
+      - name: Build Pocketbase Docker Image
+        run: docker build --build-arg PB_VERSION=0.25.0 --file pocketbase.dockerfile --tag gitea.vps.chriphost.de/christoph/pocketbase:0.25.0 .
+      - name: Push Pocketbase Docker Image
+        run: docker push gitea.vps.chriphost.de/christoph/pocketbase:0.25.0
