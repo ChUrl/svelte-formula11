@@ -38,6 +38,15 @@
 
     /** Additional classes to insert */
     extraclass?: string;
+
+    /** An optional onclick event for the button */
+    onclick?: (event: Event) => void;
+
+    /** An optional formaction for the button */
+    formaction?: string;
+
+    /** Optionally disable the button */
+    disabled?: boolean;
   }
 
   let {
@@ -51,6 +60,9 @@
     trigger_popup = { event: "click", target: "invalid" },
     shadow = false,
     extraclass = "",
+    onclick = () => {},
+    formaction = undefined,
+    disabled = false,
     ...restProps
   }: ButtonProps = $props();
 </script>
@@ -63,8 +75,11 @@
       : ''} {activate_href && is_at_path(href) ? 'btn-hover' : ''} {shadow
       ? 'shadow'
       : ''} {extraclass}"
-    {...restProps}>{@render children()}</a
+    {onclick}
+    {...restProps}
   >
+    {@render children()}
+  </a>
 {:else}
   <button
     type={submit ? "submit" : "button"}
@@ -73,6 +88,11 @@
       : ''} {shadow ? 'shadow' : ''} {extraclass}"
     draggable="false"
     use:popup={trigger_popup}
-    {...restProps}>{@render children()}</button
+    {onclick}
+    {formaction}
+    {disabled}
+    {...restProps}
   >
+    {@render children()}
+  </button>
 {/if}
