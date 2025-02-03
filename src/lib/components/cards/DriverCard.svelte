@@ -24,6 +24,8 @@
     headshot_template?: string;
 
     /** The value this component's team select dropdown will bind to */
+    // TODO: Move this into this component? Why am I passing it from the outside?
+    //       This also applies to the other card components...
     team_select_value: string;
 
     /** The options this component's team select dropdown will display */
