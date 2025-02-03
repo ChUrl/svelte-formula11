@@ -6,10 +6,10 @@
     type AutocompleteOption,
     type ModalStore,
   } from "@skeletonlabs/skeleton";
-  import { Button, Card, Dropdown, type DropdownOption } from "$lib/components";
+  import { Button, Card, Dropdown } from "$lib/components";
   import type { Driver, Race, RaceResult } from "$lib/schema";
   import { get_by_value } from "$lib/database";
-  import { RACE_PICTOGRAM_HEIGHT, RACE_PICTOGRAM_WIDTH } from "$lib/config";
+  import { race_dropdown_options } from "$lib/dropdown";
 
   interface RaceResultCardProps {
     /** The [RaceResult] object used to prefill values. */
@@ -64,15 +64,6 @@
   const require_inputs2 = require_inputs;
 
   let race_select_value: string = currentrace?.id ?? "";
-  const race_select_options: DropdownOption[] = races2.map((race: Race) => {
-    return {
-      label: race.name,
-      value: race.id,
-      icon_url: race.pictogram_url,
-      icon_width: RACE_PICTOGRAM_WIDTH,
-      icon_height: RACE_PICTOGRAM_HEIGHT,
-    };
-  });
 
   let pxxs_input: string = $state("");
   let pxxs_chips: string[] = $state(
@@ -160,7 +151,7 @@
     <Dropdown
       name="race"
       input_variable={race_select_value}
-      options={race_select_options}
+      options={race_dropdown_options(races2)}
       labelwidth="70px"
       disabled={disable_inputs2}
       required={require_inputs2}

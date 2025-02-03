@@ -2,14 +2,8 @@
   import { get_by_value } from "$lib/database";
   import { getModalStore, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
-  import type { Driver, Race, Substitution } from "$lib/schema";
+  import type { Race, Substitution } from "$lib/schema";
   import { Button, Table, type DropdownOption, type TableColumn } from "$lib/components";
-  import {
-    DRIVER_HEADSHOT_HEIGHT,
-    DRIVER_HEADSHOT_WIDTH,
-    RACE_PICTOGRAM_HEIGHT,
-    RACE_PICTOGRAM_WIDTH,
-  } from "$lib/config";
 
   let { data }: { data: PageData } = $props();
 
@@ -26,33 +20,6 @@
   update_substitution_substitute_select_values["create"] = "";
   update_substitution_for_select_values["create"] = "";
   update_substitution_race_select_values["create"] = "";
-
-  // TODO: Duplicated code in substitutions/+page.svelte
-  const driver_dropdown_options: DropdownOption[] = [];
-  data.drivers.then((drivers: Driver[]) =>
-    drivers.forEach((driver: Driver) => {
-      driver_dropdown_options.push({
-        label: driver.code,
-        value: driver.id,
-        icon_url: driver.headshot_url,
-        icon_width: DRIVER_HEADSHOT_WIDTH,
-        icon_height: DRIVER_HEADSHOT_HEIGHT,
-      });
-    }),
-  );
-
-  const race_dropdown_options: DropdownOption[] = [];
-  data.races.then((races: Race[]) =>
-    races.forEach((race: Race) => {
-      race_dropdown_options.push({
-        label: race.name,
-        value: race.id,
-        icon_url: race.pictogram_url,
-        icon_width: RACE_PICTOGRAM_WIDTH,
-        icon_height: RACE_PICTOGRAM_HEIGHT,
-      });
-    }),
-  );
 
   const substitutions_columns: TableColumn[] = [
     {
@@ -95,11 +62,10 @@
       meta: {
         substitution: substitution,
         drivers: await data.drivers,
+        races: await data.races,
         substitute_select_value: update_substitution_substitute_select_values[substitution.id],
         driver_select_value: update_substitution_for_select_values[substitution.id],
         race_select_value: update_substitution_race_select_values[substitution.id],
-        driver_select_options: driver_dropdown_options,
-        race_select_options: race_dropdown_options,
         disable_inputs: !data.admin,
       },
     };
@@ -113,12 +79,11 @@
       component: "substitutionCard",
       meta: {
         drivers: await data.drivers,
+        races: await data.races,
         substitute_select_value: update_substitution_substitute_select_values["create"],
         driver_select_value: update_substitution_for_select_values["create"],
         disable_inputs: !data.admin,
         race_select_value: update_substitution_race_select_values["create"],
-        driver_select_options: driver_dropdown_options,
-        race_select_options: race_dropdown_options,
         require_inputs: true,
         headshot_template:
           get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? "Invalid",

@@ -1,12 +1,5 @@
 <script lang="ts">
-  import {
-    Button,
-    ChequeredFlagIcon,
-    Countdown,
-    LazyImage,
-    StopwatchIcon,
-    type DropdownOption,
-  } from "$lib/components";
+  import { ChequeredFlagIcon, Countdown, LazyImage, StopwatchIcon } from "$lib/components";
   import {
     Accordion,
     AccordionItem,
@@ -42,18 +35,6 @@
   let pxx_select_value: string = $state(currentpick?.pxx ?? "");
   let dnf_select_value: string = $state(currentpick?.dnf ?? "");
 
-  // TODO: Duplicated code in cards/substitutioncard.svelte
-  const driver_dropdown_options: DropdownOption[] = [];
-  data.drivers.forEach((driver: Driver) => {
-    driver_dropdown_options.push({
-      label: driver.code,
-      value: driver.id,
-      icon_url: driver.headshot_url,
-      icon_width: DRIVER_HEADSHOT_WIDTH,
-      icon_height: DRIVER_HEADSHOT_HEIGHT,
-    });
-  });
-
   const modalStore: ModalStore = getModalStore();
   const create_guess_handler = async (event: Event) => {
     const modalSettings: ModalSettings = {
@@ -69,7 +50,6 @@
           get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? "Invalid",
         pxx_select_value: pxx_select_value,
         dnf_select_value: dnf_select_value,
-        driver_select_options: driver_dropdown_options,
       },
     };
 

@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { Card, Button, Dropdown, type DropdownOption } from "$lib/components";
+  import { Card, Button, Dropdown } from "$lib/components";
   import type { Driver, Race, RacePick, User } from "$lib/schema";
   import { get_by_value } from "$lib/database";
   import type { Action } from "svelte/action";
   import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
+  import { driver_dropdown_options } from "$lib/dropdown";
 
   interface RacePickCardProps {
     /** The [RacePick] object used to prefill values. */
@@ -30,9 +31,6 @@
 
     /** The value this component's dnf select dropdown will bind to */
     dnf_select_value: string;
-
-    /** The options this component's driver select dropdowns will display */
-    driver_select_options: DropdownOption[];
   }
 
   let {
@@ -44,7 +42,6 @@
     headshot_template = "",
     pxx_select_value,
     dnf_select_value,
-    driver_select_options,
   }: RacePickCardProps = $props();
 
   const modalStore: ModalStore = getModalStore();
@@ -60,7 +57,6 @@
     headshot_template = meta.headshot_template;
     pxx_select_value = meta.pxx_select_value;
     dnf_select_value = meta.dnf_select_value;
-    driver_select_options = meta.driver_select_options;
   }
 
   // This action is used on the <Dropdown> element.
@@ -111,7 +107,7 @@
         name="pxx"
         input_variable={pxx_select_value}
         action={register_pxx_preview_handler}
-        options={driver_select_options}
+        options={driver_dropdown_options(drivers)}
         labelwidth="60px"
         disabled={disable_inputs}
       >
@@ -122,7 +118,7 @@
       <Dropdown
         name="dnf"
         input_variable={dnf_select_value}
-        options={driver_select_options}
+        options={driver_dropdown_options(drivers)}
         labelwidth="60px"
         disabled={disable_inputs}
       >

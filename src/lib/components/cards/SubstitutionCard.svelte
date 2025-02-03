@@ -1,10 +1,11 @@
 <script lang="ts">
-  import { Card, Button, Dropdown, type DropdownOption } from "$lib/components";
-  import type { Driver, Substitution } from "$lib/schema";
+  import { Card, Button, Dropdown } from "$lib/components";
+  import type { Driver, Race, Substitution } from "$lib/schema";
   import { get_by_value } from "$lib/database";
   import type { Action } from "svelte/action";
   import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
+  import { driver_dropdown_options, race_dropdown_options } from "$lib/dropdown";
 
   interface SubstitutionCardProps {
     /** The [Substitution] object used to prefill values. */
@@ -12,6 +13,8 @@
 
     /** The drivers (to display the headshot) */
     drivers: Driver[];
+
+    races: Race[];
 
     /** Disable all inputs if [true] */
     disable_inputs?: boolean;
@@ -30,25 +33,18 @@
 
     /** The value this component's race select dropdown will bind to */
     race_select_value: string;
-
-    /** The options this component's substitute/driver select dropdowns will display */
-    driver_select_options: DropdownOption[];
-
-    /** The options this component's race select dropdown will display */
-    race_select_options: DropdownOption[];
   }
 
   let {
     substitution = undefined,
     drivers,
+    races,
     disable_inputs = false,
     require_inputs = false,
     headshot_template = "",
     substitute_select_value,
     driver_select_value,
     race_select_value,
-    driver_select_options,
-    race_select_options,
   }: SubstitutionCardProps = $props();
 
   const modalStore: ModalStore = getModalStore();
@@ -58,12 +54,11 @@
     // Stuff thats required for the "update" card
     substitution = meta.substitution;
     drivers = meta.drivers;
+    races = meta.races;
     disable_inputs = meta.disable_inputs;
     substitute_select_value = meta.substitute_select_value;
     driver_select_value = meta.driver_select_value;
     race_select_value = meta.race_select_value;
-    driver_select_options = meta.driver_select_options;
-    race_select_options = meta.race_select_options;
 
     // Stuff thats additionally required for the "create" card
     require_inputs = meta.require_inputs;
@@ -116,7 +111,7 @@
         name="substitute"
         input_variable={substitute_select_value}
         action={register_substitute_preview_handler}
-        options={driver_select_options}
+        options={driver_dropdown_options(drivers)}
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}
@@ -128,7 +123,7 @@
       <Dropdown
         name="for"
         input_variable={driver_select_value}
-        options={driver_select_options}
+        options={driver_dropdown_options(drivers)}
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}
@@ -140,7 +135,7 @@
       <Dropdown
         name="race"
         input_variable={race_select_value}
-        options={race_select_options}
+        options={race_dropdown_options(races)}
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}

@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { Button, type DropdownOption, type TableColumn, Table } from "$lib/components";
-  import { TEAM_LOGO_HEIGHT, TEAM_LOGO_WIDTH } from "$lib/config";
+  import { Button, type TableColumn, Table } from "$lib/components";
   import { get_by_value } from "$lib/database";
   import type { Driver, Team } from "$lib/schema";
   import { getModalStore, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
@@ -18,18 +17,6 @@
   );
   update_driver_team_select_values["create"] = "";
   update_driver_active_values["create"] = true;
-
-  // All options to create a <Dropdown> component for the teams
-  const team_dropdown_options: DropdownOption[] = [];
-  data.teams.forEach((team: Team) => {
-    team_dropdown_options.push({
-      label: team.name,
-      value: team.id,
-      icon_url: team.logo_url,
-      icon_width: TEAM_LOGO_WIDTH,
-      icon_height: TEAM_LOGO_HEIGHT,
-    });
-  });
 
   const drivers_columns: TableColumn[] = [
     {
@@ -70,8 +57,8 @@
       component: "driverCard",
       meta: {
         driver: driver,
+        teams: data.teams,
         team_select_value: update_driver_team_select_values[driver.id],
-        team_select_options: team_dropdown_options,
         active_value: update_driver_active_values[driver.id],
         disable_inputs: !data.admin,
       },
@@ -85,8 +72,8 @@
       type: "component",
       component: "driverCard",
       meta: {
+        teams: data.teams,
         team_select_value: update_driver_team_select_values["create"],
-        team_select_options: team_dropdown_options,
         active_value: update_driver_active_values["create"],
         disable_inputs: !data.admin,
         require_inputs: true,

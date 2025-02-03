@@ -6,13 +6,17 @@
     SlideToggle,
     type ModalStore,
   } from "@skeletonlabs/skeleton";
-  import { Button, Input, Card, Dropdown, type DropdownOption } from "$lib/components";
-  import type { Driver } from "$lib/schema";
+  import { Button, Input, Card, Dropdown } from "$lib/components";
+  import type { Driver, Team } from "$lib/schema";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
+  import { team_dropdown_options } from "$lib/dropdown";
 
   interface DriverCardProps {
     /** The [Driver] object used to prefill values. */
     driver?: Driver | undefined;
+
+    /** The teams (for the dropdown options) */
+    teams: Team[];
 
     /** Disable all inputs if [true] */
     disable_inputs?: boolean;
@@ -28,20 +32,17 @@
     //       This also applies to the other card components...
     team_select_value: string;
 
-    /** The options this component's team select dropdown will display */
-    team_select_options: DropdownOption[];
-
     /** The value this component's active switch will bind to */
     active_value: boolean;
   }
 
   let {
     driver = undefined,
+    teams,
     disable_inputs = false,
     require_inputs = false,
     headshot_template = undefined,
     team_select_value,
-    team_select_options,
     active_value,
   }: DriverCardProps = $props();
 
@@ -51,8 +52,8 @@
 
     // Stuff thats required for the "update" card
     driver = meta.driver;
+    teams = meta.teams;
     team_select_value = meta.team_select_value;
-    team_select_options = meta.team_select_options;
     active_value = meta.active_value;
     disable_inputs = meta.disable_inputs;
 
@@ -116,7 +117,7 @@
       <Dropdown
         name="team"
         input_variable={team_select_value}
-        options={team_select_options}
+        options={team_dropdown_options(teams)}
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}
