@@ -30,10 +30,6 @@
     logo_template = "",
   }: TeamCardProps = $props();
 
-  const labelwidth: string = "110px";
-
-  let colorpreview: string = $state(team?.color ?? "white");
-
   const modalStore: ModalStore = getModalStore();
   if ($modalStore[0].meta) {
     const meta = $modalStore[0].meta;
@@ -47,6 +43,10 @@
     banner_template = meta.banner_template;
     logo_template = meta.logo_template;
   }
+
+  const labelwidth: string = "110px";
+
+  let colorpreview: string = $state(team?.color ?? "white");
 </script>
 
 <Card
@@ -95,9 +95,9 @@
         }}
       >
         Color
-        <span class="badge ml-2 border" style="color: {colorpreview}; background: {colorpreview}"
-          >C</span
-        >
+        <span class="badge ml-2 border" style="color: {colorpreview}; background: {colorpreview}">
+          C
+        </span>
       </Input>
 
       <!-- Banner upload -->
