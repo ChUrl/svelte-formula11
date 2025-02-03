@@ -38,6 +38,23 @@ export const form_data_clean = (data: FormData, except: string[] = []): FormData
 };
 
 /**
+ * Remove the specified [keys] from the [data] object.
+ */
+export const form_data_remove = (data: FormData, keys: string[]): void => {
+  let delete_keys: string[] = [];
+
+  for (const [key, value] of data.entries()) {
+    if (keys.includes(key)) {
+      delete_keys.push(key);
+    }
+
+    delete_keys.forEach((key) => {
+      data.delete(key);
+    });
+  }
+};
+
+/**
  * Throws SvelteKit error(400) if form_data does not contain key.
  */
 export const form_data_ensure_key = (data: FormData, key: string): void => {
