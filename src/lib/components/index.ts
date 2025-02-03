@@ -12,6 +12,7 @@ import Card from "./cards/Card.svelte";
 import DriverCard from "./cards/DriverCard.svelte";
 import RaceCard from "./cards/RaceCard.svelte";
 import RacePickCard from "./cards/RacePickCard.svelte";
+import RaceResultCard from "./cards/RaceResultCard.svelte";
 import SubstitutionCard from "./cards/SubstitutionCard.svelte";
 import TeamCard from "./cards/TeamCard.svelte";
 
@@ -43,6 +44,7 @@ export {
   DriverCard,
   RaceCard,
   RacePickCard,
+  RaceResultCard,
   SubstitutionCard,
   TeamCard,
 

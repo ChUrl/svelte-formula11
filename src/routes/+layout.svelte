@@ -18,6 +18,7 @@
     SubstitutionCard,
     NameIcon,
     RacePickCard,
+    RaceResultCard,
   } from "$lib/components";
   import { get_avatar_preview_event_handler } from "$lib/image";
 
@@ -51,6 +52,7 @@
     driverCard: { ref: DriverCard },
     raceCard: { ref: RaceCard },
     racePickCard: { ref: RacePickCard },
+    raceResultCard: { ref: RaceResultCard },
     substitutionCard: { ref: SubstitutionCard },
   };
 
