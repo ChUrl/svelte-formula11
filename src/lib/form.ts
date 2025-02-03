@@ -47,11 +47,11 @@ export const form_data_remove = (data: FormData, keys: string[]): void => {
     if (keys.includes(key)) {
       delete_keys.push(key);
     }
-
-    delete_keys.forEach((key) => {
-      data.delete(key);
-    });
   }
+
+  delete_keys.forEach((key) => {
+    data.delete(key);
+  });
 };
 
 /**
