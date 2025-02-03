@@ -88,6 +88,8 @@
         placeholder="Enter as '#XXXXXX'"
         disabled={disable_inputs}
         required={require_inputs}
+        minlength={7}
+        maxlength={7}
         onchange={(event: Event) => {
           colorpreview = (event.target as HTMLInputElement).value;
         }}
