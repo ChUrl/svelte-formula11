@@ -21,7 +21,7 @@
       data_value_name: "avatar_url",
       label: "Avatar",
       valuefun: async (value: string): Promise<string> =>
-        `<img class='rounded-full w-10 bg-surface-400' src='${value ? value : get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url}'/>`,
+        `<img class='rounded-full w-10 bg-surface-400' src='${value ? value : get_by_value(await data.graphics, "name", "driver_headshot_template")?.file_url}'/>`,
     },
     {
       data_value_name: "admin",

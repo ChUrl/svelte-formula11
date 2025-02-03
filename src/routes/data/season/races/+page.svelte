@@ -2,7 +2,7 @@
   import { Button, Table, type TableColumn } from "$lib/components";
   import { getModalStore, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
-  import { get_by_value } from "$lib/database";
+  import { get_by_value, get_race_pictogram_template } from "$lib/database";
   import type { Race } from "$lib/schema";
 
   let { data }: { data: PageData } = $props();
@@ -62,8 +62,7 @@
       meta: {
         disable_inputs: !data.admin,
         require_inputs: true,
-        pictogram_template:
-          get_by_value(data.graphics, "name", "race_pictogram_template")?.file_url ?? "Invalid",
+        pictogram_template: get_race_pictogram_template(await data.graphics),
       },
     };
 

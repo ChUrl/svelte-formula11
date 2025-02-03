@@ -19,8 +19,8 @@
     RACE_PICTOGRAM_HEIGHT,
     RACE_PICTOGRAM_WIDTH,
   } from "$lib/config";
-  import type { CurrentPickedUser, Driver, Race, RacePick } from "$lib/schema";
-  import { get_by_value } from "$lib/database";
+  import type { CurrentPickedUser, RacePick } from "$lib/schema";
+  import { get_by_value, get_driver_headshot_template } from "$lib/database";
   import { format } from "date-fns";
 
   let { data }: { data: PageData } = $props();
@@ -44,10 +44,9 @@
         racepick: currentpick,
         currentrace: data.currentrace,
         user: data.user,
-        drivers: data.drivers,
+        drivers: await data.drivers,
         disable_inputs: false, // TODO: Datelock
-        headshot_template:
-          get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? "Invalid",
+        headshot_template: get_driver_headshot_template(await data.graphics),
         pxx_select_value: pxx_select_value,
         dnf_select_value: dnf_select_value,
       },
@@ -56,22 +55,15 @@
     modalStore.trigger(modalSettings);
   };
 
-  const getrace = (id: string): Race | undefined => get_by_value(data.races, "id", id);
-  const getdriver = (id: string): Driver | undefined => get_by_value(data.drivers, "id", id);
-
   const pickedusers = data.currentpickedusers.filter(
     (currentpickeduser: CurrentPickedUser) => currentpickeduser.picked,
   );
-  // pickedusers = pickedusers.concat(pickedusers, pickedusers);
   const outstandingusers = data.currentpickedusers.filter(
     (currentpickeduser: CurrentPickedUser) => !currentpickeduser.picked,
   );
 
   const dateformat: string = "dd.MM' 'HH:mm";
   const formatdate = (date: string): string => format(new Date(date), dateformat);
-
-  const graphicfallback = (graphic: string | undefined, fallback: string): string =>
-    graphic ?? get_by_value(data.graphics, "name", fallback)?.file_url ?? "Invalid";
 
   const race_popupsettings = (target: string): PopupSettings => {
     return {
@@ -139,33 +131,37 @@
             <div class="mt-2 flex gap-2">
               <div class="card w-full p-2 pb-0 shadow">
                 <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
-                <LazyImage
-                  src={graphicfallback(
-                    getdriver(currentpick?.pxx ?? "")?.headshot_url,
-                    "driver_headshot_template",
-                  )}
-                  imgwidth={DRIVER_HEADSHOT_WIDTH}
-                  imgheight={DRIVER_HEADSHOT_HEIGHT}
-                  containerstyle="height: 115px; margin: auto;"
-                  imgclass="bg-transparent cursor-pointer"
-                  hoverzoom
-                  onclick={create_guess_handler}
-                />
+                {#await data.graphics then graphics}
+                  {#await data.drivers then drivers}
+                    <LazyImage
+                      src={get_by_value(drivers, "id", currentpick?.pxx ?? "")?.headshot_url ??
+                        get_driver_headshot_template(graphics)}
+                      imgwidth={DRIVER_HEADSHOT_WIDTH}
+                      imgheight={DRIVER_HEADSHOT_HEIGHT}
+                      containerstyle="height: 115px; margin: auto;"
+                      imgclass="bg-transparent cursor-pointer"
+                      hoverzoom
+                      onclick={create_guess_handler}
+                    />
+                  {/await}
+                {/await}
               </div>
               <div class="card w-full p-2 pb-0 shadow">
                 <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
-                <LazyImage
-                  src={graphicfallback(
-                    getdriver(currentpick?.dnf ?? "")?.headshot_url,
-                    "driver_headshot_template",
-                  )}
-                  imgwidth={DRIVER_HEADSHOT_WIDTH}
-                  imgheight={DRIVER_HEADSHOT_HEIGHT}
-                  containerstyle="height: 115px; margin: auto;"
-                  imgclass="bg-transparent cursor-pointer"
-                  hoverzoom
-                  onclick={create_guess_handler}
-                />
+                {#await data.graphics then graphics}
+                  {#await data.drivers then drivers}
+                    <LazyImage
+                      src={get_by_value(drivers, "id", currentpick?.dnf ?? "")?.headshot_url ??
+                        get_driver_headshot_template(graphics)}
+                      imgwidth={DRIVER_HEADSHOT_WIDTH}
+                      imgheight={DRIVER_HEADSHOT_HEIGHT}
+                      containerstyle="height: 115px; margin: auto;"
+                      imgclass="bg-transparent cursor-pointer"
+                      hoverzoom
+                      onclick={create_guess_handler}
+                    />
+                  {/await}
+                {/await}
               </div>
             </div>
           {/if}
@@ -177,15 +173,17 @@
                 Picked ({pickedusers.length}/{data.currentpickedusers.length}):
               </h1>
               <div class="mt-1 grid grid-cols-4 gap-x-2 gap-y-0.5">
-                {#each pickedusers.slice(0, 16) as user}
-                  <LazyImage
-                    src={graphicfallback(user.avatar_url, "driver_headshot_template")}
-                    imgwidth={AVATAR_WIDTH}
-                    imgheight={AVATAR_HEIGHT}
-                    containerstyle="height: 35px; width: 35px;"
-                    imgclass="bg-surface-400 rounded-full"
-                  />
-                {/each}
+                {#await data.graphics then graphics}
+                  {#each pickedusers.slice(0, 16) as user}
+                    <LazyImage
+                      src={user.avatar_url ?? get_driver_headshot_template(graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                    />
+                  {/each}
+                {/await}
               </div>
             </div>
             <div class="card w-full p-2 shadow">
@@ -193,15 +191,17 @@
                 Outstanding ({outstandingusers.length}/{data.currentpickedusers.length}):
               </h1>
               <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                {#each outstandingusers.slice(0, 16) as user}
-                  <LazyImage
-                    src={graphicfallback(user.avatar_url, "driver_headshot_template")}
-                    imgwidth={AVATAR_WIDTH}
-                    imgheight={AVATAR_HEIGHT}
-                    containerstyle="height: 35px; width: 35px;"
-                    imgclass="bg-surface-400 rounded-full"
-                  />
-                {/each}
+                {#await data.graphics then graphics}
+                  {#each outstandingusers.slice(0, 16) as user}
+                    <LazyImage
+                      src={user.avatar_url ?? get_driver_headshot_template(graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                    />
+                  {/each}
+                {/await}
               </div>
             </div>
           </div>
@@ -216,7 +216,7 @@
   <div>
     <!-- Points color coding legend -->
     <!-- Use mt-3/mt-4 to account for 2x padding around the avatar. -->
-    <div class="mt-4 h-10">
+    <div class="mt-4 h-10 w-7 lg:w-36">
       <div class="hidden h-5 text-sm font-bold lg:block">Points:</div>
       <div
         class="flex h-full flex-col overflow-hidden rounded-b-lg rounded-t-lg shadow lg:h-5 lg:flex-row lg:!rounded-l-lg lg:!rounded-r-lg lg:rounded-b-none lg:rounded-t-none"
@@ -255,53 +255,57 @@
       </div>
     </div>
 
-    {#each data.raceresults as result}
-      {@const race = getrace(result.race)}
+    {#await data.races then races}
+      {#each data.raceresults as result}
+        {@const race = get_by_value(races, "id", result.race)}
 
-      <div
-        use:popup={race_popupsettings(race?.id ?? "Invalid")}
-        class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
-      >
-        <span class="hidden text-sm font-bold lg:block">
-          {race?.step}: {race?.name}
-        </span>
-        <span class="block rotate-90 text-sm font-bold lg:hidden">
-          {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
-        </span>
-        <span class="hidden text-sm lg:block">Date: {formatdate(race?.racedate ?? "")}</span>
-        <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
-      </div>
-
-      <!-- The race result popup is triggered on click on the race -->
-      <div data-popup={race?.id ?? "Invalid"} class="card z-10 p-2 shadow">
-        <span class="font-bold">Result:</span>
-        <div class="mt-2 flex flex-col gap-1">
-          {#each result.pxxs as pxx, index}
-            {@const driver = getdriver(pxx)}
-            <div class="flex gap-2">
-              <span class="w-8">P{(race?.pxx ?? -100) - 3 + index}:</span>
-              <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[index]};">
-                {driver?.code}
-              </span>
-            </div>
-          {/each}
-
-          {#if result.dnfs.length > 0}
-            <hr class="border-black" style="border-style: inset;" />
-          {/if}
-
-          {#each result.dnfs as dnf}
-            {@const driver = getdriver(dnf)}
-            <div class="flex gap-2">
-              <span class="w-8">DNF:</span>
-              <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[3]};">
-                {driver?.code}
-              </span>
-            </div>
-          {/each}
+        <div
+          use:popup={race_popupsettings(race?.id ?? "Invalid")}
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
+        >
+          <span class="hidden text-sm font-bold lg:block">
+            {race?.step}: {race?.name}
+          </span>
+          <span class="block rotate-90 text-sm font-bold lg:hidden">
+            {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
+          </span>
+          <span class="hidden text-sm lg:block">Date: {formatdate(race?.racedate ?? "")}</span>
+          <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
         </div>
-      </div>
-    {/each}
+
+        <!-- The race result popup is triggered on click on the race -->
+        <div data-popup={race?.id ?? "Invalid"} class="card z-10 p-2 shadow">
+          <span class="font-bold">Result:</span>
+          <div class="mt-2 flex flex-col gap-1">
+            {#await data.drivers then drivers}
+              {#each result.pxxs as pxx, index}
+                {@const driver = get_by_value(drivers, "id", pxx)}
+                <div class="flex gap-2">
+                  <span class="w-8">P{(race?.pxx ?? -100) - 3 + index}:</span>
+                  <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[index]};">
+                    {driver?.code}
+                  </span>
+                </div>
+              {/each}
+
+              {#if result.dnfs.length > 0}
+                <hr class="border-black" style="border-style: inset;" />
+              {/if}
+
+              {#each result.dnfs as dnf}
+                {@const driver = get_by_value(drivers, "id", dnf)}
+                <div class="flex gap-2">
+                  <span class="w-8">DNF:</span>
+                  <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[3]};">
+                    {driver?.code}
+                  </span>
+                </div>
+              {/each}
+            {/await}
+          </div>
+        </div>
+      {/each}
+    {/await}
   </div>
 
   <div class="hide-scrollbar flex w-full overflow-x-scroll pb-2">
@@ -317,13 +321,15 @@
       >
         <!-- Avatar + name display at the top -->
         <div class="mx-auto flex h-10 w-fit">
-          <LazyImage
-            src={graphicfallback(user.avatar_url, "driver_headshot_template")}
-            imgwidth={AVATAR_WIDTH}
-            imgheight={AVATAR_HEIGHT}
-            containerstyle="height: 40px; width: 40px;"
-            imgclass="bg-surface-400 rounded-full"
-          />
+          {#await data.graphics then graphics}
+            <LazyImage
+              src={user.avatar_url ?? get_driver_headshot_template(graphics)}
+              imgwidth={AVATAR_WIDTH}
+              imgheight={AVATAR_HEIGHT}
+              containerstyle="height: 40px; width: 40px;"
+              imgclass="bg-surface-400 rounded-full"
+            />
+          {/await}
           <div
             style="height: 40px; line-height: 40px;"
             class="ml-2 hidden text-nowrap text-center align-middle lg:block"
@@ -332,34 +338,38 @@
           </div>
         </div>
 
-        {#each data.raceresults as result}
-          {@const race = getrace(result.race)}
-          {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
-          {@const pxxcolor = PXX_COLORS[result.pxxs.indexOf(pick?.pxx ?? "Invalid")]}
-          {@const dnfcolor =
-            result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? PXX_COLORS[3] : PXX_COLORS[-1]}
+        {#await data.races then races}
+          {#await data.drivers then drivers}
+            {#each data.raceresults as result}
+              {@const race = get_by_value(races, "id", result.race)}
+              {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
+              {@const pxxcolor = PXX_COLORS[result.pxxs.indexOf(pick?.pxx ?? "Invalid")]}
+              {@const dnfcolor =
+                result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? PXX_COLORS[3] : PXX_COLORS[-1]}
 
-          {#if pick}
-            <div class="mt-2 h-20 w-full border bg-surface-300 p-1 lg:p-2">
-              <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
-                <span
-                  class="p-1 text-center text-sm rounded-container-token"
-                  style="background: {pxxcolor};"
-                >
-                  {getdriver(pick?.pxx ?? "")?.code}
-                </span>
-                <span
-                  class="p-1 text-center text-sm rounded-container-token"
-                  style="background: {dnfcolor};"
-                >
-                  {getdriver(pick?.dnf ?? "")?.code}
-                </span>
-              </div>
-            </div>
-          {:else}
-            <div class="mt-2 h-20 w-full"></div>
-          {/if}
-        {/each}
+              {#if pick}
+                <div class="mt-2 h-20 w-full border bg-surface-300 p-1 lg:p-2">
+                  <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
+                    <span
+                      class="p-1 text-center text-sm rounded-container-token"
+                      style="background: {pxxcolor};"
+                    >
+                      {get_by_value(drivers, "id", pick?.pxx ?? "")?.code}
+                    </span>
+                    <span
+                      class="p-1 text-center text-sm rounded-container-token"
+                      style="background: {dnfcolor};"
+                    >
+                      {get_by_value(drivers, "id", pick?.dnf ?? "")?.code}
+                    </span>
+                  </div>
+                </div>
+              {:else}
+                <div class="mt-2 h-20 w-full"></div>
+              {/if}
+            {/each}
+          {/await}
+        {/await}
       </div>
     {/each}
   </div>

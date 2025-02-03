@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Button, type TableColumn, Table } from "$lib/components";
-  import { get_by_value } from "$lib/database";
+  import { get_by_value, get_driver_headshot_template } from "$lib/database";
   import type { Driver, Team } from "$lib/schema";
   import { getModalStore, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
@@ -31,7 +31,7 @@
       data_value_name: "team",
       label: "Team",
       valuefun: async (value: string): Promise<string> => {
-        const team: Team | undefined = get_by_value(data.teams, "id", value);
+        const team: Team | undefined = get_by_value(await data.teams, "id", value);
         return team
           ? `<span class='badge border mr-2' style='color: ${team.color}; background: ${team.color};'>C</span>${team.name}`
           : "<span class='badge variant-filled-primary'>Invalid</span>";
@@ -57,7 +57,7 @@
       component: "driverCard",
       meta: {
         driver: driver,
-        teams: data.teams,
+        teams: await data.teams,
         team_select_value: update_driver_team_select_values[driver.id],
         active_value: update_driver_active_values[driver.id],
         disable_inputs: !data.admin,
@@ -72,13 +72,12 @@
       type: "component",
       component: "driverCard",
       meta: {
-        teams: data.teams,
+        teams: await data.teams,
         team_select_value: update_driver_team_select_values["create"],
         active_value: update_driver_active_values["create"],
         disable_inputs: !data.admin,
         require_inputs: true,
-        headshot_template:
-          get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? "Invalid",
+        headshot_template: get_driver_headshot_template(await data.graphics),
       },
     };
 

@@ -3,7 +3,7 @@
   import type { Team } from "$lib/schema";
   import { getModalStore, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
-  import { get_by_value } from "$lib/database";
+  import { get_by_value, get_team_banner_template, get_team_logo_template } from "$lib/database";
 
   let { data }: { data: PageData } = $props();
 
@@ -25,7 +25,7 @@
   const modalStore: ModalStore = getModalStore();
 
   const teams_handler = async (event: Event, id: string) => {
-    const team: Team | undefined = get_by_value(data.teams, "id", id);
+    const team: Team | undefined = get_by_value(await data.teams, "id", id);
     if (!team) return;
 
     const modalSettings: ModalSettings = {
@@ -40,15 +40,13 @@
     modalStore.trigger(modalSettings);
   };
 
-  const create_team_handler = (event: Event) => {
+  const create_team_handler = async (event: Event) => {
     const modalSettings: ModalSettings = {
       type: "component",
       component: "teamCard",
       meta: {
-        banner_template:
-          get_by_value(data.graphics, "name", "team_banner_template")?.file_url ?? "Invalid",
-        logo_template:
-          get_by_value(data.graphics, "name", "team_logo_template")?.file_url ?? "Invalid",
+        banner_template: get_team_banner_template(await data.graphics),
+        logo_template: get_team_logo_template(await data.graphics),
         require_inputs: true,
         disable_inputs: !data.admin,
       },
@@ -63,4 +61,6 @@
     <span class="font-bold">Create New Team</span>
   </Button>
 </div>
-<Table data={data.teams} columns={teams_columns} handler={teams_handler} />
+{#await data.teams then teams}
+  <Table data={teams} columns={teams_columns} handler={teams_handler} />
+{/await}

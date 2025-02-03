@@ -1,12 +1,13 @@
 <script lang="ts">
-  import { get_by_value } from "$lib/database";
+  import { get_by_value, get_driver_headshot_template } from "$lib/database";
   import { getModalStore, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
   import type { Race, Substitution } from "$lib/schema";
-  import { Button, Table, type DropdownOption, type TableColumn } from "$lib/components";
+  import { Button, Table, type TableColumn } from "$lib/components";
 
   let { data }: { data: PageData } = $props();
 
+  // TODO: Cleanup
   const update_substitution_substitute_select_values: { [key: string]: string } = $state({});
   const update_substitution_for_select_values: { [key: string]: string } = $state({});
   const update_substitution_race_select_values: { [key: string]: string } = $state({});
@@ -85,8 +86,7 @@
         disable_inputs: !data.admin,
         race_select_value: update_substitution_race_select_values["create"],
         require_inputs: true,
-        headshot_template:
-          get_by_value(data.graphics, "name", "driver_headshot_template")?.file_url ?? "Invalid",
+        headshot_template: get_driver_headshot_template(await data.graphics),
       },
     };
 

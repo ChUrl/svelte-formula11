@@ -1,5 +1,5 @@
 import { form_data_clean, form_data_ensure_keys, form_data_get_and_remove_id } from "$lib/form";
-import type { CurrentPickedUser, Driver, Graphic, Race, RacePick, RaceResult } from "$lib/schema";
+import type { CurrentPickedUser, Race, RacePick, RaceResult } from "$lib/schema";
 import type { Actions, PageServerLoad } from "./$types";
 
 export const load: PageServerLoad = async ({ fetch, locals }) => {
@@ -53,55 +53,11 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
     return raceresults;
   };
 
-  // TODO: Duplicated code from data/season/+layout.server.ts and data/raceresults/+page.server.ts
-  const fetch_drivers = async (): Promise<Driver[]> => {
-    const drivers: Driver[] = await locals.pb.collection("drivers").getFullList({
-      sort: "+code",
-      fetch: fetch,
-    });
-
-    drivers.map((driver: Driver) => {
-      driver.headshot_url = locals.pb.files.getURL(driver, driver.headshot);
-    });
-
-    return drivers;
-  };
-
-  // TODO: Duplicated code from data/season/+layout.server.ts and data/raceresults/+page.server.ts
-  const fetch_races = async (): Promise<Race[]> => {
-    const races: Race[] = await locals.pb.collection("races").getFullList({
-      sort: "+step",
-      fetch: fetch,
-    });
-
-    races.map((race: Race) => {
-      race.pictogram_url = locals.pb.files.getURL(race, race.pictogram);
-    });
-
-    return races;
-  };
-
-  // TODO: Duplicated code from data/season/+layout.server.ts + users/+page.server.ts
-  const fetch_graphics = async (): Promise<Graphic[]> => {
-    const graphics: Graphic[] = await locals.pb
-      .collection("graphics")
-      .getFullList({ fetch: fetch });
-
-    graphics.map((graphic: Graphic) => {
-      graphic.file_url = locals.pb.files.getURL(graphic, graphic.file);
-    });
-
-    return graphics;
-  };
-
   return {
     racepicks: await fetch_racepicks(),
     currentrace: await fetch_currentrace(),
     currentpickedusers: await fetch_currentpickedusers(),
     raceresults: await fetch_raceresults(),
-    drivers: await fetch_drivers(),
-    races: await fetch_races(),
-    graphics: await fetch_graphics(),
   };
 };
 
