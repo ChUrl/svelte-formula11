@@ -1,7 +1,6 @@
 <script lang="ts">
   import { page } from "$app/stores";
   import type { Snippet } from "svelte";
-  import type { HTMLButtonAttributes } from "svelte/elements";
   import { popup, type PopupSettings } from "@skeletonlabs/skeleton";
 
   const is_at_path = (path: string): boolean => {
@@ -10,7 +9,7 @@
     return pathname.endsWith(path);
   };
 
-  interface ButtonProps extends HTMLButtonAttributes {
+  interface ButtonProps {
     children: Snippet;
 
     /** The main color variant, e.g. "primary" or "secondary". */
@@ -57,19 +56,15 @@
 </script>
 
 {#if href}
-  <!-- HACK: Make the button act as a link using a form -->
-  <form action={href} class="contents">
-    <button
-      type="submit"
-      class="btn m-0 select-none px-2 py-2 {color
-        ? `variant-filled-${color}`
-        : ''} {width} {activate ? 'btn-hover' : ''} {activate_href && is_at_path(href)
-        ? 'btn-hover'
-        : ''} {shadow ? 'shadow' : ''} {extraclass}"
-      draggable="false"
-      {...restProps}>{@render children()}</button
-    >
-  </form>
+  <a
+    {href}
+    class="btn m-0 select-none px-2 py-2 {color ? `variant-filled-${color}` : ''} {width} {activate
+      ? 'btn-hover'
+      : ''} {activate_href && is_at_path(href) ? 'btn-hover' : ''} {shadow
+      ? 'shadow'
+      : ''} {extraclass}"
+    {...restProps}>{@render children()}</a
+  >
 {:else}
   <button
     type={submit ? "submit" : "button"}
