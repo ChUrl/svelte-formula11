@@ -330,9 +330,9 @@
       {@const picks = data.racepicks.filter((pick: RacePick) => pick.user === user.id)}
 
       <div
-        class="card ml-1 mt-2 w-full overflow-hidden py-2 lg:ml-2 {data.user &&
+        class="card ml-1 mt-2 w-full overflow-hidden py-2 shadow lg:ml-2 {data.user &&
         data.user.username === user.username
-          ? 'bg-primary-500'
+          ? 'bg-primary-300'
           : ''}"
       >
         <!-- Avatar + name display at the top -->
@@ -360,7 +360,7 @@
             result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? PXX_COLORS[3] : PXX_COLORS[-1]}
 
           {#if pick}
-            <div class="mt-2 h-20 w-full border-b border-t bg-surface-300 p-1 shadow lg:p-2">
+            <div class="mt-2 h-20 w-full border bg-surface-300 p-1 lg:p-2">
               <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
                 <span
                   class="p-1 text-center text-sm rounded-container-token"
