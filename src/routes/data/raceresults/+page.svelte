@@ -3,7 +3,6 @@
   import type { PageData } from "./$types";
   import { Button, Table, type TableColumn } from "$lib/components";
   import { get_by_value } from "$lib/database";
-  import type { Driver } from "$lib/schema";
   import { PXX_COLORS } from "$lib/config";
 
   let { data }: { data: PageData } = $props();
@@ -65,6 +64,9 @@
       component: "raceResultCard",
       meta: {
         disable_inputs: !data.admin,
+        drivers: data.drivers,
+        races: data.races,
+        result: get_by_value(data.results, "id", id),
       },
     };
 
@@ -74,10 +76,12 @@
   const create_result_handler = (event: Event) => {
     const modalSettings: ModalSettings = {
       type: "component",
-      component: "raceResultsCard",
+      component: "raceResultCard",
       meta: {
-        require_inputs: true,
         disable_inputs: !data.admin,
+        drivers: data.drivers,
+        races: data.races,
+        require_inputs: true,
       },
     };
 
