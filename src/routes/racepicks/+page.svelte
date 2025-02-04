@@ -25,21 +25,22 @@
 
   let { data }: { data: PageData } = $props();
 
-  let currentpick = (): RacePick | undefined =>
+  const currentpick: RacePick | undefined = $derived(
     data.racepicks.filter(
       (racepick: RacePick) =>
         racepick.expand.user.username === data.user?.username &&
         racepick.race === data.currentrace?.id,
-    )[0] ?? undefined;
+    )[0] ?? undefined,
+  );
 
-  let pxx_select_value: string = $state(currentpick()?.pxx ?? "");
-  let dnf_select_value: string = $state(currentpick()?.dnf ?? "");
+  const pxx_select_value: string = $derived(currentpick?.pxx ?? "");
+  const dnf_select_value: string = $derived(currentpick?.dnf ?? "");
 
-  const active_drivers_and_substitutes = (
-    drivers: Driver[],
-    substitutions: Substitution[],
-  ): Driver[] => {
+  const active_drivers_and_substitutes: Promise<Driver[]> = $derived.by(async () => {
     if (!data.currentrace) return [];
+
+    let drivers: Driver[] = await data.drivers;
+    let substitutions: Substitution[] = await data.substitutions;
 
     let active_and_substitutes: Driver[] = drivers.filter((driver: Driver) => driver.active);
 
@@ -57,7 +58,7 @@
       });
 
     return active_and_substitutes.sort((a: Driver, b: Driver) => a.code.localeCompare(b.code));
-  };
+  });
 
   const modalStore: ModalStore = getModalStore();
   const create_guess_handler = async (event: Event) => {
@@ -65,10 +66,10 @@
       type: "component",
       component: "racePickCard",
       meta: {
-        racepick: currentpick(),
+        racepick: currentpick,
         currentrace: data.currentrace,
         user: data.user,
-        drivers: active_drivers_and_substitutes(await data.drivers, await data.substitutions),
+        drivers: await active_drivers_and_substitutes,
         disable_inputs: false, // TODO: Datelock
         headshot_template: get_driver_headshot_template(await data.graphics),
         pxx_select_value: pxx_select_value,
@@ -79,11 +80,15 @@
     modalStore.trigger(modalSettings);
   };
 
-  const pickedusers = data.currentpickedusers.filter(
-    (currentpickeduser: CurrentPickedUser) => currentpickeduser.picked,
+  let pickedusers: CurrentPickedUser[] = $derived(
+    data.currentpickedusers.filter(
+      (currentpickeduser: CurrentPickedUser) => currentpickeduser.picked,
+    ),
   );
-  const outstandingusers = data.currentpickedusers.filter(
-    (currentpickeduser: CurrentPickedUser) => !currentpickeduser.picked,
+  let outstandingusers: CurrentPickedUser[] = $derived(
+    data.currentpickedusers.filter(
+      (currentpickeduser: CurrentPickedUser) => !currentpickeduser.picked,
+    ),
   );
 
   const dateformat: string = "dd.MM' 'HH:mm";
@@ -158,7 +163,7 @@
                 {#await data.graphics then graphics}
                   {#await data.drivers then drivers}
                     <LazyImage
-                      src={get_by_value(drivers, "id", currentpick()?.pxx ?? "")?.headshot_url ??
+                      src={get_by_value(drivers, "id", currentpick?.pxx ?? "")?.headshot_url ??
                         get_driver_headshot_template(graphics)}
                       imgwidth={DRIVER_HEADSHOT_WIDTH}
                       imgheight={DRIVER_HEADSHOT_HEIGHT}
@@ -175,7 +180,7 @@
                 {#await data.graphics then graphics}
                   {#await data.drivers then drivers}
                     <LazyImage
-                      src={get_by_value(drivers, "id", currentpick()?.dnf ?? "")?.headshot_url ??
+                      src={get_by_value(drivers, "id", currentpick?.dnf ?? "")?.headshot_url ??
                         get_driver_headshot_template(graphics)}
                       imgwidth={DRIVER_HEADSHOT_WIDTH}
                       imgheight={DRIVER_HEADSHOT_HEIGHT}
