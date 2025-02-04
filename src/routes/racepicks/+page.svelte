@@ -19,7 +19,7 @@
     RACE_PICTOGRAM_HEIGHT,
     RACE_PICTOGRAM_WIDTH,
   } from "$lib/config";
-  import type { CurrentPickedUser, RacePick } from "$lib/schema";
+  import type { CurrentPickedUser, Driver, RacePick, Substitution } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
   import { format } from "date-fns";
 
@@ -35,6 +35,28 @@
   let pxx_select_value: string = $state(currentpick?.pxx ?? "");
   let dnf_select_value: string = $state(currentpick?.dnf ?? "");
 
+  const active_drivers_and_substitutes = (
+    drivers: Driver[],
+    substitutions: Substitution[],
+  ): Driver[] => {
+    let active_and_substitutes: Driver[] = drivers.filter((driver: Driver) => driver.active);
+
+    substitutions
+      .filter((substitution: Substitution) => substitution.race === currentpick.race)
+      .forEach((substitution: Substitution) => {
+        const for_index = active_and_substitutes.findIndex(
+          (driver: Driver) => driver.id === substitution.for,
+        );
+        const sub_index = drivers.findIndex(
+          (driver: Driver) => driver.id === substitution.substitute,
+        );
+
+        active_and_substitutes[for_index] = drivers[sub_index];
+      });
+
+    return active_and_substitutes.sort((a: Driver, b: Driver) => a.code.localeCompare(b.code));
+  };
+
   const modalStore: ModalStore = getModalStore();
   const create_guess_handler = async (event: Event) => {
     const modalSettings: ModalSettings = {
@@ -44,7 +66,7 @@
         racepick: currentpick,
         currentrace: data.currentrace,
         user: data.user,
-        drivers: await data.drivers,
+        drivers: active_drivers_and_substitutes(await data.drivers, await data.substitutions),
         disable_inputs: false, // TODO: Datelock
         headshot_template: get_driver_headshot_template(await data.graphics),
         pxx_select_value: pxx_select_value,

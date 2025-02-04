@@ -2,7 +2,7 @@
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
   import { getModalStore, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
-  import type { Race, Substitution } from "$lib/schema";
+  import type { Driver, Race, Substitution } from "$lib/schema";
   import { Button, Table, type TableColumn } from "$lib/components";
 
   let { data }: { data: PageData } = $props();
