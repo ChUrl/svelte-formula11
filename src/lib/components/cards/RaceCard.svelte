@@ -5,6 +5,7 @@
   import type { Race } from "$lib/schema";
   import { format } from "date-fns";
   import { RACE_PICTOGRAM_HEIGHT, RACE_PICTOGRAM_WIDTH } from "$lib/config";
+  import { enhance } from "$app/forms";
 
   interface RaceCardProps {
     /** The [Race] object used to prefill values. */
@@ -76,7 +77,7 @@
   imgheight={RACE_PICTOGRAM_HEIGHT}
   imgonclick={(event: Event) => modalStore.close()}
 >
-  <form method="POST" enctype="multipart/form-data">
+  <form method="POST" enctype="multipart/form-data" use:enhance>
     <!-- This is also disabled, because the ID should only be -->
     <!-- "leaked" to users that are allowed to use the inputs -->
     {#if race && !disable_inputs}
@@ -186,6 +187,7 @@
             disabled={disable_inputs}
             submit
             width="w-1/3"
+            onclick={() => modalStore.close()}
           >
             Save Changes
           </Button>
@@ -195,6 +197,7 @@
             disabled={disable_inputs}
             formaction="?/delete_race"
             width="w-1/3"
+            onclick={() => modalStore.close()}
           >
             Delete
           </Button>
@@ -205,6 +208,7 @@
             submit
             width="w-1/2"
             disabled={disable_inputs}
+            onclick={() => modalStore.close()}
           >
             Create Race
           </Button>

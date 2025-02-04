@@ -4,6 +4,7 @@
   import { Card, Button, Input, LazyImage } from "$lib/components";
   import type { Team } from "$lib/schema";
   import { TEAM_BANNER_HEIGHT, TEAM_BANNER_WIDTH } from "$lib/config";
+  import { enhance } from "$app/forms";
 
   interface TeamCardProps {
     /** The [Team] object used to prefill values. */
@@ -57,7 +58,7 @@
   imgheight={TEAM_BANNER_HEIGHT}
   imgonclick={(event: Event) => modalStore.close()}
 >
-  <form method="POST" enctype="multipart/form-data">
+  <form method="POST" enctype="multipart/form-data" use:enhance>
     <!-- This is also disabled, because the ID should only be -->
     <!-- "leaked" to users that are allowed to use the inputs -->
     {#if team && !disable_inputs}
@@ -147,6 +148,7 @@
             disabled={disable_inputs}
             submit
             width="w-1/2"
+            onclick={() => modalStore.close()}
           >
             Save
           </Button>
@@ -156,6 +158,7 @@
             disabled={disable_inputs}
             formaction="?/delete_team"
             width="w-1/2"
+            onclick={() => modalStore.close()}
           >
             Delete
           </Button>
@@ -166,6 +169,7 @@
             submit
             width="w-full"
             disabled={disable_inputs}
+            onclick={() => modalStore.close()}
           >
             Create Team
           </Button>

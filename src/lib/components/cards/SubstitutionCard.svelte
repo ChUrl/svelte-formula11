@@ -6,6 +6,7 @@
   import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { driver_dropdown_options, race_dropdown_options } from "$lib/dropdown";
+  import { enhance } from "$app/forms";
 
   interface SubstitutionCardProps {
     /** The [Substitution] object used to prefill values. */
@@ -104,7 +105,7 @@
   imgheight={DRIVER_HEADSHOT_HEIGHT}
   imgonclick={(event: Event) => modalStore.close()}
 >
-  <form method="POST" enctype="multipart/form-data">
+  <form method="POST" enctype="multipart/form-data" use:enhance>
     <!-- This is also disabled, because the ID should only be -->
     <!-- "leaked" to users that are allowed to use the inputs -->
     {#if substitution && !disable_inputs}
@@ -158,6 +159,7 @@
             disabled={disable_inputs}
             submit
             width="w-1/2"
+            onclick={() => modalStore.close()}
           >
             Save Changes
           </Button>
@@ -167,6 +169,7 @@
             disabled={disable_inputs}
             formaction="?/delete_substitution"
             width="w-1/2"
+            onclick={() => modalStore.close()}
           >
             Delete
           </Button>
@@ -177,6 +180,7 @@
             submit
             width="w-full"
             disabled={disable_inputs}
+            onclick={() => modalStore.close()}
           >
             Create Substitution
           </Button>

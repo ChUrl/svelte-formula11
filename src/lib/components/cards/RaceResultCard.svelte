@@ -10,6 +10,7 @@
   import type { Driver, Race, RaceResult } from "$lib/schema";
   import { get_by_value } from "$lib/database";
   import { race_dropdown_options } from "$lib/dropdown";
+  import { enhance } from "$app/forms";
 
   interface RaceResultCardProps {
     /** The [RaceResult] object used to prefill values. */
@@ -146,7 +147,7 @@
 </script>
 
 <Card width="w-full sm:w-[512px]">
-  <form method="POST" enctype="multipart/form-data">
+  <form method="POST" enctype="multipart/form-data" use:enhance>
     <!-- This is also disabled, because the ID should only be -->
     <!-- "leaked" to users that are allowed to use the inputs -->
     {#if result2 && !disable_inputs2}
@@ -224,6 +225,7 @@
             disabled={disable_inputs2}
             submit
             width="w-1/2"
+            onclick={() => modalStore.close()}
           >
             Save
           </Button>
@@ -233,6 +235,7 @@
             disabled={disable_inputs2}
             formaction="?/delete_raceresult"
             width="w-1/2"
+            onclick={() => modalStore.close()}
           >
             Delete
           </Button>
@@ -243,6 +246,7 @@
             submit
             width="w-full"
             disabled={disable_inputs2}
+            onclick={() => modalStore.close()}
           >
             Create Result
           </Button>
