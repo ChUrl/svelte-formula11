@@ -32,27 +32,20 @@ export const team_dropdown_options = (teams: Team[]): DropdownOption[] => {
   return team_dropdown_opts;
 };
 
-let driver_dropdown_opts: DropdownOption[] | null = null;
-
 /**
  * Generates a list of [DropdownOptions] for a <Dropdown> component.
- * Cached until page reload.
+ * Not cached, because drivers are often filtered by active/inactive.
  */
 export const driver_dropdown_options = (drivers: Driver[]): DropdownOption[] => {
-  if (!driver_dropdown_opts) {
-    console.log("driver_dropdown_options");
-    driver_dropdown_opts = drivers.map((driver: Driver) => {
-      return {
-        label: driver.code,
-        value: driver.id,
-        icon_url: driver.headshot_url,
-        icon_width: DRIVER_HEADSHOT_WIDTH,
-        icon_height: DRIVER_HEADSHOT_HEIGHT,
-      };
-    });
-  }
-
-  return driver_dropdown_opts;
+  return drivers.map((driver: Driver) => {
+    return {
+      label: driver.code,
+      value: driver.id,
+      icon_url: driver.headshot_url,
+      icon_width: DRIVER_HEADSHOT_WIDTH,
+      icon_height: DRIVER_HEADSHOT_HEIGHT,
+    };
+  });
 };
 
 let race_dropdown_opts: DropdownOption[] | null = null;
