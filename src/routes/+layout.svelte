@@ -38,6 +38,7 @@
     type ModalComponent,
   } from "@skeletonlabs/skeleton";
   import { computePosition, autoUpdate, offset, shift, flip, arrow } from "@floating-ui/dom";
+  import { enhance } from "$app/forms";
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -180,7 +181,7 @@
     <!-- Login Drawer -->
     <div class="flex flex-col gap-2 p-2 pt-3">
       <h4 class="h4 select-none">Enter Username and Password</h4>
-      <form method="POST" class="contents">
+      <form method="POST" class="contents" use:enhance>
         <!-- Supply the pathname so the form can redirect to the current page. -->
         <input type="hidden" name="redirect_url" value={$page.url.pathname} />
         <Input name="username" placeholder="Username" autocomplete="username" required>
@@ -220,7 +221,7 @@
     <!-- Profile Drawer -->
     <div class="flex flex-col gap-2 p-2 pt-3">
       <h4 class="h4 select-none">Edit Profile</h4>
-      <form method="POST" enctype="multipart/form-data" class="contents">
+      <form method="POST" enctype="multipart/form-data" class="contents" use:enhance>
         <!-- Supply the pathname so the form can redirect to the current page. -->
         <input type="hidden" name="redirect_url" value={$page.url.pathname} />
         <input type="hidden" name="id" value={data.user.id} />
