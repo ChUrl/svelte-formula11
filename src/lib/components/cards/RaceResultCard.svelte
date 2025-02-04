@@ -67,7 +67,10 @@
 
   let pxxs_input: string = $state("");
   let pxxs_chips: string[] = $state(
-    result2?.pxxs.map((id: string) => get_by_value(drivers2, "id", id)?.code ?? "Invalid") ?? [],
+    result2?.pxxs.map(
+      (id: string, index: number) =>
+        `P${(currentrace?.pxx ?? -10) + index - 3}: ${get_by_value(drivers2, "id", id)?.code ?? "Invalid"}`,
+    ) ?? [],
   );
   let dnfs_input: string = $state("");
   let dnfs_chips: string[] = $state(
@@ -97,11 +100,14 @@
     // Can only select 7 drivers
     if (pxxs_chips.length >= 7) return;
 
-    if (!pxxs_chips.includes(event.detail.value)) {
-      pxxs_chips.push(event.detail.value);
-      pxxs_input = "";
-    }
+    // Can only select a driver once (because we display the PXX, check for string suffixes)
+    if (pxxs_chips.some((label: string) => label.endsWith(event.detail.value))) return;
 
+    // Manage labels that are displayed
+    pxxs_chips.push(`P${(currentrace?.pxx ?? -10) + pxxs_chips.length - 3}: ${event.detail.value}`);
+    pxxs_input = "";
+
+    // Manage ids that are submitted via form
     const id: string = get_by_value(drivers2, "code", event.detail.value)?.id ?? "Invalid";
     if (!pxxs_ids.includes(id)) {
       pxxs_ids.push(id);
@@ -110,16 +116,24 @@
 
   const on_pxxs_chip_remove = (event: CustomEvent): void => {
     pxxs_ids.splice(event.detail.chipIndex, 1);
+
+    pxxs_chips = pxxs_chips.map(
+      (label: string, index: number) =>
+        `P${(currentrace?.pxx ?? -10) + index - 3}: ${label.split(" ").pop()}`,
+    );
   };
 
   const on_dnfs_chip_select = (event: CustomEvent<AutocompleteOption<string>>): void => {
     if (disable_inputs2) return;
 
-    if (!dnfs_chips.includes(event.detail.value)) {
-      dnfs_chips.push(event.detail.value);
-      dnfs_input = "";
-    }
+    // Can only select a driver once
+    if (dnfs_chips.includes(event.detail.value)) return;
 
+    // Manage labels that are displayed
+    dnfs_chips.push(event.detail.value);
+    dnfs_input = "";
+
+    // Manage ids that are submitted via form
     const id: string = get_by_value(drivers2, "code", event.detail.value)?.id ?? "Invalid";
     if (!dnfs_ids.includes(id)) {
       dnfs_ids.push(id);
