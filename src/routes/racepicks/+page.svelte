@@ -25,24 +25,26 @@
 
   let { data }: { data: PageData } = $props();
 
-  const currentpick: RacePick | undefined =
+  let currentpick = (): RacePick | undefined =>
     data.racepicks.filter(
       (racepick: RacePick) =>
         racepick.expand.user.username === data.user?.username &&
         racepick.race === data.currentrace?.id,
     )[0] ?? undefined;
 
-  let pxx_select_value: string = $state(currentpick?.pxx ?? "");
-  let dnf_select_value: string = $state(currentpick?.dnf ?? "");
+  let pxx_select_value: string = $state(currentpick()?.pxx ?? "");
+  let dnf_select_value: string = $state(currentpick()?.dnf ?? "");
 
   const active_drivers_and_substitutes = (
     drivers: Driver[],
     substitutions: Substitution[],
   ): Driver[] => {
+    if (!data.currentrace) return [];
+
     let active_and_substitutes: Driver[] = drivers.filter((driver: Driver) => driver.active);
 
     substitutions
-      .filter((substitution: Substitution) => substitution.race === currentpick.race)
+      .filter((substitution: Substitution) => substitution.race === data.currentrace?.id)
       .forEach((substitution: Substitution) => {
         const for_index = active_and_substitutes.findIndex(
           (driver: Driver) => driver.id === substitution.for,
@@ -63,7 +65,7 @@
       type: "component",
       component: "racePickCard",
       meta: {
-        racepick: currentpick,
+        racepick: currentpick(),
         currentrace: data.currentrace,
         user: data.user,
         drivers: active_drivers_and_substitutes(await data.drivers, await data.substitutions),
@@ -156,7 +158,7 @@
                 {#await data.graphics then graphics}
                   {#await data.drivers then drivers}
                     <LazyImage
-                      src={get_by_value(drivers, "id", currentpick?.pxx ?? "")?.headshot_url ??
+                      src={get_by_value(drivers, "id", currentpick()?.pxx ?? "")?.headshot_url ??
                         get_driver_headshot_template(graphics)}
                       imgwidth={DRIVER_HEADSHOT_WIDTH}
                       imgheight={DRIVER_HEADSHOT_HEIGHT}
@@ -173,7 +175,7 @@
                 {#await data.graphics then graphics}
                   {#await data.drivers then drivers}
                     <LazyImage
-                      src={get_by_value(drivers, "id", currentpick?.dnf ?? "")?.headshot_url ??
+                      src={get_by_value(drivers, "id", currentpick()?.dnf ?? "")?.headshot_url ??
                         get_driver_headshot_template(graphics)}
                       imgwidth={DRIVER_HEADSHOT_WIDTH}
                       imgheight={DRIVER_HEADSHOT_HEIGHT}
