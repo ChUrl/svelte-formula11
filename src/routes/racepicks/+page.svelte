@@ -314,7 +314,7 @@
       {@const picks = data.racepicks.filter((pick: RacePick) => pick.user === user.id)}
 
       <div
-        class="card ml-1 mt-2 w-full overflow-hidden py-2 shadow lg:ml-2 {data.user &&
+        class="card ml-1 mt-2 w-full min-w-12 overflow-hidden py-2 shadow lg:ml-2 {data.user &&
         data.user.username === user.username
           ? 'bg-primary-300'
           : ''}"
