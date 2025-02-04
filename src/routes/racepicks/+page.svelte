@@ -274,7 +274,7 @@
         </div>
 
         <!-- The race result popup is triggered on click on the race -->
-        <div data-popup={race?.id ?? "Invalid"} class="card z-10 p-2 shadow">
+        <div data-popup={race?.id ?? "Invalid"} class="card z-50 p-2 shadow">
           <span class="font-bold">Result:</span>
           <div class="mt-2 flex flex-col gap-1">
             {#await data.drivers then drivers}
