@@ -227,6 +227,7 @@
         <Input
           name="username"
           value={data.user.username}
+          maxlength={10}
           placeholder="Username"
           autocomplete="username"
         >
