@@ -47,6 +47,12 @@
     race_select_value,
   }: SubstitutionCardProps = $props();
 
+  const active_drivers = (drivers: Driver[]): Driver[] =>
+    drivers.filter((driver: Driver) => driver.active);
+
+  const inactive_drivers = (drivers: Driver[]): Driver[] =>
+    drivers.filter((driver: Driver) => !driver.active);
+
   const modalStore: ModalStore = getModalStore();
   if ($modalStore[0].meta) {
     const meta = $modalStore[0].meta;
@@ -111,7 +117,7 @@
         name="substitute"
         input_variable={substitute_select_value}
         action={register_substitute_preview_handler}
-        options={driver_dropdown_options(drivers)}
+        options={driver_dropdown_options(inactive_drivers(drivers))}
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}
@@ -123,7 +129,7 @@
       <Dropdown
         name="for"
         input_variable={driver_select_value}
-        options={driver_dropdown_options(drivers)}
+        options={driver_dropdown_options(active_drivers(drivers))}
         labelwidth="120px"
         disabled={disable_inputs}
         required={require_inputs}
