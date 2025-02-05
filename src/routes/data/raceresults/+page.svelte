@@ -4,10 +4,30 @@
   import { Button, Table, type TableColumn } from "$lib/components";
   import { get_by_value } from "$lib/database";
   import { PXX_COLORS } from "$lib/config";
+  import type { RaceResult } from "$lib/schema";
 
   let { data }: { data: PageData } = $props();
 
-  const results_columns: TableColumn[] = [
+  const modalStore: ModalStore = getModalStore();
+
+  const result_handler = async (event: Event, id?: string) => {
+    const result: RaceResult | undefined = get_by_value(data.results, "id", id ?? "Invalid");
+
+    if (id && !result) return;
+
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "raceResultCard",
+      meta: {
+        data,
+        result,
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
+
+  const results_columns: TableColumn[] = $derived([
     {
       data_value_name: "race",
       label: "Step",
@@ -58,44 +78,12 @@
         return dnfs_codes.join("");
       },
     },
-  ];
-
-  const modalStore: ModalStore = getModalStore();
-
-  const results_handler = async (event: Event, id: string) => {
-    const modalSettings: ModalSettings = {
-      type: "component",
-      component: "raceResultCard",
-      meta: {
-        disable_inputs: !data.admin,
-        drivers: await data.drivers,
-        races: await data.races,
-        result: get_by_value(data.results, "id", id),
-      },
-    };
-
-    modalStore.trigger(modalSettings);
-  };
-
-  const create_result_handler = async (event: Event) => {
-    const modalSettings: ModalSettings = {
-      type: "component",
-      component: "raceResultCard",
-      meta: {
-        disable_inputs: !data.admin,
-        drivers: await data.drivers,
-        races: await data.races,
-        require_inputs: true,
-      },
-    };
-
-    modalStore.trigger(modalSettings);
-  };
+  ]);
 </script>
 
 <div class="pb-2">
-  <Button width="w-full" color="tertiary" onclick={create_result_handler} shadow>
+  <Button width="w-full" color="tertiary" onclick={result_handler} shadow>
     <span class="font-bold">Create Race Result</span>
   </Button>
 </div>
-<Table data={data.results} columns={results_columns} handler={results_handler} />
+<Table data={data.results} columns={results_columns} handler={result_handler} />
