@@ -1,1 +1,3 @@
-<h1>Leaderboard</h1>
+<svelte:head>
+  <title>Formula 11 - Leaderboard</title>
+</svelte:head>

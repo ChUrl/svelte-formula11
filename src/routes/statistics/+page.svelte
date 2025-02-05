@@ -1,1 +1,3 @@
-<h1>Statistics</h1>
+<svelte:head>
+  <title>Formula 11 - Statistics</title>
+</svelte:head>

@@ -51,6 +51,10 @@
   ]);
 </script>
 
+<svelte:head>
+  <title>Formula 11 - Drivers</title>
+</svelte:head>
+
 <div class="pb-2">
   <Button width="w-full" color="tertiary" onclick={driver_handler} shadow>
     <span class="font-bold">Create New Driver</span>

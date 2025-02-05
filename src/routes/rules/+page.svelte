@@ -2,6 +2,10 @@
   import { Card } from "$lib/components";
 </script>
 
+<svelte:head>
+  <title>Formula 11 - Rules</title>
+</svelte:head>
+
 <div class="grid grid-cols-1 gap-2 xl:grid-cols-4">
   <Card>
     <h1 class="text-lg font-bold">Format</h1>

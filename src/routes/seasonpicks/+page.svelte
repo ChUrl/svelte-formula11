@@ -1,1 +1,3 @@
-<h1>Season Picks</h1>
+<svelte:head>
+  <title>Formula 11 - Season Picks</title>
+</svelte:head>

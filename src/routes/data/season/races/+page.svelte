@@ -57,6 +57,10 @@
   ]);
 </script>
 
+<svelte:head>
+  <title>Formula 11 - Races</title>
+</svelte:head>
+
 <div class="pb-2">
   <Button width="w-full" color="tertiary" onclick={race_handler} shadow>
     <span class="font-bold">Create New Race</span>

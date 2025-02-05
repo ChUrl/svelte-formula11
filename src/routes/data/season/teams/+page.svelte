@@ -42,6 +42,10 @@
   ]);
 </script>
 
+<svelte:head>
+  <title>Formula 11 - Teams</title>
+</svelte:head>
+
 <div class="pb-2">
   <Button width="w-full" color="tertiary" onclick={team_handler} shadow>
     <span class="font-bold">Create New Team</span>

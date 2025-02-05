@@ -59,6 +59,10 @@
   ]);
 </script>
 
+<svelte:head>
+  <title>Formula 11 - Substitutions</title>
+</svelte:head>
+
 <div class="pb-2">
   <Button width="w-full" color="tertiary" onclick={substitution_handler} shadow>
     <span class="font-bold">Create New Substitution</span>

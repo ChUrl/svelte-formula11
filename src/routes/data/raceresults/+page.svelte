@@ -81,6 +81,10 @@
   ]);
 </script>
 
+<svelte:head>
+  <title>Formula 11 - Race Results</title>
+</svelte:head>
+
 <div class="pb-2">
   <Button width="w-full" color="tertiary" onclick={result_handler} shadow>
     <span class="font-bold">Create Race Result</span>

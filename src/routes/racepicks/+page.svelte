@@ -74,6 +74,10 @@
   };
 </script>
 
+<svelte:head>
+  <title>Formula 11 - Race Picks</title>
+</svelte:head>
+
 {#if data.currentrace}
   <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-0" width="w-full">
     <AccordionItem>

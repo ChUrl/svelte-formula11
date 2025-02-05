@@ -38,4 +38,8 @@
   };
 </script>
 
+<svelte:head>
+  <title>Formula 11 - Users</title>
+</svelte:head>
+
 <Table data={data.users} columns={users_columns} handler={users_handler} />
