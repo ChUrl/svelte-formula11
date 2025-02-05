@@ -56,104 +56,102 @@
   let race_select_value: string = $state(substitution?.race ?? "");
 </script>
 
-{#await data.graphics then graphics}
-  {#await data.drivers then drivers}
-    <Card
-      imgsrc={get_by_value<Driver>(drivers, "id", substitution?.substitute ?? "")?.headshot_url ??
-        get_driver_headshot_template(graphics)}
-      imgid="headshot_preview"
-      width="w-full sm:w-auto"
-      imgwidth={DRIVER_HEADSHOT_WIDTH}
-      imgheight={DRIVER_HEADSHOT_HEIGHT}
-      imgonclick={(event: Event) => modalStore.close()}
+{#await Promise.all([data.graphics, data.drivers]) then [graphics, drivers]}
+  <Card
+    imgsrc={get_by_value<Driver>(drivers, "id", substitution?.substitute ?? "")?.headshot_url ??
+      get_driver_headshot_template(graphics)}
+    imgid="headshot_preview"
+    width="w-full sm:w-auto"
+    imgwidth={DRIVER_HEADSHOT_WIDTH}
+    imgheight={DRIVER_HEADSHOT_HEIGHT}
+    imgonclick={(event: Event) => modalStore.close()}
+  >
+    <form
+      method="POST"
+      enctype="multipart/form-data"
+      use:enhance
+      onsubmit={() => modalStore.close()}
     >
-      <form
-        method="POST"
-        enctype="multipart/form-data"
-        use:enhance
-        onsubmit={() => modalStore.close()}
-      >
-        <!-- This is also disabled, because the ID should only be -->
-        <!-- "leaked" to users that are allowed to use the inputs -->
-        {#if substitution && !disabled}
-          <input name="id" type="hidden" value={substitution.id} />
-        {/if}
+      <!-- This is also disabled, because the ID should only be -->
+      <!-- "leaked" to users that are allowed to use the inputs -->
+      {#if substitution && !disabled}
+        <input name="id" type="hidden" value={substitution.id} />
+      {/if}
 
-        <div class="flex flex-col gap-2">
-          <!-- Substitute select -->
+      <div class="flex flex-col gap-2">
+        <!-- Substitute select -->
+        <Dropdown
+          name="substitute"
+          input_variable={substitute_select_value}
+          action={register_substitute_preview_handler}
+          options={driver_dropdown_options(inactive_drivers(drivers))}
+          {labelwidth}
+          {disabled}
+          {required}
+        >
+          Substitute
+        </Dropdown>
+
+        <!-- Driver select -->
+        <Dropdown
+          name="for"
+          input_variable={driver_select_value}
+          options={driver_dropdown_options(active_drivers(drivers))}
+          {labelwidth}
+          {disabled}
+          {required}
+        >
+          For
+        </Dropdown>
+
+        <!-- Race select -->
+        {#await data.races then races}
           <Dropdown
-            name="substitute"
-            input_variable={substitute_select_value}
-            action={register_substitute_preview_handler}
-            options={driver_dropdown_options(inactive_drivers(drivers))}
+            name="race"
+            input_variable={race_select_value}
+            options={race_dropdown_options(races)}
             {labelwidth}
             {disabled}
             {required}
           >
-            Substitute
+            Race
           </Dropdown>
+        {/await}
 
-          <!-- Driver select -->
-          <Dropdown
-            name="for"
-            input_variable={driver_select_value}
-            options={driver_dropdown_options(active_drivers(drivers))}
-            {labelwidth}
-            {disabled}
-            {required}
-          >
-            For
-          </Dropdown>
-
-          <!-- Race select -->
-          {#await data.races then races}
-            <Dropdown
-              name="race"
-              input_variable={race_select_value}
-              options={race_dropdown_options(races)}
-              {labelwidth}
+        <!-- Save/Delete buttons -->
+        <div class="flex justify-end gap-2">
+          {#if substitution}
+            <Button
+              formaction="?/update_substitution"
+              color="secondary"
               {disabled}
-              {required}
+              submit
+              width="w-1/2"
             >
-              Race
-            </Dropdown>
-          {/await}
-
-          <!-- Save/Delete buttons -->
-          <div class="flex justify-end gap-2">
-            {#if substitution}
-              <Button
-                formaction="?/update_substitution"
-                color="secondary"
-                {disabled}
-                submit
-                width="w-1/2"
-              >
-                Save Changes
-              </Button>
-              <Button
-                formaction="?/delete_substitution"
-                color="primary"
-                {disabled}
-                submit
-                width="w-1/2"
-              >
-                Delete
-              </Button>
-            {:else}
-              <Button
-                formaction="?/create_substitution"
-                color="tertiary"
-                {disabled}
-                submit
-                width="w-full"
-              >
-                Create Substitution
-              </Button>
-            {/if}
-          </div>
+              Save Changes
+            </Button>
+            <Button
+              formaction="?/delete_substitution"
+              color="primary"
+              {disabled}
+              submit
+              width="w-1/2"
+            >
+              Delete
+            </Button>
+          {:else}
+            <Button
+              formaction="?/create_substitution"
+              color="tertiary"
+              {disabled}
+              submit
+              width="w-full"
+            >
+              Create Substitution
+            </Button>
+          {/if}
         </div>
-      </form>
-    </Card>
-  {/await}
+      </div>
+    </form>
+  </Card>
 {/await}

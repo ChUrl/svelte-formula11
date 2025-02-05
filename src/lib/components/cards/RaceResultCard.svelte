@@ -172,20 +172,18 @@
 
     <div class="mt-2 flex flex-col gap-2">
       <!-- PXXs autocomplete chips -->
-      {#await currentrace then current}
-        {#await pxxs_whitelist then whitelist}
-          <InputChip
-            bind:input={pxxs_input}
-            bind:value={pxxs_chips}
-            {whitelist}
-            allowUpperCase
-            placeholder="Select P{(current?.pxx ?? -10) - 3} to P{(current?.pxx ?? -10) + 3}..."
-            name="pxxs_codes"
-            {disabled}
-            {required}
-            on:remove={on_pxxs_chip_remove}
-          />
-        {/await}
+      {#await Promise.all([currentrace, pxxs_whitelist]) then [current, whitelist]}
+        <InputChip
+          bind:input={pxxs_input}
+          bind:value={pxxs_chips}
+          {whitelist}
+          allowUpperCase
+          placeholder="Select P{(current?.pxx ?? -10) - 3} to P{(current?.pxx ?? -10) + 3}..."
+          name="pxxs_codes"
+          {disabled}
+          {required}
+          on:remove={on_pxxs_chip_remove}
+        />
       {/await}
       <div class="card max-h-48 w-full overflow-y-auto p-2" tabindex="-1">
         {#await pxxs_options then options}

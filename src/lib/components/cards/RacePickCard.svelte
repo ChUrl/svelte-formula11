@@ -88,97 +88,89 @@
   let dnf_select_value: string = $state(racepick?.dnf ?? "");
 </script>
 
-{#await data.graphics then graphics}
-  {#await data.drivers then drivers}
-    <Card
-      imgsrc={get_by_value<Driver>(drivers, "id", racepick?.pxx ?? "")?.headshot_url ??
-        get_driver_headshot_template(graphics)}
-      imgid="headshot_preview"
-      width="w-full sm:w-auto"
-      imgwidth={DRIVER_HEADSHOT_WIDTH}
-      imgheight={DRIVER_HEADSHOT_HEIGHT}
-      imgonclick={(event: Event) => modalStore.close()}
+{#await Promise.all([data.graphics, data.drivers]) then [graphics, drivers]}
+  <Card
+    imgsrc={get_by_value<Driver>(drivers, "id", racepick?.pxx ?? "")?.headshot_url ??
+      get_driver_headshot_template(graphics)}
+    imgid="headshot_preview"
+    width="w-full sm:w-auto"
+    imgwidth={DRIVER_HEADSHOT_WIDTH}
+    imgheight={DRIVER_HEADSHOT_HEIGHT}
+    imgonclick={(event: Event) => modalStore.close()}
+  >
+    <form
+      method="POST"
+      enctype="multipart/form-data"
+      use:enhance
+      onsubmit={() => modalStore.close()}
     >
-      <form
-        method="POST"
-        enctype="multipart/form-data"
-        use:enhance
-        onsubmit={() => modalStore.close()}
-      >
-        <!-- This is also disabled, because the ID should only be -->
-        <!-- "leaked" to users that are allowed to use the inputs -->
-        {#if racepick && !disabled}
-          <input name="id" type="hidden" value={racepick.id} />
-        {/if}
+      <!-- This is also disabled, because the ID should only be -->
+      <!-- "leaked" to users that are allowed to use the inputs -->
+      {#if racepick && !disabled}
+        <input name="id" type="hidden" value={racepick.id} />
+      {/if}
 
-        <input name="user" type="hidden" value={data.user?.id} />
-        <input name="race" type="hidden" value={data.currentrace?.id} />
+      <input name="user" type="hidden" value={data.user?.id} />
+      <input name="race" type="hidden" value={data.currentrace?.id} />
 
-        <div class="flex flex-col gap-2">
-          <!-- PXX select -->
-          {#await active_drivers_and_substitutes then pxx_drivers}
-            <Dropdown
-              name="pxx"
-              input_variable={pxx_select_value}
-              action={register_pxx_preview_handler}
-              options={driver_dropdown_options(pxx_drivers)}
-              {labelwidth}
+      <div class="flex flex-col gap-2">
+        <!-- PXX select -->
+        {#await active_drivers_and_substitutes then pxx_drivers}
+          <Dropdown
+            name="pxx"
+            input_variable={pxx_select_value}
+            action={register_pxx_preview_handler}
+            options={driver_dropdown_options(pxx_drivers)}
+            {labelwidth}
+            {disabled}
+            {required}
+          >
+            P{data.currentrace?.pxx ?? "XX"}
+          </Dropdown>
+        {/await}
+
+        <!-- DNF select -->
+        {#await active_drivers_and_substitutes then pxx_drivers}
+          <Dropdown
+            name="dnf"
+            input_variable={dnf_select_value}
+            options={driver_dropdown_options(pxx_drivers)}
+            {labelwidth}
+            {disabled}
+            {required}
+          >
+            DNF
+          </Dropdown>
+        {/await}
+
+        <!-- Save/Delete buttons -->
+        <div class="flex justify-end gap-2">
+          {#if racepick}
+            <Button
+              formaction="?/update_racepick"
+              color="secondary"
               {disabled}
-              {required}
+              submit
+              width="w-1/2"
             >
-              P{data.currentrace?.pxx ?? "XX"}
-            </Dropdown>
-          {/await}
-
-          <!-- DNF select -->
-          {#await active_drivers_and_substitutes then pxx_drivers}
-            <Dropdown
-              name="dnf"
-              input_variable={dnf_select_value}
-              options={driver_dropdown_options(pxx_drivers)}
-              {labelwidth}
+              Save Changes
+            </Button>
+            <Button formaction="?/delete_racepick" color="primary" {disabled} submit width="w-1/2">
+              Delete
+            </Button>
+          {:else}
+            <Button
+              formaction="?/create_racepick"
+              color="tertiary"
               {disabled}
-              {required}
+              submit
+              width="w-full"
             >
-              DNF
-            </Dropdown>
-          {/await}
-
-          <!-- Save/Delete buttons -->
-          <div class="flex justify-end gap-2">
-            {#if racepick}
-              <Button
-                formaction="?/update_racepick"
-                color="secondary"
-                {disabled}
-                submit
-                width="w-1/2"
-              >
-                Save Changes
-              </Button>
-              <Button
-                formaction="?/delete_racepick"
-                color="primary"
-                {disabled}
-                submit
-                width="w-1/2"
-              >
-                Delete
-              </Button>
-            {:else}
-              <Button
-                formaction="?/create_racepick"
-                color="tertiary"
-                {disabled}
-                submit
-                width="w-full"
-              >
-                Make Pick
-              </Button>
-            {/if}
-          </div>
+              Make Pick
+            </Button>
+          {/if}
         </div>
-      </form>
-    </Card>
-  {/await}
+      </div>
+    </form>
+  </Card>
 {/await}
