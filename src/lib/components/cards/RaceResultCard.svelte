@@ -33,11 +33,42 @@
   const required: boolean = $derived(!result);
   const disabled: boolean = $derived(!data.admin);
   const labelwidth: string = "70px";
+
+  let race_select_value: string = $state(result?.race ?? "");
+
+  // TODO: Currentrace needs to be updated once a race is selected
+  //       This way it doesn't update the placeholder (or the chips)...
   const currentrace: Promise<Race | undefined> = $derived.by(async () =>
-    get_by_value(await data.races, "id", result?.race ?? "Invalid"),
+    get_by_value(await data.races, "id", race_select_value),
   );
 
+  let pxxs_input: string = $state("");
+  let pxxs_chips: string[] = $state([]);
+
+  let dnfs_input: string = $state("");
+  let dnfs_chips: string[] = $state([]);
+
+  // This is the actual data that gets sent through the form
+  let pxxs_ids: string[] = $state(result?.pxxs ?? []);
+  let dnfs_ids: string[] = $state(result?.dnfs ?? []);
+
   const pxxs_options: Promise<AutocompleteOption<string>[]> = $derived.by(async () =>
+    (await data.drivers)
+      .filter((driver: Driver) => {
+        // Filter out all drivers that are already selected
+        return !pxxs_ids.includes(driver.id);
+      })
+      .map((driver: Driver) => {
+        return {
+          // NOTE: Because Skeleton displays the values inside the autocomplete input,
+          //       we have to supply the driver code twice and manage a list of ids manually (ugh)
+          label: driver.code,
+          value: driver.code,
+        };
+      }),
+  );
+
+  const dnfs_options: Promise<AutocompleteOption<string>[]> = $derived.by(async () =>
     (await data.drivers).map((driver: Driver) => {
       return {
         // NOTE: Because Skeleton displays the values inside the autocomplete input,
@@ -53,18 +84,6 @@
       return driver.code;
     }),
   );
-
-  let race_select_value: string = $state(result?.race ?? "");
-
-  let pxxs_input: string = $state("");
-  let pxxs_chips: string[] = $state([]);
-
-  let dnfs_input: string = $state("");
-  let dnfs_chips: string[] = $state([]);
-
-  // This is the actual data that gets sent through the form
-  let pxxs_ids: string[] = $state(result?.pxxs ?? []);
-  let dnfs_ids: string[] = $state(result?.dnfs ?? []);
 
   const on_pxxs_chip_select = async (
     event: CustomEvent<AutocompleteOption<string>>,
@@ -210,7 +229,7 @@
         />
       {/await}
       <div class="card max-h-48 w-full overflow-y-auto p-2" tabindex="-1">
-        {#await pxxs_options then options}
+        {#await dnfs_options then options}
           <Autocomplete
             bind:input={dnfs_input}
             {options}
