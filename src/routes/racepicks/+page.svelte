@@ -128,85 +128,73 @@
 
           <!-- Only show the userguess if signed in -->
           {#if data.user}
-            {#await data.graphics then graphics}
-              {#await data.drivers then drivers}
-                {#await racepick then pick}
-                  <div class="mt-2 flex gap-2">
-                    <div class="card w-full min-w-40 p-2 pb-0 shadow">
-                      <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
-                      <LazyImage
-                        src={get_by_value(drivers, "id", pick?.pxx ?? "")?.headshot_url ??
-                          get_driver_headshot_template(graphics)}
-                        imgwidth={DRIVER_HEADSHOT_WIDTH}
-                        imgheight={DRIVER_HEADSHOT_HEIGHT}
-                        containerstyle="height: 115px; margin: auto;"
-                        imgclass="bg-transparent cursor-pointer"
-                        hoverzoom
-                        onclick={racepick_handler}
-                      />
-                    </div>
-                    <div class="card w-full min-w-40 p-2 pb-0 shadow">
-                      <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
-                      <LazyImage
-                        src={get_by_value(drivers, "id", pick?.dnf ?? "")?.headshot_url ??
-                          get_driver_headshot_template(graphics)}
-                        imgwidth={DRIVER_HEADSHOT_WIDTH}
-                        imgheight={DRIVER_HEADSHOT_HEIGHT}
-                        containerstyle="height: 115px; margin: auto;"
-                        imgclass="bg-transparent cursor-pointer"
-                        hoverzoom
-                        onclick={racepick_handler}
-                      />
-                    </div>
-                  </div>
-                {/await}
-              {/await}
+            {#await Promise.all( [data.graphics, data.drivers, racepick], ) then [graphics, drivers, pick]}
+              <div class="mt-2 flex gap-2">
+                <div class="card w-full min-w-40 p-2 pb-0 shadow">
+                  <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
+                  <LazyImage
+                    src={get_by_value(drivers, "id", pick?.pxx ?? "")?.headshot_url ??
+                      get_driver_headshot_template(graphics)}
+                    imgwidth={DRIVER_HEADSHOT_WIDTH}
+                    imgheight={DRIVER_HEADSHOT_HEIGHT}
+                    containerstyle="height: 115px; margin: auto;"
+                    imgclass="bg-transparent cursor-pointer"
+                    hoverzoom
+                    onclick={racepick_handler}
+                  />
+                </div>
+                <div class="card w-full min-w-40 p-2 pb-0 shadow">
+                  <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
+                  <LazyImage
+                    src={get_by_value(drivers, "id", pick?.dnf ?? "")?.headshot_url ??
+                      get_driver_headshot_template(graphics)}
+                    imgwidth={DRIVER_HEADSHOT_WIDTH}
+                    imgheight={DRIVER_HEADSHOT_HEIGHT}
+                    containerstyle="height: 115px; margin: auto;"
+                    imgclass="bg-transparent cursor-pointer"
+                    hoverzoom
+                    onclick={racepick_handler}
+                  />
+                </div>
+              </div>
             {/await}
           {/if}
 
           <!-- Show users that have and have not picked yet -->
-          {#await data.currentpickedusers then currentpicked}
+          {#await Promise.all( [data.graphics, data.currentpickedusers, pickedusers, outstandingusers], ) then [graphics, currentpicked, picked, outstanding]}
             <div class="mt-2 flex gap-2">
-              {#await pickedusers then picked}
-                <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
-                  <h1 class="text-nowrap font-bold">
-                    Picked ({picked.length}/{currentpicked.length}):
-                  </h1>
-                  <div class="mt-1 grid grid-cols-4 gap-x-2 gap-y-0.5">
-                    {#await data.graphics then graphics}
-                      {#each picked.slice(0, 16) as user}
-                        <LazyImage
-                          src={user.avatar_url ?? get_driver_headshot_template(graphics)}
-                          imgwidth={AVATAR_WIDTH}
-                          imgheight={AVATAR_HEIGHT}
-                          containerstyle="height: 35px; width: 35px;"
-                          imgclass="bg-surface-400 rounded-full"
-                        />
-                      {/each}
-                    {/await}
-                  </div>
+              <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+                <h1 class="text-nowrap font-bold">
+                  Picked ({picked.length}/{currentpicked.length}):
+                </h1>
+                <div class="mt-1 grid grid-cols-4 gap-x-2 gap-y-0.5">
+                  {#each picked.slice(0, 16) as user}
+                    <LazyImage
+                      src={user.avatar_url ?? get_driver_headshot_template(graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                    />
+                  {/each}
                 </div>
-              {/await}
-              {#await outstandingusers then outstanding}
-                <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
-                  <h1 class="text-nowrap font-bold">
-                    Outstanding ({outstanding.length}/{currentpicked.length}):
-                  </h1>
-                  <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                    {#await data.graphics then graphics}
-                      {#each outstanding.slice(0, 16) as user}
-                        <LazyImage
-                          src={user.avatar_url ?? get_driver_headshot_template(graphics)}
-                          imgwidth={AVATAR_WIDTH}
-                          imgheight={AVATAR_HEIGHT}
-                          containerstyle="height: 35px; width: 35px;"
-                          imgclass="bg-surface-400 rounded-full"
-                        />
-                      {/each}
-                    {/await}
-                  </div>
+              </div>
+              <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+                <h1 class="text-nowrap font-bold">
+                  Outstanding ({outstanding.length}/{currentpicked.length}):
+                </h1>
+                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                  {#each outstanding.slice(0, 16) as user}
+                    <LazyImage
+                      src={user.avatar_url ?? get_driver_headshot_template(graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                    />
+                  {/each}
                 </div>
-              {/await}
+              </div>
             </div>
           {/await}
         </div>
@@ -259,137 +247,119 @@
       </div>
     </div>
 
-    {#await data.races then races}
-      {#await data.raceresults then raceresults}
-        {#each raceresults as result}
-          {@const race = get_by_value(races, "id", result.race)}
+    {#await Promise.all( [data.races, data.raceresults, data.drivers], ) then [races, raceresults, drivers]}
+      {#each raceresults as result}
+        {@const race = get_by_value(races, "id", result.race)}
 
-          <div
-            use:popup={race_popupsettings(race?.id ?? "Invalid")}
-            class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
-          >
-            <span class="hidden text-sm font-bold lg:block">
-              {race?.step}: {race?.name}
-            </span>
-            <span class="block rotate-90 text-sm font-bold lg:hidden">
-              {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
-            </span>
-            <span class="hidden text-sm lg:block">Date: {formatdate(race?.racedate ?? "")}</span>
-            <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
+        <div
+          use:popup={race_popupsettings(race?.id ?? "Invalid")}
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
+        >
+          <span class="hidden text-sm font-bold lg:block">
+            {race?.step}: {race?.name}
+          </span>
+          <span class="block rotate-90 text-sm font-bold lg:hidden">
+            {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
+          </span>
+          <span class="hidden text-sm lg:block">Date: {formatdate(race?.racedate ?? "")}</span>
+          <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
+        </div>
+
+        <!-- The race result popup is triggered on click on the race -->
+        <div data-popup={race?.id ?? "Invalid"} class="card z-50 p-2 shadow">
+          <span class="font-bold">Result:</span>
+          <div class="mt-2 flex flex-col gap-1">
+            {#each result.pxxs as pxx, index}
+              {@const driver = get_by_value(drivers, "id", pxx)}
+              <div class="flex gap-2">
+                <span class="w-8">P{(race?.pxx ?? -100) - 3 + index}:</span>
+                <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[index]};">
+                  {driver?.code}
+                </span>
+              </div>
+            {/each}
+
+            {#if result.dnfs.length > 0}
+              <hr class="border-black" style="border-style: inset;" />
+            {/if}
+
+            {#each result.dnfs as dnf}
+              {@const driver = get_by_value(drivers, "id", dnf)}
+              <div class="flex gap-2">
+                <span class="w-8">DNF:</span>
+                <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[3]};">
+                  {driver?.code}
+                </span>
+              </div>
+            {/each}
           </div>
-
-          <!-- The race result popup is triggered on click on the race -->
-          <div data-popup={race?.id ?? "Invalid"} class="card z-50 p-2 shadow">
-            <span class="font-bold">Result:</span>
-            <div class="mt-2 flex flex-col gap-1">
-              {#await data.drivers then drivers}
-                {#each result.pxxs as pxx, index}
-                  {@const driver = get_by_value(drivers, "id", pxx)}
-                  <div class="flex gap-2">
-                    <span class="w-8">P{(race?.pxx ?? -100) - 3 + index}:</span>
-                    <span
-                      class="badge w-10 p-1 text-center"
-                      style="background: {PXX_COLORS[index]};"
-                    >
-                      {driver?.code}
-                    </span>
-                  </div>
-                {/each}
-
-                {#if result.dnfs.length > 0}
-                  <hr class="border-black" style="border-style: inset;" />
-                {/if}
-
-                {#each result.dnfs as dnf}
-                  {@const driver = get_by_value(drivers, "id", dnf)}
-                  <div class="flex gap-2">
-                    <span class="w-8">DNF:</span>
-                    <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[3]};">
-                      {driver?.code}
-                    </span>
-                  </div>
-                {/each}
-              {/await}
-            </div>
-          </div>
-        {/each}
-      {/await}
+        </div>
+      {/each}
     {/await}
   </div>
 
   <div class="hide-scrollbar flex w-full overflow-x-scroll pb-2">
     <!-- Not ideal but currentpickedusers contains all users, so we do not need to fetch the users separately -->
-    <!-- TODO: Uhhh can I write this await stuff differently??? -->
-    {#await data.currentpickedusers then currentpicked}
-      {#await data.racepicks then racepicks}
-        {#await data.races then races}
-          {#await data.drivers then drivers}
-            {#await data.raceresults then raceresults}
-              {#each currentpicked as user}
-                {@const picks = racepicks.filter((pick: RacePick) => pick.user === user.id)}
+    {#await Promise.all( [data.currentpickedusers, data.racepicks, data.races, data.drivers, data.raceresults], ) then [currentpicked, racepicks, races, drivers, raceresults]}
+      {#each currentpicked as user}
+        {@const picks = racepicks.filter((pick: RacePick) => pick.user === user.id)}
 
-                <div
-                  class="card ml-1 mt-2 w-full min-w-12 overflow-hidden py-2 shadow lg:ml-2 {data.user &&
-                  data.user.username === user.username
-                    ? 'bg-primary-300'
-                    : ''}"
-                >
-                  <!-- Avatar + name display at the top -->
-                  <div class="mx-auto flex h-10 w-fit">
-                    {#await data.graphics then graphics}
-                      <LazyImage
-                        src={user.avatar_url ?? get_driver_headshot_template(graphics)}
-                        imgwidth={AVATAR_WIDTH}
-                        imgheight={AVATAR_HEIGHT}
-                        containerstyle="height: 40px; width: 40px;"
-                        imgclass="bg-surface-400 rounded-full"
-                      />
-                    {/await}
-                    <div
-                      style="height: 40px; line-height: 40px;"
-                      class="ml-2 hidden text-nowrap text-center align-middle lg:block"
-                    >
-                      <!-- TODO: Setting to toggle between username or firstname display -->
-                      {user.username}
-                    </div>
-                  </div>
-
-                  {#each raceresults as result}
-                    {@const race = get_by_value(races, "id", result.race)}
-                    {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
-                    {@const pxxcolor = PXX_COLORS[result.pxxs.indexOf(pick?.pxx ?? "Invalid")]}
-                    {@const dnfcolor =
-                      result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0
-                        ? PXX_COLORS[3]
-                        : PXX_COLORS[-1]}
-
-                    {#if pick}
-                      <div class="mt-2 h-20 w-full border bg-surface-300 p-1 lg:p-2">
-                        <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
-                          <span
-                            class="p-1 text-center text-sm w-10 rounded-container-token"
-                            style="background: {pxxcolor};"
-                          >
-                            {get_by_value(drivers, "id", pick?.pxx ?? "")?.code}
-                          </span>
-                          <span
-                            class="p-1 text-center text-sm w-10 rounded-container-token"
-                            style="background: {dnfcolor};"
-                          >
-                            {get_by_value(drivers, "id", pick?.dnf ?? "")?.code}
-                          </span>
-                        </div>
-                      </div>
-                    {:else}
-                      <div class="mt-2 h-20 w-full"></div>
-                    {/if}
-                  {/each}
-                </div>
-              {/each}
+        <div
+          class="card ml-1 mt-2 w-full min-w-12 overflow-hidden py-2 shadow lg:ml-2 {data.user &&
+          data.user.username === user.username
+            ? 'bg-primary-300'
+            : ''}"
+        >
+          <!-- Avatar + name display at the top -->
+          <div class="mx-auto flex h-10 w-fit">
+            {#await data.graphics then graphics}
+              <LazyImage
+                src={user.avatar_url ?? get_driver_headshot_template(graphics)}
+                imgwidth={AVATAR_WIDTH}
+                imgheight={AVATAR_HEIGHT}
+                containerstyle="height: 40px; width: 40px;"
+                imgclass="bg-surface-400 rounded-full"
+              />
             {/await}
-          {/await}
-        {/await}
-      {/await}
+            <div
+              style="height: 40px; line-height: 40px;"
+              class="ml-2 hidden text-nowrap text-center align-middle lg:block"
+            >
+              <!-- TODO: Setting to toggle between username or firstname display -->
+              {user.username}
+            </div>
+          </div>
+
+          {#each raceresults as result}
+            {@const race = get_by_value(races, "id", result.race)}
+            {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
+            {@const pxxcolor = PXX_COLORS[result.pxxs.indexOf(pick?.pxx ?? "Invalid")]}
+            {@const dnfcolor =
+              result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? PXX_COLORS[3] : PXX_COLORS[-1]}
+
+            {#if pick}
+              <div class="mt-2 h-20 w-full border bg-surface-300 p-1 lg:p-2">
+                <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
+                  <span
+                    class="w-10 p-1 text-center text-sm rounded-container-token"
+                    style="background: {pxxcolor};"
+                  >
+                    {get_by_value(drivers, "id", pick?.pxx ?? "")?.code}
+                  </span>
+                  <span
+                    class="w-10 p-1 text-center text-sm rounded-container-token"
+                    style="background: {dnfcolor};"
+                  >
+                    {get_by_value(drivers, "id", pick?.dnf ?? "")?.code}
+                  </span>
+                </div>
+              </div>
+            {:else}
+              <div class="mt-2 h-20 w-full"></div>
+            {/if}
+          {/each}
+        </div>
+      {/each}
     {/await}
   </div>
 </div>
