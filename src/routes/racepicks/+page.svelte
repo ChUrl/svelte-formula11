@@ -19,13 +19,13 @@
     RACE_PICTOGRAM_HEIGHT,
     RACE_PICTOGRAM_WIDTH,
   } from "$lib/config";
-  import type { CurrentPickedUser, Driver, RacePick, Substitution } from "$lib/schema";
+  import type { CurrentPickedUser, RacePick } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
   import { format } from "date-fns";
 
   let { data }: { data: PageData } = $props();
 
-  const currentpick: RacePick | undefined = $derived(
+  const racepick: RacePick | undefined = $derived(
     data.racepicks.filter(
       (racepick: RacePick) =>
         racepick.expand.user.username === data.user?.username &&
@@ -33,58 +33,28 @@
     )[0] ?? undefined,
   );
 
-  const pxx_select_value: string = $derived(currentpick?.pxx ?? "");
-  const dnf_select_value: string = $derived(currentpick?.dnf ?? "");
-
-  const active_drivers_and_substitutes: Promise<Driver[]> = $derived.by(async () => {
-    if (!data.currentrace) return [];
-
-    let drivers: Driver[] = await data.drivers;
-    let substitutions: Substitution[] = await data.substitutions;
-
-    let active_and_substitutes: Driver[] = drivers.filter((driver: Driver) => driver.active);
-
-    substitutions
-      .filter((substitution: Substitution) => substitution.race === data.currentrace?.id)
-      .forEach((substitution: Substitution) => {
-        const for_index = active_and_substitutes.findIndex(
-          (driver: Driver) => driver.id === substitution.for,
-        );
-        const sub_index = drivers.findIndex(
-          (driver: Driver) => driver.id === substitution.substitute,
-        );
-
-        active_and_substitutes[for_index] = drivers[sub_index];
-      });
-
-    return active_and_substitutes.sort((a: Driver, b: Driver) => a.code.localeCompare(b.code));
-  });
-
   const modalStore: ModalStore = getModalStore();
-  const create_guess_handler = async (event: Event) => {
+  const racepick_handler = async (event: Event) => {
     const modalSettings: ModalSettings = {
       type: "component",
       component: "racePickCard",
       meta: {
-        racepick: currentpick,
-        currentrace: data.currentrace,
-        user: data.user,
-        drivers: await active_drivers_and_substitutes,
-        disable_inputs: false, // TODO: Datelock
-        headshot_template: get_driver_headshot_template(await data.graphics),
-        pxx_select_value: pxx_select_value,
-        dnf_select_value: dnf_select_value,
+        data,
+        racepick,
       },
     };
 
     modalStore.trigger(modalSettings);
   };
 
+  // Users that have already picked the current race
   let pickedusers: CurrentPickedUser[] = $derived(
     data.currentpickedusers.filter(
       (currentpickeduser: CurrentPickedUser) => currentpickeduser.picked,
     ),
   );
+
+  // Users that didn't already pick the current race
   let outstandingusers: CurrentPickedUser[] = $derived(
     data.currentpickedusers.filter(
       (currentpickeduser: CurrentPickedUser) => !currentpickeduser.picked,
@@ -114,7 +84,7 @@
         <!-- Show information about the next race -->
         <div class="justify-center gap-2 lg:flex">
           <div class="mt-2 flex gap-2">
-            <div class="card flex w-full flex-col p-2 shadow">
+            <div class="card flex w-full min-w-40 flex-col p-2 shadow">
               <span class="font-bold">
                 Step {data.currentrace.step}: {data.currentrace.name}
               </span>
@@ -143,13 +113,13 @@
                 <Countdown date={data.currentrace.racedate} extraclass="font-bold" />
               </div>
             </div>
-            <div class="card w-full p-2 shadow">
-              <span class="text-nowrap font-bold">Track Layout:</span>
+            <div class="card w-full min-w-40 p-2 shadow">
+              <h1 class="mb-2 text-nowrap font-bold">Track Layout:</h1>
               <LazyImage
                 src={data.currentrace.pictogram_url ?? "Invalid"}
                 imgwidth={RACE_PICTOGRAM_WIDTH}
                 imgheight={RACE_PICTOGRAM_HEIGHT}
-                containerstyle="height: 115px; margin: auto;"
+                containerstyle="height: 105px; margin: auto;"
                 imgstyle="background: transparent;"
               />
             </div>
@@ -158,36 +128,36 @@
           <!-- Only show the userguess if signed in -->
           {#if data.user}
             <div class="mt-2 flex gap-2">
-              <div class="card w-full p-2 pb-0 shadow">
+              <div class="card w-full min-w-40 p-2 pb-0 shadow">
                 <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
                 {#await data.graphics then graphics}
                   {#await data.drivers then drivers}
                     <LazyImage
-                      src={get_by_value(drivers, "id", currentpick?.pxx ?? "")?.headshot_url ??
+                      src={get_by_value(drivers, "id", racepick?.pxx ?? "")?.headshot_url ??
                         get_driver_headshot_template(graphics)}
                       imgwidth={DRIVER_HEADSHOT_WIDTH}
                       imgheight={DRIVER_HEADSHOT_HEIGHT}
                       containerstyle="height: 115px; margin: auto;"
                       imgclass="bg-transparent cursor-pointer"
                       hoverzoom
-                      onclick={create_guess_handler}
+                      onclick={racepick_handler}
                     />
                   {/await}
                 {/await}
               </div>
-              <div class="card w-full p-2 pb-0 shadow">
+              <div class="card w-full min-w-40 p-2 pb-0 shadow">
                 <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
                 {#await data.graphics then graphics}
                   {#await data.drivers then drivers}
                     <LazyImage
-                      src={get_by_value(drivers, "id", currentpick?.dnf ?? "")?.headshot_url ??
+                      src={get_by_value(drivers, "id", racepick?.dnf ?? "")?.headshot_url ??
                         get_driver_headshot_template(graphics)}
                       imgwidth={DRIVER_HEADSHOT_WIDTH}
                       imgheight={DRIVER_HEADSHOT_HEIGHT}
                       containerstyle="height: 115px; margin: auto;"
                       imgclass="bg-transparent cursor-pointer"
                       hoverzoom
-                      onclick={create_guess_handler}
+                      onclick={racepick_handler}
                     />
                   {/await}
                 {/await}
@@ -197,7 +167,7 @@
 
           <!-- Show users that have and have not picked yet -->
           <div class="mt-2 flex gap-2">
-            <div class="card w-full p-2 shadow">
+            <div class="card w-full min-w-40 p-2 shadow">
               <h1 class="text-nowrap font-bold">
                 Picked ({pickedusers.length}/{data.currentpickedusers.length}):
               </h1>
@@ -215,7 +185,7 @@
                 {/await}
               </div>
             </div>
-            <div class="card w-full p-2 shadow">
+            <div class="card w-full min-w-40 p-2 shadow">
               <h1 class="text-nowrap font-bold">
                 Outstanding ({outstandingusers.length}/{data.currentpickedusers.length}):
               </h1>
@@ -404,12 +374,3 @@
     {/each}
   </div>
 </div>
-
-<!-- "Table" of past guesses (not an actual table this time): -->
-<!-- - Left column (rounded div column with race information: name, step, pxx) -->
-<!--   - Show full result on-click? -->
-<!-- - Rounded middle block (rest of width) with guesses: -->
-<!--   - Just avatar at the top (reduce width) with points below, username on hover? -->
-<!--   - Color-coded compact pxx + dnf picks (with podium + skull icons to differentiate?) -->
-
-<!-- Make 2 variations (races as rows and races as columns) + settings toggle? -->
