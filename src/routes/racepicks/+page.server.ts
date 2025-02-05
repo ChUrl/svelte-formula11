@@ -83,10 +83,10 @@ export const load: PageServerLoad = async ({ fetch, locals }) => {
   };
 
   return {
-    currentrace: await fetch_currentrace(),
-
     racepicks: fetch_racepicks(),
     currentpickedusers: fetch_currentpickedusers(),
     raceresults: fetch_raceresults(),
+
+    currentrace: await fetch_currentrace(),
   };
 };
