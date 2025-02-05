@@ -7,7 +7,7 @@
     type ModalStore,
   } from "@skeletonlabs/skeleton";
   import { Button, Input, Card, Dropdown } from "$lib/components";
-  import type { Driver } from "$lib/schema";
+  import type { Driver, SkeletonData } from "$lib/schema";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { team_dropdown_options } from "$lib/dropdown";
   import { enhance } from "$app/forms";
@@ -15,7 +15,7 @@
 
   interface DriverCardProps {
     /** Data passed from the page context */
-    data: any;
+    data: SkeletonData;
 
     /** The [Driver] object used to prefill values. */
     driver?: Driver;

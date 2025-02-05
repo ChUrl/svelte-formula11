@@ -3,6 +3,20 @@
 
 // Application Data
 
+/**
+ * The data returned from the root layout's [load]-function.
+ */
+export interface SkeletonData {
+  user: User;
+  admin: boolean;
+
+  graphics: Promise<Graphic[]>;
+  teams: Promise<Team[]>;
+  drivers: Promise<Driver[]>;
+  races: Promise<Race[]>;
+  substitutions: Promise<Substitution[]>;
+}
+
 export interface Graphic {
   name: string;
   file: string;

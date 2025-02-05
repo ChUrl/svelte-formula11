@@ -1,17 +1,16 @@
 <script lang="ts">
   import { Card, Button, Dropdown } from "$lib/components";
-  import type { Driver, Race, Substitution } from "$lib/schema";
+  import type { Driver, Race, SkeletonData, Substitution } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
   import type { Action } from "svelte/action";
   import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { driver_dropdown_options, race_dropdown_options } from "$lib/dropdown";
   import { enhance } from "$app/forms";
-  import { sub } from "date-fns";
 
   interface SubstitutionCardProps {
     /** Data passed from the page context */
-    data: any;
+    data: SkeletonData;
 
     /** The [Substitution] object used to prefill values. */
     substitution?: Substitution;

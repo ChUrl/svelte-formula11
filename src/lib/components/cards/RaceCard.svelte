@@ -2,7 +2,7 @@
   import { get_image_preview_event_handler } from "$lib/image";
   import { FileDropzone, getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
   import { Button, Card, Input } from "$lib/components";
-  import type { Race } from "$lib/schema";
+  import type { Race, SkeletonData } from "$lib/schema";
   import { format } from "date-fns";
   import { RACE_PICTOGRAM_HEIGHT, RACE_PICTOGRAM_WIDTH } from "$lib/config";
   import { enhance } from "$app/forms";
@@ -10,7 +10,7 @@
 
   interface RaceCardProps {
     /** Data passed from the page context */
-    data: any;
+    data: SkeletonData;
 
     /** The [Race] object used to prefill values. */
     race?: Race;

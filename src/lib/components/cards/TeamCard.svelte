@@ -2,14 +2,14 @@
   import { get_image_preview_event_handler } from "$lib/image";
   import { FileDropzone, getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
   import { Card, Button, Input, LazyImage } from "$lib/components";
-  import type { Team } from "$lib/schema";
+  import type { SkeletonData, Team } from "$lib/schema";
   import { TEAM_BANNER_HEIGHT, TEAM_BANNER_WIDTH } from "$lib/config";
   import { enhance } from "$app/forms";
   import { get_team_banner_template, get_team_logo_template } from "$lib/database";
 
   interface TeamCardProps {
     /** Data from the page context */
-    data: any;
+    data: SkeletonData;
 
     /** The [Team] object used to prefill values. */
     team?: Team;

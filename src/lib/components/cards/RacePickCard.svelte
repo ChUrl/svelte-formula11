@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Card, Button, Dropdown } from "$lib/components";
-  import type { Driver, Race, RacePick, Substitution } from "$lib/schema";
+  import type { Driver, Race, RacePick, SkeletonData, Substitution } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
   import type { Action } from "svelte/action";
   import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
@@ -10,7 +10,7 @@
 
   interface RacePickCardProps {
     /** Data passed from the page context */
-    data: any;
+    data: SkeletonData & { currentrace: Race };
 
     /** The [RacePick] object used to prefill values. */
     racepick?: RacePick;
@@ -111,6 +111,7 @@
               options={driver_dropdown_options(pxx_drivers)}
               {labelwidth}
               {disabled}
+              {required}
             >
               P{data.currentrace?.pxx ?? "XX"}
             </Dropdown>
@@ -124,6 +125,7 @@
               options={driver_dropdown_options(pxx_drivers)}
               {labelwidth}
               {disabled}
+              {required}
             >
               DNF
             </Dropdown>
