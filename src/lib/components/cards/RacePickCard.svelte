@@ -37,7 +37,10 @@
 
     const src: string =
       get_by_value<Driver>(await data.drivers, "code", target.value)?.headshot_url || "";
-    (document.getElementById("headshot_preview") as HTMLImageElement).src = src;
+    const img = document.getElementById("headshot_preview") as HTMLImageElement;
+
+    // Can be null if lazyimg not loaded
+    if (img) img.src = src;
   };
 
   const required: boolean = $derived(!racepick);
