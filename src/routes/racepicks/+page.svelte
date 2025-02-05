@@ -367,13 +367,13 @@
                       <div class="mt-2 h-20 w-full border bg-surface-300 p-1 lg:p-2">
                         <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
                           <span
-                            class="p-1 text-center text-sm rounded-container-token"
+                            class="p-1 text-center text-sm w-10 rounded-container-token"
                             style="background: {pxxcolor};"
                           >
                             {get_by_value(drivers, "id", pick?.pxx ?? "")?.code}
                           </span>
                           <span
-                            class="p-1 text-center text-sm rounded-container-token"
+                            class="p-1 text-center text-sm w-10 rounded-container-token"
                             style="background: {dnfcolor};"
                           >
                             {get_by_value(drivers, "id", pick?.dnf ?? "")?.code}
