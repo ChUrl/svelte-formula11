@@ -25,11 +25,14 @@
     team = meta.team;
   }
 
-  const required: boolean = $derived(!team);
-  const disabled: boolean = $derived(!data.admin);
+  // Constants
   const labelwidth: string = "110px";
 
-  let colorpreview: string = $state(team?.color ?? "Invalid");
+  // Reactive state
+  let required: boolean = $derived(!team);
+  let disabled: boolean = $derived(!data.admin);
+  let name_value: string = $state(team?.name ?? "");
+  let color_value: string = $state(team?.color ?? "");
 </script>
 
 {#await data.graphics then graphics}
@@ -57,7 +60,7 @@
         <!-- Team name input -->
         <Input
           name="name"
-          value={team?.name ?? ""}
+          bind:value={name_value}
           autocomplete="off"
           {labelwidth}
           {disabled}
@@ -69,20 +72,17 @@
         <!-- Team color input -->
         <Input
           name="color"
-          value={team?.color ?? ""}
+          bind:value={color_value}
           autocomplete="off"
           placeholder="Enter as '#XXXXXX'"
           minlength={7}
           maxlength={7}
-          oninput={(event: Event) => {
-            colorpreview = (event.target as HTMLInputElement).value;
-          }}
           {labelwidth}
           {disabled}
           {required}
         >
           Color
-          <span class="badge ml-2 border" style="color: {colorpreview}; background: {colorpreview}">
+          <span class="badge ml-2 border" style="color: {color_value}; background: {color_value}">
             C
           </span>
         </Input>

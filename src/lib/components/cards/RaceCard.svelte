@@ -3,10 +3,10 @@
   import { FileDropzone, getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
   import { Button, Card, Input } from "$lib/components";
   import type { Race, SkeletonData } from "$lib/schema";
-  import { format } from "date-fns";
   import { RACE_PICTOGRAM_HEIGHT, RACE_PICTOGRAM_WIDTH } from "$lib/config";
   import { enhance } from "$app/forms";
   import { get_race_pictogram_template } from "$lib/database";
+  import { format_date } from "$lib/date";
 
   interface RaceCardProps {
     /** Data passed from the page context */
@@ -26,32 +26,34 @@
     race = meta.race;
   }
 
+  // Constants
+  const labelwidth = "80px";
+  const dateformat: string = "yyyy-MM-dd'T'HH:mm";
+
   const clear_sprint = () => {
     (document.getElementById("sqdate") as HTMLInputElement).value = "";
     (document.getElementById("sdate") as HTMLInputElement).value = "";
   };
 
-  const required: boolean = $derived(!race);
-  const disabled: boolean = $derived(!data.admin);
-  const labelwidth = "80px";
-
-  // Dates have to be formatted to datetime-local format
-  const dateformat: string = "yyyy-MM-dd'T'HH:mm";
-  const sprintqualidate: string | undefined = $derived(
-    race?.sprintqualidate ? format(new Date(race.sprintqualidate), dateformat) : undefined,
-  );
-  const sprintdate: string | undefined = $derived(
-    race?.sprintdate ? format(new Date(race.sprintdate), dateformat) : undefined,
-  );
-  const qualidate: string | undefined = $derived(
-    race ? format(new Date(race.qualidate), dateformat) : undefined,
-  );
-  const racedate: string | undefined = $derived(
-    race ? format(new Date(race.racedate), dateformat) : undefined,
-  );
-
+  // Reactive state
+  let required: boolean = $derived(!race);
+  let disabled: boolean = $derived(!data.admin);
+  let name_value: string = $state(race?.name ?? "");
   let step_value: string = $state(race?.step.toString() ?? "");
   let pxx_value: string = $state(race?.pxx.toString() ?? "");
+  let sprintqualidate_value: string = $state("");
+  let sprintdate_value: string = $state("");
+  let qualidate_value: string = $state("");
+  let racedate_value: string = $state("");
+
+  if (race) {
+    if (race.sprintqualidate && race.sprintdate) {
+      sprintqualidate_value = format_date(race.sprintqualidate, dateformat);
+      sprintdate_value = format_date(race.sprintdate, dateformat);
+      qualidate_value = format_date(race.qualidate, dateformat);
+      racedate_value = format_date(race.racedate, dateformat);
+    }
+  }
 </script>
 
 {#await data.graphics then graphics}
@@ -79,7 +81,7 @@
         <!-- Driver name input -->
         <Input
           name="name"
-          value={race?.name ?? ""}
+          bind:value={name_value}
           autocomplete="off"
           {labelwidth}
           {disabled}
@@ -118,7 +120,7 @@
         <Input
           id="sqdate"
           name="sprintqualidate"
-          value={sprintqualidate ?? ""}
+          bind:value={sprintqualidate_value}
           autocomplete="off"
           type="datetime-local"
           {labelwidth}
@@ -129,7 +131,7 @@
         <Input
           id="sdate"
           name="sprintdate"
-          value={sprintdate ?? ""}
+          bind:value={sprintdate_value}
           autocomplete="off"
           type="datetime-local"
           {labelwidth}
@@ -139,7 +141,7 @@
         </Input>
         <Input
           name="qualidate"
-          value={qualidate ?? ""}
+          bind:value={qualidate_value}
           autocomplete="off"
           type="datetime-local"
           {labelwidth}
@@ -150,7 +152,7 @@
         </Input>
         <Input
           name="racedate"
-          value={racedate ?? ""}
+          bind:value={racedate_value}
           autocomplete="off"
           type="datetime-local"
           {labelwidth}

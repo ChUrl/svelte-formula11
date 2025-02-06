@@ -31,10 +31,12 @@
     driver = meta.driver;
   }
 
-  const required: boolean = $derived(!driver);
-  const disabled: boolean = $derived(!data.admin);
+  // Constants
   const labelwidth: string = "120px";
 
+  // Reactive state
+  let required: boolean = $derived(!driver);
+  let disabled: boolean = $derived(!data.admin);
   let team_select_value: string = $state(driver?.team ?? "");
   let active_value: boolean = $state(driver?.active ?? true);
 </script>

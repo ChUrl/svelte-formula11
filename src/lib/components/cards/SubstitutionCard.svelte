@@ -1,8 +1,7 @@
 <script lang="ts">
   import { Card, Button, Dropdown } from "$lib/components";
-  import type { Driver, Race, SkeletonData, Substitution } from "$lib/schema";
+  import type { Driver, SkeletonData, Substitution } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
-  import type { Action } from "svelte/action";
   import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { driver_dropdown_options, race_dropdown_options } from "$lib/dropdown";
@@ -30,23 +29,22 @@
   let drivers: Driver[] | undefined = $state(undefined);
   data.drivers.then((d: Driver[]) => (drivers = d));
 
-  const active_drivers = (drivers: Driver[]): Driver[] =>
-    drivers.filter((driver: Driver) => driver.active);
-  const inactive_drivers = (drivers: Driver[]): Driver[] =>
-    drivers.filter((driver: Driver) => !driver.active);
-
-  const required: boolean = $derived(!substitution);
-  const disabled: boolean = $derived(!data.admin);
+  // Constants
   const labelwidth: string = "120px";
 
-  let substitute_select_value: string = $state(substitution?.substitute ?? "");
-  let driver_select_value: string = $state(substitution?.for ?? "");
-  let race_select_value: string = $state(substitution?.race ?? "");
+  // Reactive state
+  let required: boolean = $derived(!substitution);
+  let disabled: boolean = $derived(!data.admin);
+  let active_drivers: Driver[] = $derived((drivers ?? []).filter((d: Driver) => d.active));
+  let inactive_drivers: Driver[] = $derived((drivers ?? []).filter((d: Driver) => !d.active));
+  let substitute_value: string = $state(substitution?.substitute ?? "");
+  let driver_value: string = $state(substitution?.for ?? "");
+  let race_value: string = $state(substitution?.race ?? "");
 
   // Update preview
   $effect(() => {
     if (!drivers) return;
-    const src: string = get_by_value(drivers, "id", substitute_select_value)?.headshot_url ?? "";
+    const src: string = get_by_value(drivers, "id", substitute_value)?.headshot_url ?? "";
     const img: HTMLImageElement = document.getElementById("headshot_preview") as HTMLImageElement;
     if (img) img.src = src;
   });
@@ -78,8 +76,8 @@
         <!-- Substitute select -->
         <Dropdown
           name="substitute"
-          bind:value={substitute_select_value}
-          options={driver_dropdown_options(inactive_drivers(drivers))}
+          bind:value={substitute_value}
+          options={driver_dropdown_options(inactive_drivers)}
           {labelwidth}
           {disabled}
           {required}
@@ -90,8 +88,8 @@
         <!-- Driver select -->
         <Dropdown
           name="for"
-          bind:value={driver_select_value}
-          options={driver_dropdown_options(active_drivers(drivers))}
+          bind:value={driver_value}
+          options={driver_dropdown_options(active_drivers)}
           {labelwidth}
           {disabled}
           {required}
@@ -103,7 +101,7 @@
         {#await data.races then races}
           <Dropdown
             name="race"
-            bind:value={race_select_value}
+            bind:value={race_value}
             options={race_dropdown_options(races)}
             {labelwidth}
             {disabled}
