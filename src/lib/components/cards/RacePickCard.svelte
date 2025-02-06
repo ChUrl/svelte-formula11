@@ -10,7 +10,6 @@
     Substitution,
   } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
-  import type { Action } from "svelte/action";
   import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { driver_dropdown_options } from "$lib/dropdown";
@@ -43,36 +42,40 @@
   let drivers: Driver[] | undefined = $state(undefined);
   data.drivers.then((d: Driver[]) => (drivers = d));
 
-  const required: boolean = $derived(!racepick);
-  const disabled: boolean = $derived(!data.admin);
+  let substitutions: Substitution[] | undefined = $state(undefined);
+  data.substitutions.then((s: Substitution[]) => (substitutions = s));
+
+  // Constants
   const labelwidth: string = "60px";
 
-  const active_drivers_and_substitutes: Promise<Driver[]> = $derived.by(async () => {
+  // Reactive state
+  let required: boolean = $derived(!racepick);
+  let disabled: boolean = $derived(!data.admin);
+  let pxx_select_value: string = $state(racepick?.pxx ?? "");
+  let dnf_select_value: string = $state(racepick?.dnf ?? "");
+
+  let active_drivers_and_substitutes: Driver[] = $derived.by(() => {
     if (!data.currentrace) return [];
 
-    let drivers: Driver[] = await data.drivers;
-    let substitutions: Substitution[] = await data.substitutions;
+    let active_and_substitutes: Driver[] = (drivers ?? []).filter(
+      (driver: Driver) => driver.active,
+    );
 
-    let active_and_substitutes: Driver[] = drivers.filter((driver: Driver) => driver.active);
-
-    substitutions
+    (substitutions ?? [])
       .filter((substitution: Substitution) => substitution.race === data.currentrace?.id)
       .forEach((substitution: Substitution) => {
         const for_index = active_and_substitutes.findIndex(
           (driver: Driver) => driver.id === substitution.for,
         );
-        const sub_index = drivers.findIndex(
+        const sub_index = (drivers ?? []).findIndex(
           (driver: Driver) => driver.id === substitution.substitute,
         );
 
-        active_and_substitutes[for_index] = drivers[sub_index];
+        active_and_substitutes[for_index] = (drivers ?? [])[sub_index];
       });
 
     return active_and_substitutes.sort((a: Driver, b: Driver) => a.code.localeCompare(b.code));
   });
-
-  let pxx_select_value: string = $state(racepick?.pxx ?? "");
-  let dnf_select_value: string = $state(racepick?.dnf ?? "");
 
   // Update preview
   $effect(() => {
@@ -110,30 +113,28 @@
 
       <div class="flex flex-col gap-2">
         <!-- PXX select -->
-        {#await active_drivers_and_substitutes then pxx_drivers}
-          <Dropdown
-            name="pxx"
-            bind:value={pxx_select_value}
-            options={driver_dropdown_options(pxx_drivers)}
-            {labelwidth}
-            {disabled}
-            {required}
-          >
-            P{data.currentrace?.pxx ?? "XX"}
-          </Dropdown>
+        <Dropdown
+          name="pxx"
+          bind:value={pxx_select_value}
+          options={driver_dropdown_options(active_drivers_and_substitutes)}
+          {labelwidth}
+          {disabled}
+          {required}
+        >
+          P{data.currentrace?.pxx ?? "XX"}
+        </Dropdown>
 
-          <!-- DNF select -->
-          <Dropdown
-            name="dnf"
-            bind:value={dnf_select_value}
-            options={driver_dropdown_options(pxx_drivers)}
-            {labelwidth}
-            {disabled}
-            {required}
-          >
-            DNF
-          </Dropdown>
-        {/await}
+        <!-- DNF select -->
+        <Dropdown
+          name="dnf"
+          bind:value={dnf_select_value}
+          options={driver_dropdown_options(active_drivers_and_substitutes)}
+          {labelwidth}
+          {disabled}
+          {required}
+        >
+          DNF
+        </Dropdown>
 
         <!-- Save/Delete buttons -->
         <div class="flex justify-end gap-2">
