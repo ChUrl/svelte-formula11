@@ -84,6 +84,18 @@
     const img: HTMLImageElement = document.getElementById("headshot_preview") as HTMLImageElement;
     if (img) img.src = src;
   });
+
+  const random_select_handler = (event: Event): void => {
+    pxx_select_value =
+      active_drivers_and_substitutes[
+        Math.floor(Math.random() * active_drivers_and_substitutes.length)
+      ].id;
+
+    dnf_select_value =
+      active_drivers_and_substitutes[
+        Math.floor(Math.random() * active_drivers_and_substitutes.length)
+      ].id;
+  };
 </script>
 
 {#await Promise.all([data.graphics, data.drivers]) then [graphics, drivers]}
@@ -135,6 +147,10 @@
         >
           DNF
         </Dropdown>
+
+        <Button color="tertiary" {disabled} width="w-full" onclick={random_select_handler}>
+          Select Random
+        </Button>
 
         <!-- Save/Delete buttons -->
         <div class="flex justify-end gap-2">
