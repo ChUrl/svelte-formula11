@@ -49,6 +49,9 @@
   const racedate: string | undefined = $derived(
     race ? format(new Date(race.racedate), dateformat) : undefined,
   );
+
+  let step_value: string = $state(race?.step.toString() ?? "");
+  let pxx_value: string = $state(race?.pxx.toString() ?? "");
 </script>
 
 {#await data.graphics then graphics}
@@ -86,7 +89,7 @@
         </Input>
         <Input
           name="step"
-          value={race?.step ?? ""}
+          bind:value={step_value}
           autocomplete="off"
           type="number"
           min={1}
@@ -99,7 +102,7 @@
         </Input>
         <Input
           name="pxx"
-          value={race?.pxx ?? ""}
+          bind:value={pxx_value}
           autocomplete="off"
           type="number"
           min={1}

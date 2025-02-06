@@ -92,7 +92,7 @@
         {#await data.teams then teams}
           <Dropdown
             name="team"
-            input_variable={team_select_value}
+            bind:value={team_select_value}
             options={team_dropdown_options(teams)}
             {labelwidth}
             {disabled}

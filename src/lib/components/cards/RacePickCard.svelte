@@ -39,22 +39,9 @@
     racepick = meta.racepick;
   }
 
-  // This is executed on mount of the element specifying the "action"
-  const register_pxx_preview_handler: Action = (node: HTMLElement) => {
-    node.addEventListener("DropdownChange", update_pxx_preview);
-  };
-
-  // This event handler is registered to the Dropdown's <input> element through the action above.
-  const update_pxx_preview = async (event: Event) => {
-    const target: HTMLInputElement = event.target as HTMLInputElement;
-
-    const src: string =
-      get_by_value<Driver>(await data.drivers, "code", target.value)?.headshot_url || "";
-    const img = document.getElementById("headshot_preview") as HTMLImageElement;
-
-    // Can be null if lazyimg not loaded
-    if (img) img.src = src;
-  };
+  // Await promises
+  let drivers: Driver[] | undefined = $state(undefined);
+  data.drivers.then((d: Driver[]) => (drivers = d));
 
   const required: boolean = $derived(!racepick);
   const disabled: boolean = $derived(!data.admin);
@@ -86,6 +73,14 @@
 
   let pxx_select_value: string = $state(racepick?.pxx ?? "");
   let dnf_select_value: string = $state(racepick?.dnf ?? "");
+
+  // Update preview
+  $effect(() => {
+    if (!drivers) return;
+    const src: string = get_by_value(drivers, "id", pxx_select_value)?.headshot_url ?? "";
+    const img: HTMLImageElement = document.getElementById("headshot_preview") as HTMLImageElement;
+    if (img) img.src = src;
+  });
 </script>
 
 {#await Promise.all([data.graphics, data.drivers]) then [graphics, drivers]}
@@ -118,8 +113,7 @@
         {#await active_drivers_and_substitutes then pxx_drivers}
           <Dropdown
             name="pxx"
-            input_variable={pxx_select_value}
-            action={register_pxx_preview_handler}
+            bind:value={pxx_select_value}
             options={driver_dropdown_options(pxx_drivers)}
             {labelwidth}
             {disabled}
@@ -127,13 +121,11 @@
           >
             P{data.currentrace?.pxx ?? "XX"}
           </Dropdown>
-        {/await}
 
-        <!-- DNF select -->
-        {#await active_drivers_and_substitutes then pxx_drivers}
+          <!-- DNF select -->
           <Dropdown
             name="dnf"
-            input_variable={dnf_select_value}
+            bind:value={dnf_select_value}
             options={driver_dropdown_options(pxx_drivers)}
             {labelwidth}
             {disabled}

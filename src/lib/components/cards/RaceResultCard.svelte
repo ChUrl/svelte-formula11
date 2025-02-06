@@ -30,6 +30,11 @@
     result = meta.result;
   }
 
+  let races: Race[] | undefined = $state(undefined);
+  data.races.then((r: Race[]) => {
+    races = r;
+  });
+
   const required: boolean = $derived(!result);
   const disabled: boolean = $derived(!data.admin);
   const labelwidth: string = "70px";
@@ -38,9 +43,17 @@
 
   // TODO: Currentrace needs to be updated once a race is selected
   //       This way it doesn't update the placeholder (or the chips)...
-  const currentrace: Promise<Race | undefined> = $derived.by(async () =>
-    get_by_value(await data.races, "id", race_select_value),
+  // const currentrace: Promise<Race | undefined> = $derived.by(async () =>
+  //   get_by_value(await data.races, "id", race_select_value),
+  // );
+
+  let currentrace: Race | undefined = $derived(
+    races ? (get_by_value(races, "id", race_select_value) ?? undefined) : undefined,
   );
+
+  $effect(() => {
+    console.log("Updated currentrace", currentrace);
+  });
 
   let pxxs_input: string = $state("");
   let pxxs_chips: string[] = $state([]);
@@ -179,7 +192,7 @@
     {#await data.races then races}
       <Dropdown
         name="race"
-        input_variable={race_select_value}
+        bind:value={race_select_value}
         options={race_dropdown_options(races)}
         {labelwidth}
         {disabled}

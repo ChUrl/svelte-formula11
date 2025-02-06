@@ -26,21 +26,9 @@
     substitution = meta.substitution;
   }
 
-  // This is executed on mount of the element specifying the "action"
-  const register_substitute_preview_handler: Action = (node: HTMLElement) =>
-    node.addEventListener("DropdownChange", update_substitute_preview);
-
-  // This event handler is registered to the Dropdown's <input> element through the action above.
-  const update_substitute_preview = async (event: Event) => {
-    const target: HTMLInputElement = event.target as HTMLInputElement;
-
-    const src: string =
-      get_by_value<Driver>(await data.drivers, "code", target.value)?.headshot_url ?? "";
-    const img = document.getElementById("headshot_preview") as HTMLImageElement;
-
-    // Can be null if lazyimage hasn't loaded
-    if (img) img.src = src;
-  };
+  // Await promises
+  let drivers: Driver[] | undefined = $state(undefined);
+  data.drivers.then((d: Driver[]) => (drivers = d));
 
   const active_drivers = (drivers: Driver[]): Driver[] =>
     drivers.filter((driver: Driver) => driver.active);
@@ -54,6 +42,14 @@
   let substitute_select_value: string = $state(substitution?.substitute ?? "");
   let driver_select_value: string = $state(substitution?.for ?? "");
   let race_select_value: string = $state(substitution?.race ?? "");
+
+  // Update preview
+  $effect(() => {
+    if (!drivers) return;
+    const src: string = get_by_value(drivers, "id", substitute_select_value)?.headshot_url ?? "";
+    const img: HTMLImageElement = document.getElementById("headshot_preview") as HTMLImageElement;
+    if (img) img.src = src;
+  });
 </script>
 
 {#await Promise.all([data.graphics, data.drivers]) then [graphics, drivers]}
@@ -82,8 +78,7 @@
         <!-- Substitute select -->
         <Dropdown
           name="substitute"
-          input_variable={substitute_select_value}
-          action={register_substitute_preview_handler}
+          bind:value={substitute_select_value}
           options={driver_dropdown_options(inactive_drivers(drivers))}
           {labelwidth}
           {disabled}
@@ -95,7 +90,7 @@
         <!-- Driver select -->
         <Dropdown
           name="for"
-          input_variable={driver_select_value}
+          bind:value={driver_select_value}
           options={driver_dropdown_options(active_drivers(drivers))}
           {labelwidth}
           {disabled}
@@ -108,7 +103,7 @@
         {#await data.races then races}
           <Dropdown
             name="race"
-            input_variable={race_select_value}
+            bind:value={race_select_value}
             options={race_dropdown_options(races)}
             {labelwidth}
             {disabled}
