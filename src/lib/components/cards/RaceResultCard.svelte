@@ -118,7 +118,7 @@
   };
 
   const on_pxxs_chip_select = (event: CustomEvent<AutocompleteOption<string>>): void => {
-    if (disabled) return;
+    if (disabled || !currentrace || !drivers) return;
 
     // Can only select 7 drivers
     if (pxxs_chips.length >= 7) return;
@@ -127,11 +127,11 @@
     if (pxxs_chips.some((label: string) => label.endsWith(event.detail.value))) return;
 
     // Manage labels that are displayed
-    pxxs_chips.push(`P${(currentrace?.pxx ?? -10) + pxxs_chips.length - 3}: ${event.detail.value}`);
+    pxxs_chips.push(`P${currentrace.pxx + pxxs_chips.length - 3}: ${event.detail.value}`);
     pxxs_input = "";
 
     // Manage ids that are submitted via form
-    const id: string = get_by_value(drivers ?? [], "code", event.detail.value)?.id ?? "Invalid";
+    const id: string = get_by_value(drivers, "code", event.detail.value)?.id ?? "Invalid";
     if (!pxxs_ids.includes(id)) {
       pxxs_ids.push(id);
     }
@@ -147,7 +147,7 @@
   };
 
   const on_dnfs_chip_select = (event: CustomEvent<AutocompleteOption<string>>): void => {
-    if (disabled) return;
+    if (disabled || !drivers) return;
 
     // Can only select a driver once
     if (dnfs_chips.includes(event.detail.value)) return;
@@ -157,7 +157,7 @@
     dnfs_input = "";
 
     // Manage ids that are submitted via form
-    const id: string = get_by_value(drivers ?? [], "code", event.detail.value)?.id ?? "Invalid";
+    const id: string = get_by_value(drivers, "code", event.detail.value)?.id ?? "Invalid";
     if (!dnfs_ids.includes(id)) {
       dnfs_ids.push(id);
     }
