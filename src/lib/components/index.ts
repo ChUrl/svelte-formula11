@@ -6,7 +6,6 @@ import Table from "./Table.svelte";
 import Button from "./form/Button.svelte";
 import Dropdown from "./form/Dropdown.svelte";
 import Input from "./form/Input.svelte";
-import Search from "./form/Search.svelte";
 
 import Card from "./cards/Card.svelte";
 import DriverCard from "./cards/DriverCard.svelte";
@@ -37,7 +36,6 @@ export {
   Button,
   Dropdown,
   Input,
-  Search,
 
   // Cards
   Card,
