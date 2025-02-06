@@ -19,9 +19,9 @@
     RACE_PICTOGRAM_HEIGHT,
     RACE_PICTOGRAM_WIDTH,
   } from "$lib/config";
+  import { format_date } from "$lib/date";
   import type { CurrentPickedUser, RacePick } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
-  import { format } from "date-fns";
 
   let { data }: { data: PageData } = $props();
 
@@ -63,7 +63,6 @@
   );
 
   const dateformat: string = "dd.MM' 'HH:mm";
-  const formatdate = (date: string): string => format(new Date(date), dateformat);
 
   const race_popupsettings = (target: string): PopupSettings => {
     return {
@@ -96,20 +95,20 @@
               {#if data.currentrace.sprintdate}
                 <div class="flex gap-2">
                   <span class="w-12">SQuali:</span>
-                  <span>{formatdate(data.currentrace.sprintqualidate)}</span>
+                  <span>{format_date(data.currentrace.sprintqualidate, dateformat)}</span>
                 </div>
                 <div class="flex gap-2">
                   <span class="w-12">SRace:</span>
-                  <span>{formatdate(data.currentrace.sprintdate)}</span>
+                  <span>{format_date(data.currentrace.sprintdate, dateformat)}</span>
                 </div>
               {/if}
               <div class="flex gap-2">
                 <span class="w-12">Quali:</span>
-                <span>{formatdate(data.currentrace.qualidate)}</span>
+                <span>{format_date(data.currentrace.qualidate, dateformat)}</span>
               </div>
               <div class="flex gap-2">
                 <span class="w-12">Race:</span>
-                <span>{formatdate(data.currentrace.racedate)}</span>
+                <span>{format_date(data.currentrace.racedate, dateformat)}</span>
               </div>
               <div class="m-auto flex">
                 <div class="mr-1 mt-1">
@@ -265,7 +264,9 @@
           <span class="block rotate-90 text-sm font-bold lg:hidden">
             {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
           </span>
-          <span class="hidden text-sm lg:block">Date: {formatdate(race?.racedate ?? "")}</span>
+          <span class="hidden text-sm lg:block">
+            Date: {format_date(race?.racedate ?? "", dateformat)}
+          </span>
           <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
         </div>
 
