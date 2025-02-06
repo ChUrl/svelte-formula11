@@ -46,7 +46,7 @@
   data.substitutions.then((s: Substitution[]) => (substitutions = s));
 
   // Constants
-  const labelwidth: string = "60px";
+  const labelwidth: string = "70px";
 
   // Reactive state
   let required: boolean = $derived(!racepick);
