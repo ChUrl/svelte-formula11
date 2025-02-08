@@ -1,8 +1,8 @@
 import Pocketbase, { type AuthRecord } from "pocketbase";
 import type { Graphic, User } from "$lib/schema";
-// TODO: import { PUBLIC_POCKETBASE_URL } from '$env/static/public';
+import { env } from "$env/dynamic/public";
 
-export let pb = new Pocketbase("http://192.168.86.50:8090");
+export let pb = new Pocketbase(env.PUBLIC_PBURL || "http://192.168.86.50:8090");
 export let pbUser: User | undefined = undefined;
 
 const update_user = async (record: AuthRecord): Promise<void> => {
