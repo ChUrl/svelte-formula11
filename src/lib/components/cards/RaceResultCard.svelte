@@ -2,15 +2,19 @@
   import {
     Autocomplete,
     getModalStore,
+    getToastStore,
     InputChip,
     type AutocompleteOption,
     type ModalStore,
+    type ToastStore,
   } from "@skeletonlabs/skeleton";
   import { Button, Card, Dropdown } from "$lib/components";
   import type { Driver, Race, RaceResult, SkeletonData } from "$lib/schema";
   import { get_by_value } from "$lib/database";
   import { race_dropdown_options } from "$lib/dropdown";
-  import { enhance } from "$app/forms";
+  import { pb } from "$lib/pocketbase";
+  import { get_error_toast } from "$lib/toast";
+  import { invalidateAll } from "$app/navigation";
 
   interface RaceResultCardProps {
     /** Data passed from the page context */
@@ -29,6 +33,8 @@
     data = meta.data;
     result = meta.result;
   }
+
+  const toastStore: ToastStore = getToastStore();
 
   let races: Race[] | undefined = $state(undefined);
   data.races.then((r: Race[]) => (races = r));
@@ -166,108 +172,132 @@
   const on_dnfs_chip_remove = (event: CustomEvent): void => {
     dnfs_ids.splice(event.detail.chipIndex, 1);
   };
+
+  // Database actions
+  const update_raceresult = (create?: boolean): (() => Promise<void>) => {
+    const handler = async (): Promise<void> => {
+      if (!race_select_value || race_select_value === "") {
+        toastStore.trigger(get_error_toast("Please select a race!"));
+        return;
+      }
+      if (!pxxs_ids || pxxs_ids.length !== 7) {
+        toastStore.trigger(get_error_toast("Please select all 7 driver placements!"));
+        return;
+      }
+
+      const raceresult_data = {
+        race: race_select_value,
+        pxxs: pxxs_ids,
+        dnfs: dnfs_ids,
+      };
+
+      try {
+        if (create) {
+          await pb.collection("raceresults").create(raceresult_data);
+        } else {
+          if (!result?.id) {
+            toastStore.trigger(get_error_toast("Invalid result id!"));
+            return;
+          }
+
+          await pb.collection("raceresults").update(result.id, raceresult_data);
+        }
+        invalidateAll();
+        modalStore.close();
+      } catch (error) {
+        toastStore.trigger(get_error_toast("" + error));
+      }
+    };
+
+    return handler;
+  };
+
+  const delete_raceresult = async (): Promise<void> => {
+    if (!result?.id) {
+      toastStore.trigger(get_error_toast("Invalid result id!"));
+      return;
+    }
+
+    try {
+      await pb.collection("raceresults").delete(result.id);
+      invalidateAll();
+      modalStore.close();
+    } catch (error) {
+      toastStore.trigger(get_error_toast("" + error));
+    }
+  };
 </script>
 
 <Card width="w-full sm:w-[512px]">
-  <form method="POST" enctype="multipart/form-data" use:enhance onsubmit={() => modalStore.close()}>
-    <!-- This is also disabled, because the ID should only be -->
-    <!-- "leaked" to users that are allowed to use the inputs -->
-    {#if result && !disabled}
-      <input name="id" type="hidden" value={result.id} />
-    {/if}
+  <!-- Race select input -->
+  {#await data.races then races}
+    <Dropdown
+      name="race"
+      bind:value={race_select_value}
+      options={race_dropdown_options(races)}
+      onchange={on_race_select}
+      {labelwidth}
+      {disabled}
+      {required}
+    >
+      Race
+    </Dropdown>
+  {/await}
 
-    <!-- Send the input chips ids -->
-    {#each pxxs_ids as pxxs_id}
-      <input name="pxxs" type="hidden" {disabled} value={pxxs_id} />
-    {/each}
-    {#each dnfs_ids as dnfs_id}
-      <input name="dnfs" type="hidden" {disabled} value={dnfs_id} />
-    {/each}
-
-    <!-- Race select input -->
-    {#await data.races then races}
-      <Dropdown
-        name="race"
-        bind:value={race_select_value}
-        options={race_dropdown_options(races)}
-        onchange={on_race_select}
-        {labelwidth}
-        {disabled}
-        {required}
-      >
-        Race
-      </Dropdown>
-    {/await}
-
-    <div class="mt-2 flex flex-col gap-2">
-      <!-- PXXs autocomplete chips -->
-      <InputChip
+  <div class="mt-2 flex flex-col gap-2">
+    <!-- PXXs autocomplete chips -->
+    <InputChip
+      bind:input={pxxs_input}
+      bind:value={pxxs_chips}
+      whitelist={pxxs_whitelist}
+      allowUpperCase
+      placeholder={pxxs_placeholder}
+      name="pxxs_codes"
+      {disabled}
+      {required}
+      on:remove={on_pxxs_chip_remove}
+    />
+    <div class="card max-h-48 w-full overflow-y-auto p-2" tabindex="-1">
+      <Autocomplete
         bind:input={pxxs_input}
-        bind:value={pxxs_chips}
-        whitelist={pxxs_whitelist}
-        allowUpperCase
-        placeholder={pxxs_placeholder}
-        name="pxxs_codes"
-        {disabled}
-        {required}
-        on:remove={on_pxxs_chip_remove}
+        options={pxxs_options}
+        denylist={pxxs_chips}
+        on:selection={on_pxxs_chip_select}
       />
-      <div class="card max-h-48 w-full overflow-y-auto p-2" tabindex="-1">
-        <Autocomplete
-          bind:input={pxxs_input}
-          options={pxxs_options}
-          denylist={pxxs_chips}
-          on:selection={on_pxxs_chip_select}
-        />
-      </div>
-
-      <!-- DNFs autocomplete chips -->
-      <InputChip
-        bind:input={dnfs_input}
-        bind:value={dnfs_chips}
-        whitelist={pxxs_whitelist}
-        allowUpperCase
-        placeholder="Select DNFs..."
-        name="dnfs_codes"
-        {disabled}
-        on:remove={on_dnfs_chip_remove}
-      />
-      <div class="card max-h-48 w-full overflow-y-auto p-2" tabindex="-1">
-        <Autocomplete
-          bind:input={dnfs_input}
-          options={dnfs_options}
-          denylist={dnfs_chips}
-          on:selection={on_dnfs_chip_select}
-        />
-      </div>
-
-      <!-- Save/Delete buttons -->
-      <div class="flex items-center justify-end gap-2">
-        {#if result}
-          <Button
-            formaction="?/update_raceresult"
-            color="secondary"
-            {disabled}
-            submit
-            width="w-1/2"
-          >
-            Save
-          </Button>
-          <Button formaction="?/delete_raceresult" color="primary" {disabled} submit width="w-1/2">
-            Delete
-          </Button>
-        {:else}
-          <Button
-            formaction="?/create_raceresult"
-            color="tertiary"
-            {disabled}
-            submit
-            width="w-full"
-          >
-            Create Result
-          </Button>
-        {/if}
-      </div>
     </div>
-  </form>
+
+    <!-- DNFs autocomplete chips -->
+    <InputChip
+      bind:input={dnfs_input}
+      bind:value={dnfs_chips}
+      whitelist={pxxs_whitelist}
+      allowUpperCase
+      placeholder="Select DNFs..."
+      name="dnfs_codes"
+      {disabled}
+      on:remove={on_dnfs_chip_remove}
+    />
+    <div class="card max-h-48 w-full overflow-y-auto p-2" tabindex="-1">
+      <Autocomplete
+        bind:input={dnfs_input}
+        options={dnfs_options}
+        denylist={dnfs_chips}
+        on:selection={on_dnfs_chip_select}
+      />
+    </div>
+
+    <!-- Save/Delete buttons -->
+    <div class="flex items-center justify-end gap-2">
+      {#if result}
+        <Button onclick={update_raceresult()} color="secondary" {disabled} width="w-1/2"
+          >Save</Button
+        >
+        <Button onclick={delete_raceresult} color="primary" {disabled} width="w-1/2">Delete</Button>
+      {:else}
+        <Button onclick={update_raceresult(true)} color="tertiary" {disabled} width="w-full">
+          Create Result
+        </Button>
+      {/if}
+    </div>
+  </div>
 </Card>

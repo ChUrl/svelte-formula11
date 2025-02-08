@@ -1,10 +1,8 @@
 <script lang="ts">
   import "../app.css";
-
   import type { Snippet } from "svelte";
   import type { LayoutData } from "./$types";
   import { page } from "$app/stores";
-
   import {
     Button,
     MenuDrawerIcon,
@@ -29,6 +27,7 @@
     Drawer,
     getDrawerStore,
     Modal,
+    Toast,
     getModalStore,
     type DrawerSettings,
     Avatar,
@@ -36,9 +35,13 @@
     type DrawerStore,
     type ModalStore,
     type ModalComponent,
+    type ToastStore,
+    getToastStore,
   } from "@skeletonlabs/skeleton";
   import { computePosition, autoUpdate, offset, shift, flip, arrow } from "@floating-ui/dom";
-  import { enhance } from "$app/forms";
+  import { invalidateAll } from "$app/navigation";
+  import { get_error_toast } from "$lib/toast";
+  import { pb } from "$lib/pocketbase";
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -56,6 +59,9 @@
     raceResultCard: { ref: RaceResultCard },
     substitutionCard: { ref: SubstitutionCard },
   };
+
+  // Toast config
+  const toastStore: ToastStore = getToastStore();
 
   // Drawer config
   const drawerStore: DrawerStore = getDrawerStore();
@@ -125,11 +131,92 @@
 
   // Popups config
   storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
+
+  // Reactive state
+  let username_value: string = $state("");
+  let firstname_value: string = $state("");
+  let password_value: string = $state("");
+  let avatar_value: FileList | undefined = $state();
+
+  // Database actions
+  // TODO: Avatar compression
+  const login = async (): Promise<void> => {
+    try {
+      await pb.collection("users").authWithPassword(username_value, password_value);
+    } catch (error) {
+      toastStore.trigger(get_error_toast("" + error));
+    }
+    await invalidateAll();
+    drawerStore.close();
+    password_value = "";
+    firstname_value = data.user?.firstname ?? "";
+  };
+
+  const logout = async (): Promise<void> => {
+    pb.authStore.clear();
+    await invalidateAll();
+    drawerStore.close();
+    username_value = "";
+    firstname_value = "";
+    password_value = "";
+  };
+
+  const update_profile = (create?: boolean): (() => Promise<void>) => {
+    const handler = async (): Promise<void> => {
+      if (!username_value || username_value === "") {
+        toastStore.trigger(get_error_toast("Please enter a username!"));
+        return;
+      }
+      if (!firstname_value || firstname_value === "") {
+        toastStore.trigger(get_error_toast("Please enter your first name!"));
+        return;
+      }
+      if (!password_value || password_value === "") {
+        toastStore.trigger(get_error_toast("Please enter a password!"));
+        return;
+      }
+
+      try {
+        if (create) {
+          await pb.collection("users").create({
+            username: username_value,
+            firstname: firstname_value,
+            password: password_value,
+            passwordConfirm: password_value,
+            admin: false,
+          });
+
+          await login();
+          return;
+        } else {
+          if (!data.user?.id || data.user.id === "") {
+            toastStore.trigger(get_error_toast("Invalid user id!"));
+            return;
+          }
+
+          await pb.collection("users").update(data.user.id, {
+            username: username_value,
+            firstname: firstname_value,
+            avatar: avatar_value && avatar_value.length === 1 ? avatar_value[0] : undefined,
+          });
+
+          invalidateAll();
+          drawerStore.close();
+        }
+      } catch (error) {
+        toastStore.trigger(get_error_toast("" + error));
+      }
+    };
+
+    return handler;
+  };
 </script>
 
 <LoadingIndicator />
 
 <Modal components={modalRegistry} regionBackdrop="!overflow-y-scroll" />
+
+<Toast zIndex="z-[1000]" />
 
 <Drawer zIndex="z-30">
   <!-- Use p-3 because the drawer has a 5px overlap with the navbar -->
@@ -181,39 +268,29 @@
     <!-- Login Drawer -->
     <div class="flex flex-col gap-2 p-2 pt-3">
       <h4 class="h4 select-none">Enter Username and Password</h4>
-      <form method="POST" class="contents" use:enhance>
-        <!-- Supply the pathname so the form can redirect to the current page. -->
-        <input type="hidden" name="redirect_url" value={$page.url.pathname} />
-        <Input name="username" placeholder="Username" autocomplete="username" required>
-          <UserIcon />
-        </Input>
-        <Input name="firstname" placeholder="First Name (leave empty for login)" autocomplete="off">
-          <NameIcon />
-        </Input>
-        <Input name="password" type="password" placeholder="Password" autocomplete="off" required>
-          <PasswordIcon />
-        </Input>
-        <div class="flex justify-end gap-2">
-          <Button
-            formaction="/profile?/login"
-            onclick={close_drawer}
-            color="tertiary"
-            submit
-            shadow
-          >
-            Login
-          </Button>
-          <Button
-            formaction="/profile?/create_profile"
-            onclick={close_drawer}
-            color="tertiary"
-            submit
-            shadow
-          >
-            Register
-          </Button>
-        </div>
-      </form>
+      <Input bind:value={username_value} placeholder="Username" autocomplete="username" required>
+        <UserIcon />
+      </Input>
+      <Input
+        bind:value={firstname_value}
+        placeholder="First Name (leave empty for login)"
+        autocomplete="off"
+      >
+        <NameIcon />
+      </Input>
+      <Input
+        bind:value={password_value}
+        type="password"
+        placeholder="Password"
+        autocomplete="off"
+        required
+      >
+        <PasswordIcon />
+      </Input>
+      <div class="flex justify-end gap-2">
+        <Button onclick={login} color="tertiary" shadow>Login</Button>
+        <Button onclick={update_profile(true)} color="tertiary" shadow>Register</Button>
+      </div>
     </div>
   {:else if $drawerStore.id === "profile_drawer" && data.user}
     <!-- Profile Drawer -->
@@ -221,56 +298,30 @@
     <!-- Profile Drawer -->
     <div class="flex flex-col gap-2 p-2 pt-3">
       <h4 class="h4 select-none">Edit Profile</h4>
-      <form method="POST" enctype="multipart/form-data" class="contents" use:enhance>
-        <!-- Supply the pathname so the form can redirect to the current page. -->
-        <input type="hidden" name="redirect_url" value={$page.url.pathname} />
-        <input type="hidden" name="id" value={data.user.id} />
-        <Input
-          name="username"
-          value={data.user.username}
-          maxlength={10}
-          placeholder="Username"
-          autocomplete="username"
-        >
-          <UserIcon />
-        </Input>
-        <Input
-          name="firstname"
-          value={data.user.firstname}
-          placeholder="First Name"
-          autocomplete="off"
-        >
-          <NameIcon />
-        </Input>
-        <FileDropzone
-          name="avatar"
-          onchange={get_avatar_preview_event_handler("user_avatar_preview")}
-        >
-          <svelte:fragment slot="message"
-            ><span class="font-bold">Upload Avatar</span></svelte:fragment
-          >
-        </FileDropzone>
-        <div class="flex justify-end gap-2">
-          <Button
-            formaction="/profile?/update_profile"
-            onclick={close_drawer}
-            color="secondary"
-            submit
-            shadow
-          >
-            Save Changes
-          </Button>
-          <Button
-            formaction="/profile?/logout"
-            onclick={close_drawer}
-            color="primary"
-            submit
-            shadow
-          >
-            Logout
-          </Button>
-        </div>
-      </form>
+      <Input
+        bind:value={username_value}
+        maxlength={10}
+        placeholder="Username"
+        autocomplete="username"
+      >
+        <UserIcon />
+      </Input>
+      <Input bind:value={firstname_value} placeholder="First Name" autocomplete="off">
+        <NameIcon />
+      </Input>
+      <FileDropzone
+        name="avatar"
+        bind:files={avatar_value}
+        onchange={get_avatar_preview_event_handler("user_avatar_preview")}
+      >
+        <svelte:fragment slot="message">
+          <span class="font-bold">Upload Avatar</span>
+        </svelte:fragment>
+      </FileDropzone>
+      <div class="flex justify-end gap-2">
+        <Button onclick={update_profile()} color="secondary" shadow>Save Changes</Button>
+        <Button onclick={logout} color="primary" shadow>Logout</Button>
+      </div>
     </div>
   {/if}
 </Drawer>

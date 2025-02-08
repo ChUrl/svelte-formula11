@@ -2,10 +2,17 @@
   import { Card, Button, Dropdown } from "$lib/components";
   import type { Driver, SkeletonData, Substitution } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
-  import { getModalStore, type ModalStore } from "@skeletonlabs/skeleton";
+  import {
+    getModalStore,
+    getToastStore,
+    type ModalStore,
+    type ToastStore,
+  } from "@skeletonlabs/skeleton";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { driver_dropdown_options, race_dropdown_options } from "$lib/dropdown";
-  import { enhance } from "$app/forms";
+  import { get_error_toast } from "$lib/toast";
+  import { pb } from "$lib/pocketbase";
+  import { invalidateAll } from "$app/navigation";
 
   interface SubstitutionCardProps {
     /** Data passed from the page context */
@@ -24,6 +31,8 @@
     data = meta.data;
     substitution = meta.substitution;
   }
+
+  const toastStore: ToastStore = getToastStore();
 
   // Await promises
   let drivers: Driver[] | undefined = $state(undefined);
@@ -48,6 +57,62 @@
     const img: HTMLImageElement = document.getElementById("headshot_preview") as HTMLImageElement;
     if (img) img.src = src;
   });
+
+  // Database actions
+  const update_substitution = (create?: boolean): (() => Promise<void>) => {
+    const handler = async (): Promise<void> => {
+      if (!substitute_value || substitute_value === "") {
+        toastStore.trigger(get_error_toast("Please select a substitute driver!"));
+        return;
+      }
+      if (!driver_value || driver_value === "") {
+        toastStore.trigger(get_error_toast("Please select a replaced driver!"));
+        return;
+      }
+      if (!race_value || race_value === "") {
+        toastStore.trigger(get_error_toast("Please select a race!"));
+        return;
+      }
+
+      const substitution_data = {
+        substitute: substitute_value,
+        for: driver_value,
+        race: race_value,
+      };
+
+      try {
+        if (create) {
+          await pb.collection("substitutions").create(substitution_data);
+        } else {
+          if (!substitution?.id) {
+            toastStore.trigger(get_error_toast("Invalid substitution id!"));
+            return;
+          }
+          await pb.collection("substitutions").update(substitution.id, substitution_data);
+        }
+        invalidateAll();
+        modalStore.close();
+      } catch (error) {
+        toastStore.trigger(get_error_toast("" + error));
+      }
+    };
+    return handler;
+  };
+
+  const delete_substitution = async (): Promise<void> => {
+    if (!substitution?.id) {
+      toastStore.trigger(get_error_toast("Invalid substitution id!"));
+      return;
+    }
+
+    try {
+      await pb.collection("substitutions").delete(substitution.id);
+      invalidateAll();
+      modalStore.close();
+    } catch (error) {
+      toastStore.trigger(get_error_toast("" + error));
+    }
+  };
 </script>
 
 {#await Promise.all([data.graphics, data.drivers]) then [graphics, drivers]}
@@ -60,91 +125,57 @@
     imgheight={DRIVER_HEADSHOT_HEIGHT}
     imgonclick={(event: Event) => modalStore.close()}
   >
-    <form
-      method="POST"
-      enctype="multipart/form-data"
-      use:enhance
-      onsubmit={() => modalStore.close()}
-    >
-      <!-- This is also disabled, because the ID should only be -->
-      <!-- "leaked" to users that are allowed to use the inputs -->
-      {#if substitution && !disabled}
-        <input name="id" type="hidden" value={substitution.id} />
-      {/if}
+    <div class="flex flex-col gap-2">
+      <!-- Substitute select -->
+      <Dropdown
+        bind:value={substitute_value}
+        options={driver_dropdown_options(inactive_drivers)}
+        {labelwidth}
+        {disabled}
+        {required}
+      >
+        Substitute
+      </Dropdown>
 
-      <div class="flex flex-col gap-2">
-        <!-- Substitute select -->
+      <!-- Driver select -->
+      <Dropdown
+        bind:value={driver_value}
+        options={driver_dropdown_options(active_drivers)}
+        {labelwidth}
+        {disabled}
+        {required}
+      >
+        For
+      </Dropdown>
+
+      <!-- Race select -->
+      {#await data.races then races}
         <Dropdown
-          name="substitute"
-          bind:value={substitute_value}
-          options={driver_dropdown_options(inactive_drivers)}
+          bind:value={race_value}
+          options={race_dropdown_options(races)}
           {labelwidth}
           {disabled}
           {required}
         >
-          Substitute
+          Race
         </Dropdown>
+      {/await}
 
-        <!-- Driver select -->
-        <Dropdown
-          name="for"
-          bind:value={driver_value}
-          options={driver_dropdown_options(active_drivers)}
-          {labelwidth}
-          {disabled}
-          {required}
-        >
-          For
-        </Dropdown>
-
-        <!-- Race select -->
-        {#await data.races then races}
-          <Dropdown
-            name="race"
-            bind:value={race_value}
-            options={race_dropdown_options(races)}
-            {labelwidth}
-            {disabled}
-            {required}
-          >
-            Race
-          </Dropdown>
-        {/await}
-
-        <!-- Save/Delete buttons -->
-        <div class="flex justify-end gap-2">
-          {#if substitution}
-            <Button
-              formaction="?/update_substitution"
-              color="secondary"
-              {disabled}
-              submit
-              width="w-1/2"
-            >
-              Save Changes
-            </Button>
-            <Button
-              formaction="?/delete_substitution"
-              color="primary"
-              {disabled}
-              submit
-              width="w-1/2"
-            >
-              Delete
-            </Button>
-          {:else}
-            <Button
-              formaction="?/create_substitution"
-              color="tertiary"
-              {disabled}
-              submit
-              width="w-full"
-            >
-              Create Substitution
-            </Button>
-          {/if}
-        </div>
+      <!-- Save/Delete buttons -->
+      <div class="flex justify-end gap-2">
+        {#if substitution}
+          <Button onclick={update_substitution()} color="secondary" {disabled} width="w-1/2">
+            Save Changes
+          </Button>
+          <Button onclick={delete_substitution} color="primary" {disabled} width="w-1/2">
+            Delete
+          </Button>
+        {:else}
+          <Button onclick={update_substitution(true)} color="tertiary" {disabled} width="w-full">
+            Create Substitution
+          </Button>
+        {/if}
       </div>
-    </form>
+    </div>
   </Card>
 {/await}

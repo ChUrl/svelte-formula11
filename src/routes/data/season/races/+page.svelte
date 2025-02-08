@@ -26,6 +26,7 @@
     modalStore.trigger(modalSettings);
   };
 
+  // TODO: Displayed dates differ from actual dates by 1 hour
   const races_columns: TableColumn[] = $derived([
     {
       data_value_name: "name",

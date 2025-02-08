@@ -5,12 +5,7 @@ import type { PocketBase, RecordModel } from "pocketbase";
 // for information about these interfaces
 declare global {
   namespace App {
-    interface Locals {
-      pb: PocketBase;
-      user: User | undefined;
-      admin: boolean;
-    }
-
+    // interface Locals {}
     // interface Error {}
     // interface PageData {}
     // interface PageState {}
