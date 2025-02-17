@@ -1,6 +1,6 @@
 <script lang="ts">
   import "../app.css";
-  import type { Snippet } from "svelte";
+  import { onDestroy, onMount, type Snippet } from "svelte";
   import type { LayoutData } from "./$types";
   import { page } from "$app/stores";
   import {
@@ -40,7 +40,7 @@
   import { computePosition, autoUpdate, offset, shift, flip, arrow } from "@floating-ui/dom";
   import { invalidate } from "$app/navigation";
   import { get_error_toast } from "$lib/toast";
-  import { pb } from "$lib/pocketbase";
+  import { pb, subscribe, unsubscribe } from "$lib/pocketbase";
   import { AVATAR_HEIGHT, AVATAR_WIDTH } from "$lib/config";
   import { error } from "@sveltejs/kit";
 
@@ -236,6 +236,39 @@
 
     return handler;
   };
+
+  // Real-time updates without reloading
+  onMount(() =>
+    subscribe([
+      "users",
+      "drivers",
+      "racepicks",
+      "raceresults",
+      "races",
+      "seasonpicks",
+      "substitutions",
+      "teams",
+      "currentpickedusers",
+      "currentrace",
+      "raceresultdesc",
+    ]),
+  );
+
+  onDestroy(() =>
+    unsubscribe([
+      "users",
+      "drivers",
+      "racepicks",
+      "raceresults",
+      "races",
+      "seasonpicks",
+      "substitutions",
+      "teams",
+      "currentpickedusers",
+      "currentrace",
+      "raceresultdesc",
+    ]),
+  );
 </script>
 
 <LoadingIndicator />
