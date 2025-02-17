@@ -11,7 +11,11 @@
   const modalStore: ModalStore = getModalStore();
 
   const result_handler = async (event: Event, id?: string) => {
-    const result: RaceResult | undefined = get_by_value(data.results, "id", id ?? "Invalid");
+    const result: RaceResult | undefined = get_by_value(
+      await data.raceresults,
+      "id",
+      id ?? "Invalid",
+    );
 
     if (id && !result) return;
 
@@ -90,4 +94,6 @@
     <span class="font-bold">Create Race Result</span>
   </Button>
 </div>
-<Table data={data.results} columns={results_columns} handler={result_handler} />
+{#await data.raceresults then results}
+  <Table data={results} columns={results_columns} handler={result_handler} />
+{/await}

@@ -1,5 +1,5 @@
 import { pb } from "$lib/pocketbase";
-import type { CurrentPickedUser, Race, RacePick, RaceResult } from "$lib/schema";
+import type { CurrentPickedUser, Race, RacePick } from "$lib/schema";
 import type { PageLoad } from "../$types";
 
 export const load: PageLoad = async ({ fetch }) => {
@@ -36,21 +36,9 @@ export const load: PageLoad = async ({ fetch }) => {
 
     return currentpickedusers;
   };
-
-  // TODO: Duplicated code from data/raceresults/+page.server.ts
-  const fetch_raceresults = async (): Promise<RaceResult[]> => {
-    // Don't expand races/pxxs/dnfs since we already fetched those
-    const raceresults: RaceResult[] = await pb
-      .collection("raceresultsdesc")
-      .getFullList({ fetch: fetch });
-
-    return raceresults;
-  };
-
   return {
     racepicks: fetch_racepicks(),
     currentpickedusers: fetch_currentpickedusers(),
-    raceresults: fetch_raceresults(),
 
     currentrace: await fetch_currentrace(),
   };

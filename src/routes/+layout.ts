@@ -3,7 +3,7 @@ import { pb, pbUser } from "$lib/pocketbase";
 // This makes the page client-side rendered
 export const ssr = false;
 
-import type { Driver, Graphic, Race, Substitution, Team } from "$lib/schema";
+import type { Driver, Graphic, Race, RaceResult, Substitution, Team } from "$lib/schema";
 import type { LayoutLoad } from "./$types";
 
 // On each page load (every route), this function runs serverside.
@@ -76,16 +76,27 @@ export const load: LayoutLoad = () => {
     return substitutions;
   };
 
+  const fetch_raceresults = async (): Promise<RaceResult[]> => {
+    const raceresults: RaceResult[] = await pb
+      .collection("raceresultsdesc")
+      .getFullList({ fetch: fetch });
+
+    return raceresults;
+  };
+
   return {
-    // User information
+    // User information (synchronous)
     user: pbUser,
     admin: pbUser?.admin ?? false,
 
-    // Return static data asynchronously
+    // Return static data
     graphics: fetch_graphics(),
     teams: fetch_teams(),
     drivers: fetch_drivers(),
     races: fetch_races(),
     substitutions: fetch_substitutions(),
+
+    // Return other data
+    raceresults: fetch_raceresults(),
   };
 };
