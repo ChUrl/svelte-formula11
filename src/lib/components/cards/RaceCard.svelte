@@ -139,7 +139,7 @@
     }
 
     try {
-      await pb.collection("raceresults").delete(race.id);
+      await pb.collection("races").delete(race.id);
       invalidateAll();
       modalStore.close();
     } catch (error) {
