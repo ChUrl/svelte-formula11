@@ -42,6 +42,8 @@
   import { invalidateAll } from "$app/navigation";
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
+  import { AVATAR_HEIGHT, AVATAR_WIDTH } from "$lib/config";
+  import { error } from "@sveltejs/kit";
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -139,7 +141,6 @@
   let avatar_value: FileList | undefined = $state();
 
   // Database actions
-  // TODO: Avatar compression
   const login = async (): Promise<void> => {
     try {
       await pb.collection("users").authWithPassword(username_value, password_value);
@@ -176,6 +177,33 @@
         return;
       }
 
+      // Avatar handling
+      let avatar_avif: Blob | undefined = undefined;
+      const avatar_file: File | undefined =
+        avatar_value && avatar_value.length === 1 ? avatar_value[0] : undefined;
+
+      if (avatar_file) {
+        const avatar_formdata: FormData = new FormData();
+        avatar_formdata.append("image", avatar_file);
+        avatar_formdata.append("width", AVATAR_WIDTH.toString());
+        avatar_formdata.append("height", AVATAR_HEIGHT.toString());
+
+        try {
+          const response = await fetch("/api/compress", {
+            method: "POST",
+            body: avatar_formdata,
+          });
+
+          if (!response.ok) {
+            error(500, "Compression failed.");
+          }
+
+          avatar_avif = await response.blob();
+        } catch (error) {
+          toastStore.trigger(get_error_toast("" + error));
+        }
+      }
+
       try {
         if (create) {
           await pb.collection("users").create({
@@ -197,7 +225,7 @@
           await pb.collection("users").update(data.user.id, {
             username: username_value,
             firstname: firstname_value,
-            avatar: avatar_value && avatar_value.length === 1 ? avatar_value[0] : undefined,
+            avatar: avatar_avif,
           });
 
           invalidateAll();
