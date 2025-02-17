@@ -6,6 +6,7 @@ import type {
   Race,
   RacePick,
   RaceResult,
+  SeasonPick,
   Substitution,
   Team,
   User,
@@ -142,12 +143,24 @@ export const fetch_currentrace = async (
 export const fetch_racepicks = async (
   fetch: (_: any) => Promise<Response>,
 ): Promise<RacePick[]> => {
-  // Don't expand race/pxx/dnf since we already fetched those
   const racepicks: RacePick[] = await pb
     .collection("racepicks")
     .getFullList({ fetch: fetch, expand: "user" });
 
   return racepicks;
+};
+
+/**
+ * Fetch all [SeasonPicks] from the database
+ */
+export const fetch_seasonpicks = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<SeasonPick[]> => {
+  const seasonpicks: SeasonPick[] = await pb
+    .collection("seasonpicks")
+    .getFullList({ fetch: fetch, expand: "user" });
+
+  return seasonpicks;
 };
 
 /**
