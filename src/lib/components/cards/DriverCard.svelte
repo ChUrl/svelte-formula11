@@ -16,6 +16,7 @@
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
   import { invalidateAll } from "$app/navigation";
+  import { error } from "@sveltejs/kit";
 
   interface DriverCardProps {
     /** Data passed from the page context */
@@ -51,7 +52,6 @@
   let active_value: boolean = $state(driver?.active ?? true);
 
   // Database actions
-  // TODO: Headshot compression
   const update_driver = (create?: boolean): (() => Promise<void>) => {
     const handler = async (): Promise<void> => {
       if (!firstname_input_value || firstname_input_value === "") {
@@ -71,21 +71,47 @@
         return;
       }
 
+      // Headshot handling
+      let headshot_avif: Blob | undefined = undefined;
+      const headshot_file: File | undefined =
+        headshot_file_value && headshot_file_value.length === 1
+          ? headshot_file_value[0]
+          : undefined;
+
+      if (headshot_file) {
+        const headshot_formdata: FormData = new FormData();
+        headshot_formdata.append("image", headshot_file);
+        headshot_formdata.append("width", DRIVER_HEADSHOT_WIDTH.toString());
+        headshot_formdata.append("height", DRIVER_HEADSHOT_HEIGHT.toString());
+
+        try {
+          const response = await fetch("/api/compress", {
+            method: "POST",
+            body: headshot_formdata,
+          });
+
+          if (!response.ok) {
+            error(500, "Compression failed.");
+          }
+
+          headshot_avif = await response.blob();
+        } catch (error) {
+          toastStore.trigger(get_error_toast("" + error));
+        }
+      }
+
       const driver_data = {
         firstname: firstname_input_value,
         lastname: lastname_input_value,
         code: code_input_value,
         team: team_select_value,
         active: active_value,
-        headshot:
-          headshot_file_value && headshot_file_value.length === 1
-            ? headshot_file_value[0]
-            : undefined,
+        headshot: headshot_avif,
       };
 
       try {
         if (create) {
-          if (!headshot_file_value || headshot_file_value.length !== 1) {
+          if (!headshot_avif) {
             toastStore.trigger(get_error_toast("Please upload a single driver headshot!"));
             return;
           }
