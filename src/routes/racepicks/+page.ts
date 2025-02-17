@@ -10,14 +10,7 @@ import {
 import type { PageLoad } from "../$types";
 
 export const load: PageLoad = async ({ fetch, depends }) => {
-  depends(
-    "data:racepicks",
-    "data:currentpickedusers",
-    "data:raceresults",
-    "data:drivers",
-    "data:races",
-    "data:currentrace",
-  );
+  depends("data:racepicks", "data:users", "data:raceresults", "data:drivers", "data:races");
 
   return {
     racepicks: fetch_racepicks(fetch),

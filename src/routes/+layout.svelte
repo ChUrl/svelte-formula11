@@ -246,9 +246,8 @@
       "seasonpicks",
       "substitutions",
       "teams",
-      "currentpickedusers",
-      "currentrace",
-      "raceresultdesc",
+
+      // The view collections do not receive realtime events
     ]),
   );
 
@@ -262,9 +261,6 @@
       "seasonpicks",
       "substitutions",
       "teams",
-      "currentpickedusers",
-      "currentrace",
-      "raceresultdesc",
     ]),
   );
 </script>
