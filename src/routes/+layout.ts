@@ -10,7 +10,9 @@ export const ssr = false;
 // since it's populated inside hooks.server.ts per request.
 // It will populate the "user" attribute of each page's "data" object,
 // so each page has access to the current user (or knows if no one is signed in).
-export const load: LayoutLoad = async () => {
+export const load: LayoutLoad = async ({ fetch, depends }) => {
+  depends("data:graphics");
+
   return {
     // User information (synchronous)
     user: pbUser,

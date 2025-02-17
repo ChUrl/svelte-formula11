@@ -8,7 +8,16 @@ import {
 } from "$lib/fetch";
 import type { PageLoad } from "../$types";
 
-export const load: PageLoad = async ({ fetch }) => {
+export const load: PageLoad = async ({ fetch, depends }) => {
+  depends(
+    "data:racepicks",
+    "data:currentpickedusers",
+    "data:raceresults",
+    "data:drivers",
+    "data:races",
+    "data:currentrace",
+  );
+
   return {
     racepicks: fetch_racepicks(fetch),
     currentpickedusers: fetch_currentpickedusers(fetch),
