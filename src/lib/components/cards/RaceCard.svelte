@@ -15,6 +15,7 @@
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
   import { invalidateAll } from "$app/navigation";
+  import { error } from "@sveltejs/kit";
 
   interface RaceCardProps {
     /** Data passed from the page context */
@@ -68,7 +69,6 @@
   }
 
   // Database actions
-  // TODO: Pictogram compression
   const update_race = (create?: boolean): (() => Promise<void>) => {
     const handler = async (): Promise<void> => {
       if (!name_value || name_value === "") {
@@ -92,6 +92,33 @@
         return;
       }
 
+      // Pictogram handling
+      let pictogram_avif: Blob | undefined = undefined;
+      const pictogram_file: File | undefined =
+        pictogram_value && pictogram_value.length === 1 ? pictogram_value[0] : undefined;
+
+      if (pictogram_file) {
+        const pictogram_formdata: FormData = new FormData();
+        pictogram_formdata.append("image", pictogram_file);
+        pictogram_formdata.append("width", RACE_PICTOGRAM_WIDTH.toString());
+        pictogram_formdata.append("height", RACE_PICTOGRAM_HEIGHT.toString());
+
+        try {
+          const response = await fetch("/api/compress", {
+            method: "POST",
+            body: pictogram_formdata,
+          });
+
+          if (!response.ok) {
+            error(500, "Compression failed.");
+          }
+
+          pictogram_avif = await response.blob();
+        } catch (error) {
+          toastStore.trigger(get_error_toast("" + error));
+        }
+      }
+
       const race_data = {
         name: name_value,
         step: step_value,
@@ -106,12 +133,12 @@
             : undefined,
         qualidate: new Date(qualidate_value).toISOString(),
         racedate: new Date(racedate_value).toISOString(),
-        pictogram: pictogram_value && pictogram_value.length === 1 ? pictogram_value[0] : undefined,
+        pictogram: pictogram_avif,
       };
 
       try {
         if (create) {
-          if (!pictogram_value || pictogram_value.length !== 1) {
+          if (!pictogram_avif) {
             toastStore.trigger(get_error_toast("Please upload a single pictogram!"));
             return;
           }
