@@ -9,11 +9,17 @@
   } from "@skeletonlabs/skeleton";
   import { Card, Button, Input, LazyImage } from "$lib/components";
   import type { SkeletonData, Team } from "$lib/schema";
-  import { TEAM_BANNER_HEIGHT, TEAM_BANNER_WIDTH } from "$lib/config";
+  import {
+    TEAM_BANNER_HEIGHT,
+    TEAM_BANNER_WIDTH,
+    TEAM_LOGO_HEIGHT,
+    TEAM_LOGO_WIDTH,
+  } from "$lib/config";
   import { get_team_banner_template, get_team_logo_template } from "$lib/database";
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
   import { invalidateAll } from "$app/navigation";
+  import { error } from "@sveltejs/kit";
 
   interface TeamCardProps {
     /** Data from the page context */
@@ -47,7 +53,6 @@
   let logo_value: FileList | undefined = $state();
 
   // Database actions
-  // TODO: Banner + logo compression
   const update_team = (create?: boolean): (() => Promise<void>) => {
     const handler = async (): Promise<void> => {
       if (!name_value || name_value === "") {
@@ -59,20 +64,83 @@
         return;
       }
 
-      const team_data = {
+      // Banner handling
+      let banner_avif: Blob | undefined = undefined;
+      const banner_file: File | undefined =
+        banner_value && banner_value.length === 1 ? banner_value[0] : undefined;
+
+      if (banner_file) {
+        const banner_formdata: FormData = new FormData();
+        banner_formdata.append("image", banner_file);
+        banner_formdata.append("width", TEAM_BANNER_WIDTH.toString());
+        banner_formdata.append("height", TEAM_BANNER_HEIGHT.toString());
+
+        try {
+          const response = await fetch("/api/compress", {
+            method: "POST",
+            body: banner_formdata,
+          });
+
+          if (!response.ok) {
+            error(500, "Compression failed.");
+          }
+
+          banner_avif = await response.blob();
+        } catch (error) {
+          toastStore.trigger(get_error_toast("" + error));
+        }
+      }
+
+      // Logo handling
+      let logo_avif: Blob | undefined = undefined;
+      const logo_file: File | undefined =
+        logo_value && logo_value.length === 1 ? logo_value[0] : undefined;
+
+      if (logo_file) {
+        const logo_formdata: FormData = new FormData();
+        logo_formdata.append("image", logo_file);
+        logo_formdata.append("width", TEAM_LOGO_WIDTH.toString());
+        logo_formdata.append("height", TEAM_LOGO_HEIGHT.toString());
+
+        try {
+          const response = await fetch("/api/compress", {
+            method: "POST",
+            body: logo_formdata,
+          });
+
+          if (!response.ok) {
+            error(500, "Compression failed.");
+          }
+
+          logo_avif = await response.blob();
+        } catch (error) {
+          toastStore.trigger(get_error_toast("" + error));
+        }
+      }
+
+      let team_data = {
         name: name_value,
         color: color_value,
-        banner: banner_value && banner_value.length === 1 ? banner_value[0] : undefined,
-        logo: logo_value && logo_value.length === 1 ? logo_value[0] : undefined,
+        banner: banner_avif,
+        logo: logo_avif,
       };
+
+      // HACK: Having only a single file for the update request
+      //       doesn't work with pocketbase for some reason
+      if (team_data.banner === undefined) {
+        delete team_data.banner;
+      }
+      if (team_data.logo === undefined) {
+        delete team_data.logo;
+      }
 
       try {
         if (create) {
-          if (!banner_value || banner_value.length !== 1) {
+          if (!banner_avif) {
             toastStore.trigger(get_error_toast("Please upload a single team banner!"));
             return;
           }
-          if (!logo_value || logo_value.length !== 1) {
+          if (!logo_avif) {
             toastStore.trigger(get_error_toast("Please upload a single team logo!"));
             return;
           }
