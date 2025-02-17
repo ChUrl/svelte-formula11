@@ -170,7 +170,7 @@
                 <h1 class="text-nowrap font-bold">
                   Picked ({picked.length}/{currentpicked.length}):
                 </h1>
-                <div class="mt-1 grid grid-cols-4 gap-x-2 gap-y-0.5">
+                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
                   {#each picked.slice(0, 16) as user}
                     <LazyImage
                       src={user.avatar_url ?? get_driver_headshot_template(graphics)}
@@ -303,14 +303,15 @@
     {/await}
   </div>
 
-  <div class="hide-scrollbar flex w-full overflow-x-scroll pb-2">
+  <!-- TODO: Horizontal scrollbar missing in desktop chrome (fuck chrome)??? -->
+  <div class="flex w-full overflow-x-scroll pb-2">
     <!-- Not ideal but currentpickedusers contains all users, so we do not need to fetch the users separately -->
     {#await Promise.all( [data.currentpickedusers, data.racepicks, data.races, data.drivers, data.raceresults], ) then [currentpicked, racepicks, races, drivers, raceresults]}
       {#each currentpicked as user}
         {@const picks = racepicks.filter((pick: RacePick) => pick.user === user.id)}
 
         <div
-          class="card ml-1 mt-2 w-full min-w-12 overflow-hidden py-2 shadow lg:ml-2 {data.user &&
+          class="card ml-1 mt-2 w-full min-w-12 overflow-hidden py-2 shadow lg:ml-2 lg:min-w-40 {data.user &&
           data.user.username === user.username
             ? 'bg-primary-300'
             : ''}"
