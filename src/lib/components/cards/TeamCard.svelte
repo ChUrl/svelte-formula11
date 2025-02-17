@@ -8,7 +8,7 @@
     type ToastStore,
   } from "@skeletonlabs/skeleton";
   import { Card, Button, Input, LazyImage } from "$lib/components";
-  import type { SkeletonData, Team } from "$lib/schema";
+  import type { Team } from "$lib/schema";
   import {
     TEAM_BANNER_HEIGHT,
     TEAM_BANNER_WIDTH,
@@ -20,10 +20,11 @@
   import { pb } from "$lib/pocketbase";
   import { invalidateAll } from "$app/navigation";
   import { error } from "@sveltejs/kit";
+  import type { PageData } from "../../../routes/data/season/teams/$types";
 
   interface TeamCardProps {
     /** Data from the page context */
-    data: SkeletonData;
+    data: PageData;
 
     /** The [Team] object used to prefill values. */
     team?: Team;

@@ -1,14 +1,6 @@
 <script lang="ts">
   import { Card, Button, Dropdown } from "$lib/components";
-  import type {
-    CurrentPickedUser,
-    Driver,
-    Race,
-    RacePick,
-    RaceResult,
-    SkeletonData,
-    Substitution,
-  } from "$lib/schema";
+  import type { Driver, RacePick, Substitution } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
   import {
     getModalStore,
@@ -21,15 +13,11 @@
   import { get_error_toast } from "$lib/toast";
   import { invalidateAll } from "$app/navigation";
   import { pb } from "$lib/pocketbase";
+  import type { PageData } from "../../../routes/racepicks/$types";
 
   interface RacePickCardProps {
     /** Data passed from the page context */
-    data: SkeletonData & {
-      currentrace: Race;
-      racepicks: Promise<RacePick[]>;
-      currentpickedusers: Promise<CurrentPickedUser[]>;
-      raceresults: Promise<RaceResult[]>;
-    };
+    data: PageData;
 
     /** The [RacePick] object used to prefill values. */
     racepick?: RacePick;
@@ -59,7 +47,7 @@
 
   // Reactive state
   let required: boolean = $derived(!racepick);
-  let disabled: boolean = $derived(!data.admin);
+  let disabled: boolean = false; // TODO: Datelock
   let pxx_select_value: string = $state(racepick?.pxx ?? "");
   let dnf_select_value: string = $state(racepick?.dnf ?? "");
 

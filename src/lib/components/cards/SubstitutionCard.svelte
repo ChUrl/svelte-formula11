@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Card, Button, Dropdown } from "$lib/components";
-  import type { Driver, SkeletonData, Substitution } from "$lib/schema";
+  import type { Driver, Substitution } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
   import {
     getModalStore,
@@ -13,10 +13,11 @@
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
   import { invalidateAll } from "$app/navigation";
+  import type { PageData } from "../../../routes/data/season/substitutions/$types";
 
   interface SubstitutionCardProps {
     /** Data passed from the page context */
-    data: SkeletonData;
+    data: PageData;
 
     /** The [Substitution] object used to prefill values. */
     substitution?: Substitution;

@@ -8,7 +8,7 @@
     type ToastStore,
   } from "@skeletonlabs/skeleton";
   import { Button, Card, Input } from "$lib/components";
-  import type { Race, SkeletonData } from "$lib/schema";
+  import type { Race } from "$lib/schema";
   import { RACE_PICTOGRAM_HEIGHT, RACE_PICTOGRAM_WIDTH } from "$lib/config";
   import { get_race_pictogram_template } from "$lib/database";
   import { format_date } from "$lib/date";
@@ -16,10 +16,11 @@
   import { pb } from "$lib/pocketbase";
   import { invalidateAll } from "$app/navigation";
   import { error } from "@sveltejs/kit";
+  import type { PageData } from "../../../routes/data/season/races/$types";
 
   interface RaceCardProps {
     /** Data passed from the page context */
-    data: SkeletonData;
+    data: PageData;
 
     /** The [Race] object used to prefill values. */
     race?: Race;

@@ -9,7 +9,7 @@
     type ToastStore,
   } from "@skeletonlabs/skeleton";
   import { Button, Input, Card, Dropdown } from "$lib/components";
-  import type { Driver, SkeletonData } from "$lib/schema";
+  import type { Driver } from "$lib/schema";
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { team_dropdown_options } from "$lib/dropdown";
   import { get_driver_headshot_template } from "$lib/database";
@@ -17,10 +17,11 @@
   import { pb } from "$lib/pocketbase";
   import { invalidateAll } from "$app/navigation";
   import { error } from "@sveltejs/kit";
+  import type { PageData } from "../../../routes/data/season/drivers/$types";
 
   interface DriverCardProps {
     /** Data passed from the page context */
-    data: SkeletonData;
+    data: PageData;
 
     /** The [Driver] object used to prefill values. */
     driver?: Driver;

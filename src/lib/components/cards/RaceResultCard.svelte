@@ -9,16 +9,17 @@
     type ToastStore,
   } from "@skeletonlabs/skeleton";
   import { Button, Card, Dropdown } from "$lib/components";
-  import type { Driver, Race, RaceResult, SkeletonData } from "$lib/schema";
+  import type { Driver, Race, RaceResult } from "$lib/schema";
   import { get_by_value } from "$lib/database";
   import { race_dropdown_options } from "$lib/dropdown";
   import { pb } from "$lib/pocketbase";
   import { get_error_toast } from "$lib/toast";
   import { invalidateAll } from "$app/navigation";
+  import type { PageData } from "../../../routes/data/raceresults/$types";
 
   interface RaceResultCardProps {
     /** Data passed from the page context */
-    data: SkeletonData & { results: RaceResult[] };
+    data: PageData;
 
     /** The [RaceResult] object used to prefill values. */
     result?: RaceResult;
