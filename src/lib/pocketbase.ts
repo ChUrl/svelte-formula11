@@ -8,6 +8,7 @@ export let pbUser: User | undefined = undefined;
 const update_user = async (record: AuthRecord): Promise<void> => {
   if (!record) {
     pbUser = undefined;
+    console.log("Returning with pbUser = undefined");
     return;
   }
 
@@ -32,8 +33,11 @@ const update_user = async (record: AuthRecord): Promise<void> => {
 };
 
 // Update the pbUser object when authStore changes (e.g. after logging in)
-pb.authStore.onChange(() => {
-  update_user(pb.authStore.record);
-  // console.log("Updating pbUser...")
-  // console.dir(pbUser, { depth: null });
+pb.authStore.onChange(async () => {
+  await update_user(pb.authStore.record);
+
+  // TODO: If the user has not chosen an avatar,
+  //       the page keeps displaying the "Login" button (wtf)
+  console.log("Updating pbUser...");
+  console.dir(pbUser, { depth: null });
 }, true);

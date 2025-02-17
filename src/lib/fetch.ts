@@ -112,7 +112,9 @@ export const fetch_users = async (fetch: (_: any) => Promise<Response>): Promise
     .getFullList({ fetch: fetch, sort: "+username" });
 
   users.map((user: User) => {
-    user.avatar_url = pb.files.getURL(user, user.avatar);
+    if (user.avatar) {
+      user.avatar_url = pb.files.getURL(user, user.avatar);
+    }
   });
 
   return users;

@@ -19,7 +19,6 @@
     RaceResultCard,
   } from "$lib/components";
   import { get_avatar_preview_event_handler } from "$lib/image";
-
   import {
     AppBar,
     storePopup,
@@ -39,7 +38,7 @@
     getToastStore,
   } from "@skeletonlabs/skeleton";
   import { computePosition, autoUpdate, offset, shift, flip, arrow } from "@floating-ui/dom";
-  import { invalidateAll } from "$app/navigation";
+  import { invalidate } from "$app/navigation";
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
   import { AVATAR_HEIGHT, AVATAR_WIDTH } from "$lib/config";
@@ -135,8 +134,8 @@
   storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
   // Reactive state
-  let username_value: string = $state("");
-  let firstname_value: string = $state("");
+  let username_value: string = $state(data.user?.username ?? "");
+  let firstname_value: string = $state(data.user?.firstname ?? "");
   let password_value: string = $state("");
   let avatar_value: FileList | undefined = $state();
 
@@ -147,15 +146,14 @@
     } catch (error) {
       toastStore.trigger(get_error_toast("" + error));
     }
-    await invalidateAll();
+    await invalidate("data:user");
     drawerStore.close();
     password_value = "";
-    firstname_value = data.user?.firstname ?? "";
   };
 
   const logout = async (): Promise<void> => {
     pb.authStore.clear();
-    await invalidateAll();
+    await invalidate("data:user");
     drawerStore.close();
     username_value = "";
     firstname_value = "";
@@ -170,10 +168,6 @@
       }
       if (!firstname_value || firstname_value === "") {
         toastStore.trigger(get_error_toast("Please enter your first name!"));
-        return;
-      }
-      if (!password_value || password_value === "") {
-        toastStore.trigger(get_error_toast("Please enter a password!"));
         return;
       }
 
@@ -206,16 +200,20 @@
 
       try {
         if (create) {
+          if (!password_value || password_value === "") {
+            toastStore.trigger(get_error_toast("Please enter a password!"));
+            return;
+          }
+
           await pb.collection("users").create({
             username: username_value,
             firstname: firstname_value,
             password: password_value,
-            passwordConfirm: password_value,
+            passwordConfirm: password_value, // lol
             admin: false,
           });
 
           await login();
-          return;
         } else {
           if (!data.user?.id || data.user.id === "") {
             toastStore.trigger(get_error_toast("Invalid user id!"));
@@ -227,10 +225,10 @@
             firstname: firstname_value,
             avatar: avatar_avif,
           });
-
-          invalidateAll();
           drawerStore.close();
         }
+
+        invalidate("data:users");
       } catch (error) {
         toastStore.trigger(get_error_toast("" + error));
       }

@@ -11,7 +11,7 @@ export const ssr = false;
 // It will populate the "user" attribute of each page's "data" object,
 // so each page has access to the current user (or knows if no one is signed in).
 export const load: LayoutLoad = async ({ fetch, depends }) => {
-  depends("data:graphics");
+  depends("data:graphics", "data:user");
 
   return {
     // User information (synchronous)
