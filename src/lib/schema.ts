@@ -77,6 +77,22 @@ export interface RacePick {
   };
 }
 
+export interface SeasonPick {
+  id: string;
+  user: string;
+  hottake: string;
+  wdcwinner: string;
+  wccwinner: string;
+  mostovertakes: string;
+  mostdnfs: string;
+  doohanstarts: number;
+  teamwinners: string[];
+  podiums: string[];
+  expand: {
+    user: User;
+  };
+}
+
 export interface RaceResult {
   id: string;
   race: string;
