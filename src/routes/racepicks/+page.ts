@@ -5,6 +5,7 @@ import {
   fetch_racepicks,
   fetch_raceresults,
   fetch_races,
+  fetch_substitutions,
 } from "$lib/fetch";
 import type { PageLoad } from "../$types";
 
@@ -24,6 +25,7 @@ export const load: PageLoad = async ({ fetch, depends }) => {
     raceresults: fetch_raceresults(fetch),
     drivers: fetch_drivers(fetch),
     races: fetch_races(fetch),
+    substitutions: fetch_substitutions(fetch),
 
     currentrace: await fetch_currentrace(fetch),
   };
