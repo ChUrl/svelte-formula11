@@ -74,35 +74,6 @@
           timple
         ];
       };
-
-      f1python = pkgs.python312.withPackages (p:
-        with p; [
-          # Basic
-          rich
-
-          # Web
-          flask
-          flask-sqlalchemy
-          flask-caching
-          sqlalchemy
-
-          # Test
-          pytest
-
-          # TODO: For some reason, listing those under fastf1.dependencies doesn't work???
-          matplotlib
-          numpy
-          pandas
-          python-dateutil
-          requests
-          requests-cache
-          scipy
-          rapidfuzz
-          websockets
-          timple
-
-          fastf1
-        ]);
     in {
       devShell = pkgs.devshell.mkShell {
         name = "Formula11";
@@ -110,16 +81,6 @@
         packages = with pkgs; [
           nodejs_23
           pocketbase
-
-          # nodePackages.autoprefixer
-          # nodePackages.postcss
-          # nodePackages.postcss-cli
-          # nodePackages.sass
-          # nodePackages.svelte-check
-          # nodePackages.tailwindcss
-
-          # f1python
-          # sqlitebrowser
         ];
 
         # Use $1 for positional args
