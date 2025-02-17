@@ -15,7 +15,6 @@
   import { get_driver_headshot_template } from "$lib/database";
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
-  import { invalidateAll } from "$app/navigation";
   import { error } from "@sveltejs/kit";
   import type { PageData } from "../../../routes/data/season/drivers/$types";
 
@@ -124,7 +123,6 @@
           }
           await pb.collection("drivers").update(driver.id, driver_data);
         }
-        invalidateAll();
         modalStore.close();
       } catch (error) {
         toastStore.trigger(get_error_toast("" + error));
@@ -142,7 +140,6 @@
 
     try {
       await pb.collection("drivers").delete(driver.id);
-      invalidateAll();
       modalStore.close();
     } catch (error) {
       toastStore.trigger(get_error_toast("" + error));

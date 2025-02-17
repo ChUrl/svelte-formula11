@@ -14,7 +14,6 @@
   import { race_dropdown_options } from "$lib/dropdown";
   import { pb } from "$lib/pocketbase";
   import { get_error_toast } from "$lib/toast";
-  import { invalidateAll } from "$app/navigation";
   import type { PageData } from "../../../routes/data/raceresults/$types";
 
   interface RaceResultCardProps {
@@ -203,7 +202,6 @@
 
           await pb.collection("raceresults").update(result.id, raceresult_data);
         }
-        invalidateAll();
         modalStore.close();
       } catch (error) {
         toastStore.trigger(get_error_toast("" + error));
@@ -221,7 +219,6 @@
 
     try {
       await pb.collection("raceresults").delete(result.id);
-      invalidateAll();
       modalStore.close();
     } catch (error) {
       toastStore.trigger(get_error_toast("" + error));

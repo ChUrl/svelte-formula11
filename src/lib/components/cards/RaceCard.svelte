@@ -14,7 +14,6 @@
   import { format_date } from "$lib/date";
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
-  import { invalidateAll } from "$app/navigation";
   import { error } from "@sveltejs/kit";
   import type { PageData } from "../../../routes/data/season/races/$types";
 
@@ -151,7 +150,6 @@
           }
           await pb.collection("races").update(race.id, race_data);
         }
-        invalidateAll();
         modalStore.close();
       } catch (error) {
         toastStore.trigger(get_error_toast("" + error));
@@ -168,7 +166,6 @@
 
     try {
       await pb.collection("races").delete(race.id);
-      invalidateAll();
       modalStore.close();
     } catch (error) {
       toastStore.trigger(get_error_toast("" + error));

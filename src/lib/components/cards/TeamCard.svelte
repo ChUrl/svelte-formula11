@@ -18,7 +18,6 @@
   import { get_team_banner_template, get_team_logo_template } from "$lib/database";
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
-  import { invalidateAll } from "$app/navigation";
   import { error } from "@sveltejs/kit";
   import type { PageData } from "../../../routes/data/season/teams/$types";
 
@@ -153,7 +152,6 @@
           }
           await pb.collection("teams").update(team.id, team_data);
         }
-        invalidateAll();
         modalStore.close();
       } catch (error) {
         toastStore.trigger(get_error_toast("" + error));
@@ -171,7 +169,6 @@
 
     try {
       await pb.collection("teams").delete(team.id);
-      invalidateAll();
       modalStore.close();
     } catch (error) {
       toastStore.trigger(get_error_toast("" + error));

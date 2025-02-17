@@ -11,7 +11,6 @@
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { driver_dropdown_options } from "$lib/dropdown";
   import { get_error_toast } from "$lib/toast";
-  import { invalidateAll } from "$app/navigation";
   import { pb } from "$lib/pocketbase";
   import type { PageData } from "../../../routes/racepicks/$types";
 
@@ -131,7 +130,6 @@
           }
           await pb.collection("racepicks").update(racepick.id, racepick_data);
         }
-        invalidateAll();
         modalStore.close();
       } catch (error) {
         toastStore.trigger(get_error_toast("" + error));
@@ -149,7 +147,6 @@
 
     try {
       await pb.collection("racepicks").delete(racepick.id);
-      invalidateAll();
       modalStore.close();
     } catch (error) {
       toastStore.trigger(get_error_toast("" + error));

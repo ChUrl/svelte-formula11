@@ -227,8 +227,6 @@
           });
           drawerStore.close();
         }
-
-        invalidate("data:users");
       } catch (error) {
         toastStore.trigger(get_error_toast("" + error));
       }

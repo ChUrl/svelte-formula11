@@ -12,7 +12,6 @@
   import { driver_dropdown_options, race_dropdown_options } from "$lib/dropdown";
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
-  import { invalidateAll } from "$app/navigation";
   import type { PageData } from "../../../routes/data/season/substitutions/$types";
 
   interface SubstitutionCardProps {
@@ -91,7 +90,6 @@
           }
           await pb.collection("substitutions").update(substitution.id, substitution_data);
         }
-        invalidateAll();
         modalStore.close();
       } catch (error) {
         toastStore.trigger(get_error_toast("" + error));
@@ -108,7 +106,6 @@
 
     try {
       await pb.collection("substitutions").delete(substitution.id);
-      invalidateAll();
       modalStore.close();
     } catch (error) {
       toastStore.trigger(get_error_toast("" + error));
