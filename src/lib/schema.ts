@@ -53,9 +53,6 @@ export interface Driver {
   headshot_url?: string;
   team: string;
   active: boolean;
-  expand: {
-    team: Team;
-  };
 }
 
 export interface Race {
