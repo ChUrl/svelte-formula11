@@ -1,6 +1,7 @@
-import Pocketbase, { type AuthRecord } from "pocketbase";
+import Pocketbase, { type AuthRecord, type RecordModel, type RecordSubscription } from "pocketbase";
 import type { Graphic, User } from "$lib/schema";
 import { env } from "$env/dynamic/public";
+import { invalidate } from "$app/navigation";
 
 export let pb = new Pocketbase(env.PUBLIC_PBURL || "http://192.168.86.50:8090");
 export let pbUser: User | undefined = undefined;
@@ -41,3 +42,17 @@ pb.authStore.onChange(async () => {
   console.log("Updating pbUser...");
   console.dir(pbUser, { depth: null });
 }, true);
+
+export const subscribe = (collections: string[]) => {
+  collections.forEach((collection: string) => {
+    pb.collection(collection).subscribe("*", (event: RecordSubscription<RecordModel>) => {
+      invalidate(`data:${collection}`);
+    });
+  });
+};
+
+export const unsubscribe = (collections: string[]) => {
+  collections.forEach((collection: string) => {
+    pb.collection(collection).unsubscribe("*");
+  });
+};
