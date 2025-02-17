@@ -256,7 +256,7 @@
 
         <div
           use:popup={race_popupsettings(race?.id ?? "Invalid")}
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
+          class="card mt-2 flex h-20 w-7 cursor-pointer flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
           <span class="hidden text-sm font-bold lg:block">
             {race?.step}: {race?.name}
