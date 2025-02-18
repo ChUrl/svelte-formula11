@@ -109,3 +109,13 @@ export interface CurrentPickedUser {
   admin: boolean;
   picked: boolean;
 }
+
+export interface SeasonPickedUser {
+  id: string;
+  username: string;
+  firstname: string;
+  avatar: string;
+  avatar_url?: string;
+  admin: boolean;
+  picked: boolean;
+}
