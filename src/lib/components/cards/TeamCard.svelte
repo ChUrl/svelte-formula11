@@ -176,83 +176,81 @@
   };
 </script>
 
-{#await data.graphics then graphics}
-  <Card
-    imgsrc={team?.banner_url ?? get_team_banner_template(graphics)}
-    imgid="banner_preview"
-    width="w-full sm:w-auto"
-    imgwidth={TEAM_BANNER_WIDTH}
-    imgheight={TEAM_BANNER_HEIGHT}
-    imgonclick={(event: Event) => modalStore.close()}
-  >
-    <div class="flex flex-col gap-2">
-      <!-- Team name input -->
-      <Input bind:value={name_value} autocomplete="off" {labelwidth} {disabled} {required}>
-        Name
-      </Input>
+<Card
+  imgsrc={team?.banner_url ?? get_team_banner_template(data.graphics)}
+  imgid="banner_preview"
+  width="w-full sm:w-auto"
+  imgwidth={TEAM_BANNER_WIDTH}
+  imgheight={TEAM_BANNER_HEIGHT}
+  imgonclick={(event: Event) => modalStore.close()}
+>
+  <div class="flex flex-col gap-2">
+    <!-- Team name input -->
+    <Input bind:value={name_value} autocomplete="off" {labelwidth} {disabled} {required}>
+      Name
+    </Input>
 
-      <!-- Team color input -->
-      <Input
-        bind:value={color_value}
-        autocomplete="off"
-        placeholder="Enter as '#XXXXXX'"
-        minlength={7}
-        maxlength={7}
-        {labelwidth}
-        {disabled}
-        {required}
-      >
-        Color
-        <span class="badge ml-2 border" style="color: {color_value}; background: {color_value}">
-          C
-        </span>
-      </Input>
+    <!-- Team color input -->
+    <Input
+      bind:value={color_value}
+      autocomplete="off"
+      placeholder="Enter as '#XXXXXX'"
+      minlength={7}
+      maxlength={7}
+      {labelwidth}
+      {disabled}
+      {required}
+    >
+      Color
+      <span class="badge ml-2 border" style="color: {color_value}; background: {color_value}">
+        C
+      </span>
+    </Input>
 
-      <!-- Banner upload -->
-      <FileDropzone
-        name="banner"
-        bind:files={banner_value}
-        onchange={get_image_preview_event_handler("banner_preview")}
-        {disabled}
-        {required}
-      >
-        <svelte:fragment slot="message">
-          <span class="font-bold">Upload Banner</span>
-        </svelte:fragment>
-      </FileDropzone>
+    <!-- Banner upload -->
+    <FileDropzone
+      name="banner"
+      bind:files={banner_value}
+      onchange={get_image_preview_event_handler("banner_preview")}
+      {disabled}
+      {required}
+    >
+      <svelte:fragment slot="message">
+        <span class="font-bold">Upload Banner</span>
+      </svelte:fragment>
+    </FileDropzone>
 
-      <!-- Logo upload -->
-      <FileDropzone
-        name="logo"
-        bind:files={logo_value}
-        onchange={get_image_preview_event_handler("logo_preview")}
-        {disabled}
-        {required}
-      >
-        <svelte:fragment slot="message">
-          <div class="inline-flex flex-nowrap items-center gap-2">
-            <span class="font-bold">Upload Logo</span>
-            <LazyImage
-              src={team?.logo_url ?? get_team_logo_template(graphics)}
-              id="logo_preview"
-              imgwidth={32}
-              imgheight={32}
-            />
-          </div>
-        </svelte:fragment>
-      </FileDropzone>
+    <!-- Logo upload -->
+    <FileDropzone
+      name="logo"
+      bind:files={logo_value}
+      onchange={get_image_preview_event_handler("logo_preview")}
+      {disabled}
+      {required}
+    >
+      <svelte:fragment slot="message">
+        <div class="inline-flex flex-nowrap items-center gap-2">
+          <span class="font-bold">Upload Logo</span>
+          <LazyImage
+            src={team?.logo_url ?? get_team_logo_template(data.graphics)}
+            id="logo_preview"
+            imgwidth={32}
+            imgheight={32}
+          />
+        </div>
+      </svelte:fragment>
+    </FileDropzone>
 
-      <!-- Save/Delete buttons -->
-      <div class="flex justify-end gap-2">
-        {#if team}
-          <Button onclick={update_team()} color="secondary" {disabled} width="w-1/2">Save</Button>
-          <Button onclick={delete_team} color="primary" {disabled} width="w-1/2">Delete</Button>
-        {:else}
-          <Button onclick={update_team(true)} color="tertiary" {disabled} width="w-full">
-            Create Team
-          </Button>
-        {/if}
-      </div>
+    <!-- Save/Delete buttons -->
+    <div class="flex justify-end gap-2">
+      {#if team}
+        <Button onclick={update_team()} color="secondary" {disabled} width="w-1/2">Save</Button>
+        <Button onclick={delete_team} color="primary" {disabled} width="w-1/2">Delete</Button>
+      {:else}
+        <Button onclick={update_team(true)} color="tertiary" {disabled} width="w-full">
+          Create Team
+        </Button>
+      {/if}
     </div>
-  </Card>
-{/await}
+  </div>
+</Card>

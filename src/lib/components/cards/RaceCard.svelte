@@ -173,121 +173,114 @@
   };
 </script>
 
-{#await data.graphics then graphics}
-  <Card
-    imgsrc={race?.pictogram_url ?? get_race_pictogram_template(graphics)}
-    imgid="pictogram_preview"
-    width="w-full sm:w-auto"
-    imgwidth={RACE_PICTOGRAM_WIDTH}
-    imgheight={RACE_PICTOGRAM_HEIGHT}
-    imgonclick={(event: Event) => modalStore.close()}
-  >
-    <div class="flex flex-col gap-2">
-      <!-- Driver name input -->
-      <Input bind:value={name_value} autocomplete="off" {labelwidth} {disabled} {required}>
-        Name
-      </Input>
-      <Input
-        bind:value={step_value}
-        autocomplete="off"
-        type="number"
-        min={1}
-        max={24}
-        {labelwidth}
-        {disabled}
-        {required}
-      >
-        Step
-      </Input>
-      <Input
-        bind:value={pxx_value}
-        autocomplete="off"
-        type="number"
-        min={1}
-        max={20}
-        {labelwidth}
-        {disabled}
-        {required}
-      >
-        PXX
-      </Input>
+<Card
+  imgsrc={race?.pictogram_url ?? get_race_pictogram_template(data.graphics)}
+  imgid="pictogram_preview"
+  width="w-full sm:w-auto"
+  imgwidth={RACE_PICTOGRAM_WIDTH}
+  imgheight={RACE_PICTOGRAM_HEIGHT}
+  imgonclick={(event: Event) => modalStore.close()}
+>
+  <div class="flex flex-col gap-2">
+    <!-- Driver name input -->
+    <Input bind:value={name_value} autocomplete="off" {labelwidth} {disabled} {required}>
+      Name
+    </Input>
+    <Input
+      bind:value={step_value}
+      autocomplete="off"
+      type="number"
+      min={1}
+      max={24}
+      {labelwidth}
+      {disabled}
+      {required}
+    >
+      Step
+    </Input>
+    <Input
+      bind:value={pxx_value}
+      autocomplete="off"
+      type="number"
+      min={1}
+      max={20}
+      {labelwidth}
+      {disabled}
+      {required}
+    >
+      PXX
+    </Input>
 
-      <!-- NOTE: Input datetime-local accepts YYYY-mm-ddTHH:MM format -->
-      <Input
-        id="sqdate"
-        bind:value={sprintqualidate_value}
-        autocomplete="off"
-        type="datetime-local"
-        {labelwidth}
-        {disabled}
-      >
-        SQuali
-      </Input>
-      <Input
-        id="sdate"
-        bind:value={sprintdate_value}
-        autocomplete="off"
-        type="datetime-local"
-        {labelwidth}
-        {disabled}
-      >
-        SRace
-      </Input>
-      <Input
-        bind:value={qualidate_value}
-        autocomplete="off"
-        type="datetime-local"
-        {labelwidth}
-        {disabled}
-        {required}
-      >
-        Quali
-      </Input>
-      <Input
-        bind:value={racedate_value}
-        autocomplete="off"
-        type="datetime-local"
-        {labelwidth}
-        {disabled}
-        {required}
-      >
-        Race
-      </Input>
+    <!-- NOTE: Input datetime-local accepts YYYY-mm-ddTHH:MM format -->
+    <Input
+      id="sqdate"
+      bind:value={sprintqualidate_value}
+      autocomplete="off"
+      type="datetime-local"
+      {labelwidth}
+      {disabled}
+    >
+      SQuali
+    </Input>
+    <Input
+      id="sdate"
+      bind:value={sprintdate_value}
+      autocomplete="off"
+      type="datetime-local"
+      {labelwidth}
+      {disabled}
+    >
+      SRace
+    </Input>
+    <Input
+      bind:value={qualidate_value}
+      autocomplete="off"
+      type="datetime-local"
+      {labelwidth}
+      {disabled}
+      {required}
+    >
+      Quali
+    </Input>
+    <Input
+      bind:value={racedate_value}
+      autocomplete="off"
+      type="datetime-local"
+      {labelwidth}
+      {disabled}
+      {required}
+    >
+      Race
+    </Input>
 
-      <!-- Headshot upload -->
-      <FileDropzone
-        name="pictogram"
-        onchange={get_image_preview_event_handler("pictogram_preview")}
-        bind:files={pictogram_value}
-        {disabled}
-        {required}
-      >
-        <svelte:fragment slot="message">
-          <span class="font-bold">Upload Pictogram</span>
-        </svelte:fragment>
-      </FileDropzone>
+    <!-- Headshot upload -->
+    <FileDropzone
+      name="pictogram"
+      onchange={get_image_preview_event_handler("pictogram_preview")}
+      bind:files={pictogram_value}
+      {disabled}
+      {required}
+    >
+      <svelte:fragment slot="message">
+        <span class="font-bold">Upload Pictogram</span>
+      </svelte:fragment>
+    </FileDropzone>
 
-      <!-- Save/Delete buttons -->
-      <div class="flex justify-end gap-2">
-        <Button
-          onclick={clear_sprint}
-          color="secondary"
-          {disabled}
-          width={race ? "w-1/3" : "w-1/2"}
-        >
-          Remove Sprint
+    <!-- Save/Delete buttons -->
+    <div class="flex justify-end gap-2">
+      <Button onclick={clear_sprint} color="secondary" {disabled} width={race ? "w-1/3" : "w-1/2"}>
+        Remove Sprint
+      </Button>
+      {#if race}
+        <Button onclick={update_race()} color="secondary" {disabled} width="w-1/3">
+          Save Changes
         </Button>
-        {#if race}
-          <Button onclick={update_race()} color="secondary" {disabled} width="w-1/3">
-            Save Changes
-          </Button>
-          <Button onclick={delete_race} color="primary" {disabled} width="w-1/3">Delete</Button>
-        {:else}
-          <Button onclick={update_race(true)} color="tertiary" {disabled} width="w-1/2">
-            Create Race
-          </Button>
-        {/if}
-      </div>
+        <Button onclick={delete_race} color="primary" {disabled} width="w-1/3">Delete</Button>
+      {:else}
+        <Button onclick={update_race(true)} color="tertiary" {disabled} width="w-1/2">
+          Create Race
+        </Button>
+      {/if}
     </div>
-  </Card>
-{/await}
+  </div>
+</Card>

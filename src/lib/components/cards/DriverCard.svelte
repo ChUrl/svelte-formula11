@@ -147,93 +147,79 @@
   };
 </script>
 
-{#await data.graphics then graphics}
-  <Card
-    imgsrc={driver?.headshot_url ?? get_driver_headshot_template(graphics)}
-    imgid="headshot_preview"
-    width="w-full sm:w-auto"
-    imgwidth={DRIVER_HEADSHOT_WIDTH}
-    imgheight={DRIVER_HEADSHOT_HEIGHT}
-    imgonclick={(event: Event) => modalStore.close()}
-  >
-    <div class="flex flex-col gap-2">
-      <!-- Driver name input -->
-      <Input
-        bind:value={firstname_input_value}
-        autocomplete="off"
-        {labelwidth}
-        {disabled}
-        {required}
-      >
-        First Name
-      </Input>
-      <Input
-        bind:value={lastname_input_value}
-        autocomplete="off"
-        {labelwidth}
-        {disabled}
-        {required}
-      >
-        Last Name
-      </Input>
-      <Input
-        bind:value={code_input_value}
-        autocomplete="off"
-        minlength={3}
-        maxlength={3}
-        {labelwidth}
-        {disabled}
-        {required}
-      >
-        Driver Code
-      </Input>
+<Card
+  imgsrc={driver?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+  imgid="headshot_preview"
+  width="w-full sm:w-auto"
+  imgwidth={DRIVER_HEADSHOT_WIDTH}
+  imgheight={DRIVER_HEADSHOT_HEIGHT}
+  imgonclick={(event: Event) => modalStore.close()}
+>
+  <div class="flex flex-col gap-2">
+    <!-- Driver name input -->
+    <Input bind:value={firstname_input_value} autocomplete="off" {labelwidth} {disabled} {required}>
+      First Name
+    </Input>
+    <Input bind:value={lastname_input_value} autocomplete="off" {labelwidth} {disabled} {required}>
+      Last Name
+    </Input>
+    <Input
+      bind:value={code_input_value}
+      autocomplete="off"
+      minlength={3}
+      maxlength={3}
+      {labelwidth}
+      {disabled}
+      {required}
+    >
+      Driver Code
+    </Input>
 
-      <!-- Driver team input -->
-      {#await data.teams then teams}
-        <Dropdown
-          bind:value={team_select_value}
-          options={team_dropdown_options(teams)}
-          {labelwidth}
+    <!-- Driver team input -->
+    {#await data.teams then teams}
+      <Dropdown
+        bind:value={team_select_value}
+        options={team_dropdown_options(teams)}
+        {labelwidth}
+        {disabled}
+        {required}
+      >
+        Team
+      </Dropdown>
+    {/await}
+
+    <!-- Headshot upload -->
+    <FileDropzone
+      name="headshot"
+      bind:files={headshot_file_value}
+      onchange={get_image_preview_event_handler("headshot_preview")}
+      {disabled}
+      {required}
+    >
+      <svelte:fragment slot="message">
+        <span class="font-bold">Upload Headshot</span>
+      </svelte:fragment>
+    </FileDropzone>
+
+    <!-- Save/Delete buttons -->
+    <div class="flex items-center justify-end gap-2">
+      <div class="mr-auto">
+        <SlideToggle
+          name="active"
+          background="bg-primary-500"
+          active="bg-tertiary-500"
+          bind:checked={active_value}
           {disabled}
-          {required}
-        >
-          Team
-        </Dropdown>
-      {/await}
-
-      <!-- Headshot upload -->
-      <FileDropzone
-        name="headshot"
-        bind:files={headshot_file_value}
-        onchange={get_image_preview_event_handler("headshot_preview")}
-        {disabled}
-        {required}
-      >
-        <svelte:fragment slot="message">
-          <span class="font-bold">Upload Headshot</span>
-        </svelte:fragment>
-      </FileDropzone>
-
-      <!-- Save/Delete buttons -->
-      <div class="flex items-center justify-end gap-2">
-        <div class="mr-auto">
-          <SlideToggle
-            name="active"
-            background="bg-primary-500"
-            active="bg-tertiary-500"
-            bind:checked={active_value}
-            {disabled}
-          />
-        </div>
-        {#if driver}
-          <Button onclick={update_driver()} color="secondary" {disabled} width="w-1/2">Save</Button>
-          <Button onclick={delete_driver} color="primary" {disabled} width="w-1/2">Delete</Button>
-        {:else}
-          <Button onclick={update_driver(true)} color="tertiary" {disabled} width="w-full">
-            Create Driver
-          </Button>
-        {/if}
+        />
       </div>
+      {#if driver}
+        <Button onclick={update_driver()} color="secondary" {disabled} width="w-1/2">Save</Button>
+        <Button onclick={delete_driver} color="primary" {disabled} width="w-1/2">Delete</Button>
+      {:else}
+        <Button onclick={update_driver(true)} color="tertiary" {disabled} width="w-full">
+          Create Driver
+        </Button>
+      {/if}
     </div>
-  </Card>
-{/await}
+  </div>
+</Card>
