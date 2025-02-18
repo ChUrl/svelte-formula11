@@ -7,6 +7,7 @@ import type {
   RacePick,
   RaceResult,
   SeasonPick,
+  SeasonPickedUser,
   Substitution,
   Team,
   User,
@@ -182,4 +183,24 @@ export const fetch_currentpickedusers = async (
   });
 
   return currentpickedusers;
+};
+
+/**
+ * Fetch all [Users] (with the extra field "picked" that is truthy
+ * if the user already picked for the season) with file URLs for the avatars
+ */
+export const fetch_seasonpickedusers = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<SeasonPickedUser[]> => {
+  const seasonpickedusers: SeasonPickedUser[] = await pb
+    .collection("seasonpickedusers")
+    .getFullList({ fetch: fetch });
+
+  seasonpickedusers.map((seasonpickeduser: SeasonPickedUser) => {
+    if (seasonpickeduser.avatar) {
+      seasonpickeduser.avatar_url = pb.files.getURL(seasonpickeduser, seasonpickeduser.avatar);
+    }
+  });
+
+  return seasonpickedusers;
 };
