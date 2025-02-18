@@ -131,13 +131,13 @@
 
           <!-- Only show the userguess if signed in -->
           {#if data.user}
-            {#await Promise.all( [data.graphics, data.drivers, racepick], ) then [graphics, drivers, pick]}
+            {#await Promise.all([data.drivers, racepick]) then [drivers, pick]}
               <div class="mt-2 flex gap-2">
                 <div class="card w-full min-w-40 p-2 pb-0 shadow">
                   <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
                   <LazyImage
                     src={get_by_value(drivers, "id", pick?.pxx ?? "")?.headshot_url ??
-                      get_driver_headshot_template(graphics)}
+                      get_driver_headshot_template(data.graphics)}
                     imgwidth={DRIVER_HEADSHOT_WIDTH}
                     imgheight={DRIVER_HEADSHOT_HEIGHT}
                     containerstyle="height: 115px; margin: auto;"
@@ -150,7 +150,7 @@
                   <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
                   <LazyImage
                     src={get_by_value(drivers, "id", pick?.dnf ?? "")?.headshot_url ??
-                      get_driver_headshot_template(graphics)}
+                      get_driver_headshot_template(data.graphics)}
                     imgwidth={DRIVER_HEADSHOT_WIDTH}
                     imgheight={DRIVER_HEADSHOT_HEIGHT}
                     containerstyle="height: 115px; margin: auto;"
@@ -164,7 +164,7 @@
           {/if}
 
           <!-- Show users that have and have not picked yet -->
-          {#await Promise.all( [data.graphics, data.currentpickedusers, pickedusers, outstandingusers], ) then [graphics, currentpicked, picked, outstanding]}
+          {#await Promise.all( [data.currentpickedusers, pickedusers, outstandingusers], ) then [currentpicked, picked, outstanding]}
             <div class="mt-2 flex gap-2">
               <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
                 <h1 class="text-nowrap font-bold">
@@ -173,7 +173,7 @@
                 <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
                   {#each picked.slice(0, 16) as user}
                     <LazyImage
-                      src={user.avatar_url ?? get_driver_headshot_template(graphics)}
+                      src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
                       imgwidth={AVATAR_WIDTH}
                       imgheight={AVATAR_HEIGHT}
                       containerstyle="height: 35px; width: 35px;"
@@ -189,7 +189,7 @@
                 <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
                   {#each outstanding.slice(0, 16) as user}
                     <LazyImage
-                      src={user.avatar_url ?? get_driver_headshot_template(graphics)}
+                      src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
                       imgwidth={AVATAR_WIDTH}
                       imgheight={AVATAR_HEIGHT}
                       containerstyle="height: 35px; width: 35px;"
@@ -261,13 +261,14 @@
           <span class="hidden text-sm font-bold lg:block">
             {race?.step}: {race?.name}
           </span>
-          <span class="block rotate-90 text-sm font-bold lg:hidden">
-            {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
-          </span>
           <span class="hidden text-sm lg:block">
             Date: {format_date(race?.racedate ?? "", dateformat)}
           </span>
           <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
+
+          <span class="block rotate-90 text-sm font-bold lg:hidden">
+            {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
+          </span>
         </div>
 
         <!-- The race result popup is triggered on click on the race -->
@@ -303,6 +304,7 @@
     {/await}
   </div>
 
+  <!-- TODO: If no guess is made, the table will probably be too short? -->
   <!-- TODO: Horizontal scrollbar missing in desktop chrome (fuck chrome)??? -->
   <div class="flex w-full overflow-x-scroll pb-2">
     <!-- Not ideal but currentpickedusers contains all users, so we do not need to fetch the users separately -->
@@ -318,15 +320,13 @@
         >
           <!-- Avatar + name display at the top -->
           <div class="mx-auto flex h-10 w-fit">
-            {#await data.graphics then graphics}
-              <LazyImage
-                src={user.avatar_url ?? get_driver_headshot_template(graphics)}
-                imgwidth={AVATAR_WIDTH}
-                imgheight={AVATAR_HEIGHT}
-                containerstyle="height: 40px; width: 40px;"
-                imgclass="bg-surface-400 rounded-full"
-              />
-            {/await}
+            <LazyImage
+              src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+              imgwidth={AVATAR_WIDTH}
+              imgheight={AVATAR_HEIGHT}
+              containerstyle="height: 40px; width: 40px;"
+              imgclass="bg-surface-400 rounded-full"
+            />
             <div
               style="height: 40px; line-height: 40px;"
               class="ml-2 hidden text-nowrap text-center align-middle lg:block"
