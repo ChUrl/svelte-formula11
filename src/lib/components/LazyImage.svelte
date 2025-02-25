@@ -56,8 +56,8 @@
   use:lazyload
   onLazyVisible={lazy_visible_handler}
   class="overflow-hidden"
-  style="aspect-ratio: {imgwidth} / {imgheight}; {containerstyle ??
-    ''}; max-width: {imgwidth}px; max-height: {imgheight}px"
+  style="aspect-ratio: {imgwidth} / {imgheight}; max-width: {imgwidth}px; max-height: {imgheight}px; {containerstyle ??
+    ''}"
 >
   {#if load}
     {#await fetch_image_base64(src) then data}
