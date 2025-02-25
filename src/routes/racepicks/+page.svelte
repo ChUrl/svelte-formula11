@@ -254,10 +254,12 @@
       {#each raceresults as result}
         {@const race = get_by_value(races, "id", result.race)}
 
+        <!-- Race name display -->
         <div
           use:popup={race_popupsettings(race?.id ?? "Invalid")}
           class="card mt-2 flex h-20 w-7 cursor-pointer flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
+          <!-- For large screens -->
           <span class="hidden text-sm font-bold lg:block">
             {race?.step}: {race?.name}
           </span>
@@ -266,8 +268,9 @@
           </span>
           <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
 
-          <span class="block rotate-90 text-sm font-bold lg:hidden">
-            {race?.name.slice(0, 8)}{(race?.name.length ?? 8) > 8 ? "." : ""}
+          <!-- For small screens -->
+          <span class="block rotate-90 text-xs font-bold lg:hidden">
+            {race?.name.slice(0, 9)}{(race?.name.length ?? 9) > 9 ? "." : ""}
           </span>
         </div>
 
