@@ -76,8 +76,8 @@
         <span class="font-bold">Next Race Guess</span>
       </svelte:fragment>
       <svelte:fragment slot="content">
-        <!-- Show information about the next race -->
         <div class="justify-center gap-2 lg:flex">
+          <!-- Show information about the next race -->
           <div class="mt-2 flex gap-2">
             <div class="card flex w-full min-w-40 flex-col p-2 shadow">
               <span class="font-bold">
@@ -156,13 +156,13 @@
 
           <!-- Show users that have and have not picked yet -->
           {#await Promise.all( [data.currentpickedusers, pickedusers, outstandingusers], ) then [currentpicked, picked, outstanding]}
-            <div class="mt-2 flex gap-2">
+            <div class="mt-2 flex max-h-[155px] gap-2 overflow-y-scroll">
               <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
                 <h1 class="text-nowrap font-bold">
                   Picked ({picked.length}/{currentpicked.length}):
                 </h1>
                 <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                  {#each picked.slice(0, 16) as user}
+                  {#each picked as user}
                     <LazyImage
                       src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
                       imgwidth={AVATAR_WIDTH}
@@ -173,12 +173,14 @@
                   {/each}
                 </div>
               </div>
-              <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+              <div
+                class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+              >
                 <h1 class="text-nowrap font-bold">
-                  Outstanding ({outstanding.length}/{currentpicked.length}):
+                  Missing ({outstanding.length}/{currentpicked.length}):
                 </h1>
                 <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                  {#each outstanding.slice(0, 16) as user}
+                  {#each outstanding as user}
                     <LazyImage
                       src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
                       imgwidth={AVATAR_WIDTH}
