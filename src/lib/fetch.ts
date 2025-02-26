@@ -1,8 +1,9 @@
-import { pb } from "./pocketbase";
+import { pb, pbUser } from "./pocketbase";
 import type {
   CurrentPickedUser,
   Driver,
   Graphic,
+  Hottake,
   Race,
   RacePick,
   RaceResult,
@@ -138,19 +139,42 @@ export const fetch_currentrace = async (
   return currentrace[0];
 };
 
+// TODO: This will make the hidden racepicks by other users visible inside the browser console...
 /**
  * Fetch all [RacePicks] from the database
  */
-export const fetch_racepicks = async (
+export const fetch_visibleracepicks = async (
   fetch: (_: any) => Promise<Response>,
 ): Promise<RacePick[]> => {
   const racepicks: RacePick[] = await pb
-    .collection("racepicks")
+    .collection("visibleracepicks")
     .getFullList({ fetch: fetch, expand: "user" });
 
   return racepicks;
 };
 
+/**
+ * Fetch the [RacePick] for the current race by the current user from the database
+ */
+export const fetch_currentracepick = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<RacePick | undefined> => {
+  if (!pbUser) return undefined;
+
+  const currentpickeduser: CurrentPickedUser = await pb
+    .collection("currentpickedusers")
+    .getOne(pbUser.id, { fetch: fetch });
+
+  if (!currentpickeduser.picked) return undefined;
+
+  const racepick: RacePick = await pb
+    .collection("racepicks")
+    .getOne(currentpickeduser.picked, { fetch: fetch });
+
+  return racepick;
+};
+
+// TODO: This will make the hidden seasonpicks by other users visible inside the browser console...
 /**
  * Fetch all [SeasonPicks] from the database
  */
@@ -158,10 +182,42 @@ export const fetch_seasonpicks = async (
   fetch: (_: any) => Promise<Response>,
 ): Promise<SeasonPick[]> => {
   const seasonpicks: SeasonPick[] = await pb
-    .collection("seasonpicks")
+    .collection("visibleseasonpicks")
     .getFullList({ fetch: fetch, expand: "user" });
 
   return seasonpicks;
+};
+
+/**
+ * Fetch all [Hottakes] from the databse
+ */
+export const fetch_hottakes = async (fetch: (_: any) => Promise<Response>): Promise<Hottake[]> => {
+  const hottakes: Hottake[] = await pb
+    .collection("hottakes")
+    .getFullList({ fetch: fetch, expand: "user" });
+
+  return hottakes;
+};
+
+/**
+ * Fetch the [SeasonPick] by the current user from the database
+ */
+export const fetch_currentseasonpick = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<SeasonPick | undefined> => {
+  if (!pbUser) return undefined;
+
+  const seasonpickeduser: CurrentPickedUser = await pb
+    .collection("seasonpickedusers")
+    .getOne(pbUser.id, { fetch: fetch });
+
+  if (!seasonpickeduser.picked) return undefined;
+
+  const seasonpick: SeasonPick = await pb
+    .collection("seasonpicks")
+    .getOne(seasonpickeduser.picked, { fetch: fetch });
+
+  return seasonpick;
 };
 
 /**
