@@ -29,7 +29,7 @@
   const seasonpick_handler = async (event: Event) => {
     const modalSettings: ModalSettings = {
       type: "component",
-      component: "seasonPickcard",
+      component: "seasonPickCard",
       meta: {
         data,
         seasonpick: data.seasonpick,
