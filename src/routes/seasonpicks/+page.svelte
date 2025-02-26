@@ -7,7 +7,7 @@
     type ModalStore,
   } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
-  import type { SeasonPick, SeasonPickedUser } from "$lib/schema";
+  import type { Hottake, SeasonPick } from "$lib/schema";
   import { ChequeredFlagIcon, LazyImage } from "$lib/components";
   import {
     get_by_value,
@@ -25,13 +25,6 @@
 
   let { data }: { data: PageData } = $props();
 
-  const seasonpick: Promise<SeasonPick | undefined> = $derived.by(
-    async () =>
-      (await data.seasonpicks).filter(
-        (seasonpick: SeasonPick) => seasonpick.expand.user.username === data.user?.username,
-      )[0] ?? undefined,
-  );
-
   const modalStore: ModalStore = getModalStore();
   const seasonpick_handler = async (event: Event) => {
     const modalSettings: ModalSettings = {
@@ -39,7 +32,7 @@
       component: "seasonPickcard",
       meta: {
         data,
-        seasonpick: await seasonpick,
+        seasonpick: data.seasonpick,
       },
     };
 
@@ -51,21 +44,20 @@
   <title>Formula 11 - Season Picks</title>
 </svelte:head>
 
-{#await seasonpick then pick}
-  <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-2" width="w-full">
-    <AccordionItem>
-      <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
-      <svelte:fragment slot="summary">
-        <span class="font-bold">Your Season Pick</span>
-      </svelte:fragment>
-      <svelte:fragment slot="content">
-        {pick?.hottake ?? "Invalid"}
-      </svelte:fragment>
-    </AccordionItem>
-  </Accordion>
-{/await}
+<Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-2" width="w-full">
+  <AccordionItem>
+    <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
+    <svelte:fragment slot="summary">
+      <span class="font-bold">Your Season Pick</span>
+    </svelte:fragment>
+    <svelte:fragment slot="content">
+      {data.seasonpick?.hottake ?? "Invalid"}
+    </svelte:fragment>
+  </AccordionItem>
+</Accordion>
 
 <!-- The fookin table -->
+<!-- TODO: Hide this thing if no picks... -->
 <div class="flex">
   <div>
     <!-- TODO: Points popup? -->
@@ -126,16 +118,23 @@
   </div>
 
   <!-- TODO: Datelock the guess display (except hottake for review) -->
+  <!-- TODO: Add user option to display driver codes instead of headshots (or both) -->
   <div class="flex w-full overflow-x-scroll pb-2">
-    {#await Promise.all( [data.seasonpickedusers, data.seasonpicks, data.drivers, data.teams], ) then [seasonpicked, seasonpicks, drivers, teams]}
-      {#each seasonpicked.filter((user: SeasonPickedUser) => user.picked) as user}
-        {@const pick = seasonpicks.filter((pick: SeasonPick) => pick.user === user.id)[0]}
-        {@const wdcwinner = get_by_value(drivers, "id", pick.wdcwinner)}
-        {@const wccwinner = get_by_value(teams, "id", pick.wccwinner)}
-        {@const mostovertakes = get_by_value(drivers, "id", pick.mostovertakes)}
-        {@const mostdnfs = get_by_value(drivers, "id", pick.mostdnfs)}
-        {@const teamwinners = pick.teamwinners.map((id: string) => get_by_value(drivers, "id", id))}
-        {@const podiums = pick.podiums.map((id: string) => get_by_value(drivers, "id", id))}
+    {#await Promise.all( [data.seasonpickedusers, data.seasonpicks, data.hottakes, data.drivers, data.teams], ) then [seasonpicked, seasonpicks, hottakes, drivers, teams]}
+      {#each seasonpicked as user}
+        {@const hottake = hottakes.filter((take: Hottake) => take.user === user.id)[0] ?? undefined}
+        {@const pick =
+          seasonpicks.filter((pick: SeasonPick) => pick.user === user.id)[0] ?? undefined}
+        {@const wdcwinner = pick ? get_by_value(drivers, "id", pick.wdcwinner) : undefined}
+        {@const wccwinner = pick ? get_by_value(teams, "id", pick.wccwinner) : undefined}
+        {@const mostovertakes = pick ? get_by_value(drivers, "id", pick.mostovertakes) : undefined}
+        {@const mostdnfs = pick ? get_by_value(drivers, "id", pick.mostdnfs) : undefined}
+        {@const teamwinners = pick
+          ? pick.teamwinners.map((id: string) => get_by_value(drivers, "id", id))
+          : [undefined]}
+        {@const podiums = pick
+          ? pick.podiums.map((id: string) => get_by_value(drivers, "id", id))
+          : [undefined]}
 
         <div
           class="card ml-1 mt-2 w-full min-w-36 overflow-hidden py-2 shadow lg:ml-2 {data.user &&
@@ -165,7 +164,7 @@
           <div
             class="mt-2 h-20 w-full overflow-y-scroll border bg-surface-300 px-1 py-2 leading-3 lg:px-2"
           >
-            <div class="mx-auto w-fit text-xs lg:text-sm">{pick.hottake}</div>
+            <div class="mx-auto w-fit text-xs font-bold lg:text-sm">{hottake?.hottake ?? "?"}</div>
           </div>
 
           <!-- Drivers Champion -->
@@ -224,12 +223,12 @@
           <!-- Doohan Starts -->
           <div class="mt-2 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2">
             <div class="mx-auto w-fit text-xs lg:text-sm">
-              Jack Doohan startet <span class="font-bold">{pick.doohanstarts}</span> mal.
+              Jack Doohan startet <span class="font-bold">{pick?.doohanstarts ?? "?"}</span> mal.
             </div>
           </div>
 
           <!-- Teamwinners -->
-          <!-- TODO: The grid spacing is not correct (too much space in the middle). Also for the grid below... -->
+          <!-- TODO: Sort teamwinners by team (and by code inside teams), so they are sorted equally for each column -->
           <div
             class="mt-2 h-[360px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 sm:h-[220px] md:h-[150px] lg:px-2"
           >
@@ -250,7 +249,8 @@
           </div>
 
           <!-- Podiums -->
-          <!-- TODO: Replace all style tags with custom classes like height here -->
+          <!-- TODO: Replace all style tags throughout the page with custom classes like height here -->
+          <!-- TODO: Sort podiums by driver code, so they are sorted equally for each column -->
           <div
             class="mt-2 h-[360px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 md:h-[220px] lg:px-2 xl:h-[150px]"
           >
