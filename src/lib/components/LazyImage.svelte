@@ -19,7 +19,7 @@
     /** Optional extra style for the lazy <div> container */
     containerstyle?: string;
 
-    /** Additional classes to insert */
+    /** Additional classes to insert for container + image */
     imgclass?: string;
 
     /** Slightly zoom the image on mouse-hover */
@@ -55,7 +55,7 @@
 <div
   use:lazyload
   onLazyVisible={lazy_visible_handler}
-  class="overflow-hidden"
+  class="overflow-hidden {imgclass}"
   style="aspect-ratio: {imgwidth} / {imgheight}; max-width: {imgwidth}px; max-height: {imgheight}px; {containerstyle ??
     ''}"
 >
