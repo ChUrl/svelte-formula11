@@ -9,7 +9,7 @@
     type ToastStore,
   } from "@skeletonlabs/skeleton";
   import { Button, Card, Dropdown } from "$lib/components";
-  import type { Driver, Race, RaceResult } from "$lib/schema";
+  import type { Driver, Race, RaceResult, Substitution } from "$lib/schema";
   import { get_by_value } from "$lib/database";
   import { race_dropdown_options } from "$lib/dropdown";
   import { pb } from "$lib/pocketbase";
@@ -36,11 +36,15 @@
 
   const toastStore: ToastStore = getToastStore();
 
+  // Await promises
   let races: Race[] | undefined = $state(undefined);
   data.races.then((r: Race[]) => (races = r));
 
   let drivers: Driver[] | undefined = $state(undefined);
   data.drivers.then((d: Driver[]) => (drivers = d));
+
+  let substitutions: Substitution[] | undefined = $state(undefined);
+  data.substitutions.then((s: Substitution[]) => (substitutions = s));
 
   // Constants
   const labelwidth: string = "70px";
@@ -79,27 +83,35 @@
   let pxxs_ids: string[] = $state(result?.pxxs ?? []);
   let dnfs_ids: string[] = $state(result?.dnfs ?? []);
 
-  let pxxs_options: AutocompleteOption<string>[] = $derived.by(() =>
-    (drivers ?? []).map((driver: Driver) => {
-      return {
-        // NOTE: Because Skeleton displays the values inside the autocomplete input,
-        //       we have to supply the driver code twice and manage a list of ids manually (ugh)
-        label: driver.code,
-        value: driver.code,
-      };
-    }),
-  );
+  let pxxs_options: AutocompleteOption<string>[] = $derived.by(() => {
+    if (!race_select_value) return [];
 
-  let dnfs_options: AutocompleteOption<string>[] = $derived.by(() =>
-    (drivers ?? []).map((driver: Driver) => {
+    let active_and_substitutes: Driver[] = (drivers ?? []).filter(
+      (driver: Driver) => driver.active,
+    );
+
+    (substitutions ?? [])
+      .filter((substitution: Substitution) => substitution.race === race_select_value)
+      .forEach((substitution: Substitution) => {
+        const for_index = active_and_substitutes.findIndex(
+          (driver: Driver) => driver.id === substitution.for,
+        );
+        const sub_index = (drivers ?? []).findIndex(
+          (driver: Driver) => driver.id === substitution.substitute,
+        );
+
+        active_and_substitutes[for_index] = (drivers ?? [])[sub_index];
+      });
+
+    return active_and_substitutes.map((driver: Driver) => {
       return {
         // NOTE: Because Skeleton displays the values inside the autocomplete input,
         //       we have to supply the driver code twice and manage a list of ids manually (ugh)
         label: driver.code,
         value: driver.code,
       };
-    }),
-  );
+    });
+  });
 
   let pxxs_whitelist: string[] = $derived.by(() =>
     (drivers ?? []).map((driver: Driver) => {
@@ -207,74 +219,78 @@
 </script>
 
 <Card width="w-full sm:w-[512px]">
-  <!-- Race select input -->
-  {#await data.races then races}
-    <Dropdown
-      name="race"
-      bind:value={race_select_value}
-      options={race_dropdown_options(races)}
-      {labelwidth}
-      {disabled}
-      {required}
-    >
-      Race
-    </Dropdown>
-  {/await}
+  <div class="flex flex-col gap-2">
+    <!-- Race select input -->
+    {#await data.races then races}
+      <Dropdown
+        name="race"
+        bind:value={race_select_value}
+        options={race_dropdown_options(races)}
+        {labelwidth}
+        {disabled}
+        {required}
+      >
+        Race
+      </Dropdown>
+    {/await}
 
-  <div class="mt-2 flex flex-col gap-2">
-    <!-- PXXs autocomplete chips -->
-    <InputChip
-      bind:input={pxxs_input}
-      bind:value={pxxs_chips}
-      whitelist={pxxs_whitelist}
-      allowUpperCase
-      placeholder={pxxs_placeholder}
-      name="pxxs_codes"
-      {disabled}
-      {required}
-      on:remove={on_pxxs_chip_remove}
-    />
-    <div class="card max-h-48 w-full overflow-y-auto p-2" tabindex="-1">
-      <Autocomplete
+    {#if race_select_value}
+      <!-- PXXs autocomplete chips -->
+      <InputChip
         bind:input={pxxs_input}
-        options={pxxs_options}
-        denylist={pxxs_chips}
-        on:selection={on_pxxs_chip_select}
+        bind:value={pxxs_chips}
+        whitelist={pxxs_whitelist}
+        allowUpperCase
+        placeholder={pxxs_placeholder}
+        name="pxxs_codes"
+        {disabled}
+        {required}
+        on:remove={on_pxxs_chip_remove}
       />
-    </div>
+      <div class="card max-h-48 w-full overflow-y-auto p-2" tabindex="-1">
+        <Autocomplete
+          bind:input={pxxs_input}
+          options={pxxs_options}
+          denylist={pxxs_chips}
+          on:selection={on_pxxs_chip_select}
+        />
+      </div>
 
-    <!-- DNFs autocomplete chips -->
-    <InputChip
-      bind:input={dnfs_input}
-      bind:value={dnfs_chips}
-      whitelist={pxxs_whitelist}
-      allowUpperCase
-      placeholder="Select DNFs..."
-      name="dnfs_codes"
-      {disabled}
-      on:remove={on_dnfs_chip_remove}
-    />
-    <div class="card max-h-48 w-full overflow-y-auto p-2" tabindex="-1">
-      <Autocomplete
+      <!-- DNFs autocomplete chips -->
+      <InputChip
         bind:input={dnfs_input}
-        options={dnfs_options}
-        denylist={dnfs_chips}
-        on:selection={on_dnfs_chip_select}
+        bind:value={dnfs_chips}
+        whitelist={pxxs_whitelist}
+        allowUpperCase
+        placeholder="Select DNFs..."
+        name="dnfs_codes"
+        {disabled}
+        on:remove={on_dnfs_chip_remove}
       />
-    </div>
+      <div class="card max-h-48 w-full overflow-y-auto p-2" tabindex="-1">
+        <Autocomplete
+          bind:input={dnfs_input}
+          options={pxxs_options}
+          denylist={dnfs_chips}
+          on:selection={on_dnfs_chip_select}
+        />
+      </div>
 
-    <!-- Save/Delete buttons -->
-    <div class="flex items-center justify-end gap-2">
-      {#if result}
-        <Button onclick={update_raceresult()} color="secondary" {disabled} width="w-1/2"
-          >Save</Button
-        >
-        <Button onclick={delete_raceresult} color="primary" {disabled} width="w-1/2">Delete</Button>
-      {:else}
-        <Button onclick={update_raceresult(true)} color="tertiary" {disabled} width="w-full">
-          Create Result
-        </Button>
-      {/if}
-    </div>
+      <!-- Save/Delete buttons -->
+      <div class="flex items-center justify-end gap-2">
+        {#if result}
+          <Button onclick={update_raceresult()} color="secondary" {disabled} width="w-1/2"
+            >Save</Button
+          >
+          <Button onclick={delete_raceresult} color="primary" {disabled} width="w-1/2"
+            >Delete</Button
+          >
+        {:else}
+          <Button onclick={update_raceresult(true)} color="tertiary" {disabled} width="w-full">
+            Create Result
+          </Button>
+        {/if}
+      </div>
+    {/if}
   </div>
 </Card>
