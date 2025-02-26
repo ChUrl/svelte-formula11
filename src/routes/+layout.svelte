@@ -17,6 +17,7 @@
     NameIcon,
     RacePickCard,
     RaceResultCard,
+    SeasonPickCard,
   } from "$lib/components";
   import { get_avatar_preview_event_handler } from "$lib/image";
   import {
@@ -58,6 +59,7 @@
     raceCard: { ref: RaceCard },
     racePickCard: { ref: RacePickCard },
     raceResultCard: { ref: RaceResultCard },
+    seasonPickCard: { ref: SeasonPickCard },
     substitutionCard: { ref: SubstitutionCard },
   };
 
