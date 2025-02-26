@@ -59,7 +59,7 @@
 </svelte:head>
 
 <!-- Await this here so the accordion doesn't lag when opening -->
-{#await Promise.all([data.drivers, data.teams]) then [drivers, teams]}
+{#await Promise.all( [data.drivers, data.teams, data.seasonpicks, data.seasonpickedusers, pickedusers, outstandingusers], ) then [drivers, teams, seasonpicks, currentpicked, picked, outstanding]}
   <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-2" width="w-full">
     <AccordionItem>
       <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
@@ -191,48 +191,46 @@
           {/if}
 
           <!-- Show users that have and have not picked yet -->
-          {#await Promise.all( [data.seasonpicks, data.seasonpickedusers, pickedusers, outstandingusers], ) then [seasonpicks, currentpicked, picked, outstanding]}
-            {#if seasonpicks.length === 0}
-              <div class="mt-2 flex gap-2">
-                <div
-                  class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-                >
-                  <h1 class="text-nowrap font-bold">
-                    Picked ({picked.length}/{currentpicked.length}):
-                  </h1>
-                  <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                    {#each picked.slice(0, 16) as user}
-                      <LazyImage
-                        src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
-                        imgwidth={AVATAR_WIDTH}
-                        imgheight={AVATAR_HEIGHT}
-                        containerstyle="height: 35px; width: 35px;"
-                        imgclass="bg-surface-400 rounded-full"
-                      />
-                    {/each}
-                  </div>
-                </div>
-                <div
-                  class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-                >
-                  <h1 class="text-nowrap font-bold">
-                    Missing ({outstanding.length}/{currentpicked.length}):
-                  </h1>
-                  <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                    {#each outstanding.slice(0, 16) as user}
-                      <LazyImage
-                        src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
-                        imgwidth={AVATAR_WIDTH}
-                        imgheight={AVATAR_HEIGHT}
-                        containerstyle="height: 35px; width: 35px;"
-                        imgclass="bg-surface-400 rounded-full"
-                      />
-                    {/each}
-                  </div>
+          {#if seasonpicks.length === 0}
+            <div class="mt-2 flex gap-2">
+              <div
+                class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+              >
+                <h1 class="text-nowrap font-bold">
+                  Picked ({picked.length}/{currentpicked.length}):
+                </h1>
+                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                  {#each picked.slice(0, 16) as user}
+                    <LazyImage
+                      src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                    />
+                  {/each}
                 </div>
               </div>
-            {/if}
-          {/await}
+              <div
+                class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+              >
+                <h1 class="text-nowrap font-bold">
+                  Missing ({outstanding.length}/{currentpicked.length}):
+                </h1>
+                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                  {#each outstanding.slice(0, 16) as user}
+                    <LazyImage
+                      src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                    />
+                  {/each}
+                </div>
+              </div>
+            </div>
+          {/if}
         </div>
       </svelte:fragment>
     </AccordionItem>
