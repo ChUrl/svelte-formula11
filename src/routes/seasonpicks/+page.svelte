@@ -61,11 +61,11 @@
 <div class="flex">
   <div>
     <!-- TODO: Points popup? -->
-    <div class="mt-4 h-10 w-7 lg:w-32"></div>
+    <div class="mt-4 h-10 w-7 lg:w-36"></div>
 
     <!-- TODO: Show the guess categories like the races in racepicks -->
     <!-- Hottake -->
-    <div class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32">
+    <div class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36">
       <span class="hidden text-nowrap text-sm font-bold lg:block">Hottake</span>
       <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Hottake</span>
     </div>
@@ -74,7 +74,7 @@
       {#if seasonpicks.length > 0}
         <!-- Drivers Champion -->
         <div
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32"
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block">Drivers<br />Champion</span>
           <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WDC</span>
@@ -82,7 +82,7 @@
 
         <!-- Constructors Champion -->
         <div
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32"
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block"
             >Constructors<br />Champion</span
@@ -92,7 +92,7 @@
 
         <!-- Overtakes -->
         <div
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32"
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block">Most Overtakes</span>
           <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Overtakes</span>
@@ -100,7 +100,7 @@
 
         <!-- DNFs -->
         <div
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32"
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block">Most DNFs</span>
           <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">DNFs</span>
@@ -108,7 +108,7 @@
 
         <!-- Doohan Starts -->
         <div
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32"
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block">Doohan Starts</span>
           <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Doohan</span>
@@ -116,7 +116,7 @@
 
         <!-- Teamwinners -->
         <div
-          class="card mt-2 flex h-[360px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow sm:h-[220px] md:h-[150px] lg:w-32"
+          class="card mt-2 flex h-[360px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow sm:h-[220px] md:h-[150px] lg:w-36"
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block">Team-Battle<br />Winners</span
           >
@@ -125,7 +125,7 @@
 
         <!-- Podiums -->
         <div
-          class="card mt-2 flex h-[360px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow md:h-[220px] lg:w-32 xl:h-[150px]"
+          class="card mt-2 flex h-[360px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow md:h-[220px] lg:w-36 xl:h-[150px]"
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block">Podiums</span>
           <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Podiums</span>
