@@ -85,9 +85,11 @@
               </div>
               <div class="card w-full min-w-40 p-2 shadow">
                 <h1 class="mb-2 text-nowrap font-bold">Doohan Starts:</h1>
-                <span class="text-sm">
-                  Jack Doohan startet {data.seasonpick?.doohanstarts} mal.
-                </span>
+                {#if data.seasonpick}
+                  <span class="text-sm">
+                    Jack Doohan startet {data.seasonpick?.doohanstarts} mal.
+                  </span>
+                {/if}
               </div>
             </div>
 
