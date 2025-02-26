@@ -77,6 +77,7 @@
       : ''} {extraclass}"
     {onclick}
     {...restProps}
+    draggable="false"
   >
     {@render children()}
   </a>
