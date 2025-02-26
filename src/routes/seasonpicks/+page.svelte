@@ -70,51 +70,68 @@
       <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Hottake</span>
     </div>
 
-    <!-- Drivers Champion -->
-    <div class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32">
-      <span class="hidden text-nowrap text-sm font-bold lg:block">Drivers<br />Champion</span>
-      <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WDC</span>
-    </div>
+    {#await data.seasonpicks then seasonpicks}
+      {#if seasonpicks.length > 0}
+        <!-- Drivers Champion -->
+        <div
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32"
+        >
+          <span class="hidden text-nowrap text-sm font-bold lg:block">Drivers<br />Champion</span>
+          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WDC</span>
+        </div>
 
-    <!-- Constructors Champion -->
-    <div class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32">
-      <span class="hidden text-nowrap text-sm font-bold lg:block">Constructors<br />Champion</span>
-      <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WCC</span>
-    </div>
+        <!-- Constructors Champion -->
+        <div
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32"
+        >
+          <span class="hidden text-nowrap text-sm font-bold lg:block"
+            >Constructors<br />Champion</span
+          >
+          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WCC</span>
+        </div>
 
-    <!-- Overtakes -->
-    <div class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32">
-      <span class="hidden text-nowrap text-sm font-bold lg:block">Most Overtakes</span>
-      <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Overtakes</span>
-    </div>
+        <!-- Overtakes -->
+        <div
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32"
+        >
+          <span class="hidden text-nowrap text-sm font-bold lg:block">Most Overtakes</span>
+          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Overtakes</span>
+        </div>
 
-    <!-- DNFs -->
-    <div class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32">
-      <span class="hidden text-nowrap text-sm font-bold lg:block">Most DNFs</span>
-      <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">DNFs</span>
-    </div>
+        <!-- DNFs -->
+        <div
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32"
+        >
+          <span class="hidden text-nowrap text-sm font-bold lg:block">Most DNFs</span>
+          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">DNFs</span>
+        </div>
 
-    <!-- Doohan Starts -->
-    <div class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32">
-      <span class="hidden text-nowrap text-sm font-bold lg:block">Doohan Starts</span>
-      <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Doohan</span>
-    </div>
+        <!-- Doohan Starts -->
+        <div
+          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-32"
+        >
+          <span class="hidden text-nowrap text-sm font-bold lg:block">Doohan Starts</span>
+          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Doohan</span>
+        </div>
 
-    <!-- Teamwinners -->
-    <div
-      class="card mt-2 flex h-[360px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow sm:h-[220px] md:h-[150px] lg:w-32"
-    >
-      <span class="hidden text-nowrap text-sm font-bold lg:block">Team-Battle<br />Winners</span>
-      <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Teamwin.</span>
-    </div>
+        <!-- Teamwinners -->
+        <div
+          class="card mt-2 flex h-[360px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow sm:h-[220px] md:h-[150px] lg:w-32"
+        >
+          <span class="hidden text-nowrap text-sm font-bold lg:block">Team-Battle<br />Winners</span
+          >
+          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Teamwin.</span>
+        </div>
 
-    <!-- Podiums -->
-    <div
-      class="card mt-2 flex h-[360px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow md:h-[220px] lg:w-32 xl:h-[150px]"
-    >
-      <span class="hidden text-nowrap text-sm font-bold lg:block">Podiums</span>
-      <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Podiums</span>
-    </div>
+        <!-- Podiums -->
+        <div
+          class="card mt-2 flex h-[360px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow md:h-[220px] lg:w-32 xl:h-[150px]"
+        >
+          <span class="hidden text-nowrap text-sm font-bold lg:block">Podiums</span>
+          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Podiums</span>
+        </div>
+      {/if}
+    {/await}
   </div>
 
   <!-- TODO: Datelock the guess display (except hottake for review) -->
@@ -167,108 +184,110 @@
             <div class="mx-auto w-fit text-xs font-bold lg:text-sm">{hottake?.hottake ?? "?"}</div>
           </div>
 
-          <!-- Drivers Champion -->
-          <div class="mt-2 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
-            <div class="mx-auto w-fit">
-              <!-- NOTE: The containerstyle should be 64x64, don't know why that doesn't fit... (also below) -->
-              <LazyImage
-                src={wdcwinner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                imgwidth={DRIVER_HEADSHOT_HEIGHT}
-                imgheight={DRIVER_HEADSHOT_WIDTH}
-                containerstyle="height: 62px;"
-                imgclass="bg-surface-400 rounded-md"
-              />
-            </div>
-          </div>
-
-          <!-- Constructors Champion -->
-          <div class="mt-2 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2">
-            <div class="mx-auto w-fit">
-              <LazyImage
-                src={wccwinner?.banner_url ?? get_team_banner_template(data.graphics)}
-                imgwidth={TEAM_BANNER_WIDTH}
-                imgheight={TEAM_BANNER_HEIGHT}
-                containerstyle="height: 62px;"
-                imgclass="bg-surface-400 rounded-md"
-              />
-            </div>
-          </div>
-
-          <!-- Most Overtakes -->
-          <div class="mt-2 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
-            <div class="mx-auto w-fit">
-              <LazyImage
-                src={mostovertakes?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                imgwidth={DRIVER_HEADSHOT_HEIGHT}
-                imgheight={DRIVER_HEADSHOT_WIDTH}
-                containerstyle="height: 62px;"
-                imgclass="bg-surface-400 rounded-md"
-              />
-            </div>
-          </div>
-
-          <!-- Most DNFs -->
-          <div class="mt-2 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
-            <div class="mx-auto w-fit">
-              <LazyImage
-                src={mostdnfs?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                imgwidth={DRIVER_HEADSHOT_HEIGHT}
-                imgheight={DRIVER_HEADSHOT_WIDTH}
-                containerstyle="height: 62px;"
-                imgclass="bg-surface-400 rounded-md"
-              />
-            </div>
-          </div>
-
-          <!-- Doohan Starts -->
-          <div class="mt-2 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2">
-            <div class="mx-auto w-fit text-xs lg:text-sm">
-              Jack Doohan startet <span class="font-bold">{pick?.doohanstarts ?? "?"}</span> mal.
-            </div>
-          </div>
-
-          <!-- Teamwinners -->
-          <!-- TODO: Sort teamwinners by team (and by code inside teams), so they are sorted equally for each column -->
-          <div
-            class="mt-2 h-[360px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 sm:h-[220px] md:h-[150px] lg:px-2"
-          >
-            <div
-              class="grid gap-2"
-              style="grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); grid-template-rows: repeat(auto, 62px);"
-            >
-              {#each teamwinners as teamwinner}
+          {#if seasonpicks.length > 0}
+            <!-- Drivers Champion -->
+            <div class="mt-2 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
+              <div class="mx-auto w-fit">
+                <!-- NOTE: The containerstyle should be 64x64, don't know why that doesn't fit... (also below) -->
                 <LazyImage
-                  src={teamwinner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                  src={wdcwinner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
                   imgwidth={DRIVER_HEADSHOT_HEIGHT}
                   imgheight={DRIVER_HEADSHOT_WIDTH}
                   containerstyle="height: 62px;"
                   imgclass="bg-surface-400 rounded-md"
                 />
-              {/each}
+              </div>
             </div>
-          </div>
 
-          <!-- Podiums -->
-          <!-- TODO: Replace all style tags throughout the page with custom classes like height here -->
-          <!-- TODO: Sort podiums by driver code, so they are sorted equally for each column -->
-          <div
-            class="mt-2 h-[360px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 md:h-[220px] lg:px-2 xl:h-[150px]"
-          >
-            <div
-              class="mx-auto grid gap-2"
-              style="grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));"
-            >
-              {#each podiums as podium}
+            <!-- Constructors Champion -->
+            <div class="mt-2 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2">
+              <div class="mx-auto w-fit">
                 <LazyImage
-                  src={podium?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                  imgwidth={DRIVER_HEADSHOT_HEIGHT}
-                  imgheight={DRIVER_HEADSHOT_WIDTH}
-                  containerstyle="height: 62px; width: 62px;"
+                  src={wccwinner?.banner_url ?? get_team_banner_template(data.graphics)}
+                  imgwidth={TEAM_BANNER_WIDTH}
+                  imgheight={TEAM_BANNER_HEIGHT}
+                  containerstyle="height: 62px;"
                   imgclass="bg-surface-400 rounded-md"
                 />
-              {/each}
+              </div>
             </div>
-          </div>
+
+            <!-- Most Overtakes -->
+            <div class="mt-2 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
+              <div class="mx-auto w-fit">
+                <LazyImage
+                  src={mostovertakes?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                  imgwidth={DRIVER_HEADSHOT_HEIGHT}
+                  imgheight={DRIVER_HEADSHOT_WIDTH}
+                  containerstyle="height: 62px;"
+                  imgclass="bg-surface-400 rounded-md"
+                />
+              </div>
+            </div>
+
+            <!-- Most DNFs -->
+            <div class="mt-2 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
+              <div class="mx-auto w-fit">
+                <LazyImage
+                  src={mostdnfs?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                  imgwidth={DRIVER_HEADSHOT_HEIGHT}
+                  imgheight={DRIVER_HEADSHOT_WIDTH}
+                  containerstyle="height: 62px;"
+                  imgclass="bg-surface-400 rounded-md"
+                />
+              </div>
+            </div>
+
+            <!-- Doohan Starts -->
+            <div class="mt-2 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2">
+              <div class="mx-auto w-fit text-xs lg:text-sm">
+                Jack Doohan startet <span class="font-bold">{pick?.doohanstarts ?? "?"}</span> mal.
+              </div>
+            </div>
+
+            <!-- Teamwinners -->
+            <!-- TODO: Sort teamwinners by team (and by code inside teams), so they are sorted equally for each column -->
+            <div
+              class="mt-2 h-[360px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 sm:h-[220px] md:h-[150px] lg:px-2"
+            >
+              <div
+                class="grid gap-2"
+                style="grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); grid-template-rows: repeat(auto, 62px);"
+              >
+                {#each teamwinners as teamwinner}
+                  <LazyImage
+                    src={teamwinner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={DRIVER_HEADSHOT_HEIGHT}
+                    imgheight={DRIVER_HEADSHOT_WIDTH}
+                    containerstyle="height: 62px;"
+                    imgclass="bg-surface-400 rounded-md"
+                  />
+                {/each}
+              </div>
+            </div>
+
+            <!-- Podiums -->
+            <!-- TODO: Replace all style tags throughout the page with custom classes like height here -->
+            <!-- TODO: Sort podiums by driver code, so they are sorted equally for each column -->
+            <div
+              class="mt-2 h-[360px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 md:h-[220px] lg:px-2 xl:h-[150px]"
+            >
+              <div
+                class="mx-auto grid gap-2"
+                style="grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));"
+              >
+                {#each podiums as podium}
+                  <LazyImage
+                    src={podium?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={DRIVER_HEADSHOT_HEIGHT}
+                    imgheight={DRIVER_HEADSHOT_WIDTH}
+                    containerstyle="height: 62px; width: 62px;"
+                    imgclass="bg-surface-400 rounded-md"
+                  />
+                {/each}
+              </div>
+            </div>
+          {/if}
         </div>
       {/each}
     {/await}
