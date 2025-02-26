@@ -69,10 +69,7 @@
   // Set the pxxs/dnfs states once the drivers are loaded
   data.drivers.then(async (drivers: Driver[]) => {
     pxxs_chips =
-      result?.pxxs.map(
-        (id: string, index: number) =>
-          `P${(currentrace?.pxx ?? -10) + index - 3}: ${get_by_value(drivers, "id", id)?.code ?? "Invalid"}`,
-      ) ?? [];
+      result?.pxxs.map((id: string) => get_by_value(drivers, "id", id)?.code ?? "Invalid") ?? [];
 
     dnfs_chips =
       result?.dnfs.map((id: string) => get_by_value(drivers, "id", id)?.code ?? "Invalid") ?? [];
@@ -83,19 +80,14 @@
   let dnfs_ids: string[] = $state(result?.dnfs ?? []);
 
   let pxxs_options: AutocompleteOption<string>[] = $derived.by(() =>
-    (drivers ?? [])
-      .filter((driver: Driver) => {
-        // Filter out all drivers that are already selected
-        return !pxxs_ids.includes(driver.id);
-      })
-      .map((driver: Driver) => {
-        return {
-          // NOTE: Because Skeleton displays the values inside the autocomplete input,
-          //       we have to supply the driver code twice and manage a list of ids manually (ugh)
-          label: driver.code,
-          value: driver.code,
-        };
-      }),
+    (drivers ?? []).map((driver: Driver) => {
+      return {
+        // NOTE: Because Skeleton displays the values inside the autocomplete input,
+        //       we have to supply the driver code twice and manage a list of ids manually (ugh)
+        label: driver.code,
+        value: driver.code,
+      };
+    }),
   );
 
   let dnfs_options: AutocompleteOption<string>[] = $derived.by(() =>
@@ -116,24 +108,17 @@
   );
 
   // Event handlers
-  const on_race_select = (event: Event): void => {
-    pxxs_chips = pxxs_chips.map(
-      (label: string, index: number) =>
-        `P${(currentrace?.pxx ?? -10) + index - 3}: ${label.split(" ").pop()}`,
-    );
-  };
-
   const on_pxxs_chip_select = (event: CustomEvent<AutocompleteOption<string>>): void => {
     if (disabled || !currentrace || !drivers) return;
 
     // Can only select 7 drivers
     if (pxxs_chips.length >= 7) return;
 
-    // Can only select a driver once (because we display the PXX, check for string suffixes)
-    if (pxxs_chips.some((label: string) => label.endsWith(event.detail.value))) return;
+    // Can only select a driver once
+    if (pxxs_chips.includes(event.detail.value)) return;
 
     // Manage labels that are displayed
-    pxxs_chips.push(`P${currentrace.pxx + pxxs_chips.length - 3}: ${event.detail.value}`);
+    pxxs_chips.push(event.detail.value);
     pxxs_input = "";
 
     // Manage ids that are submitted via form
@@ -145,11 +130,6 @@
 
   const on_pxxs_chip_remove = (event: CustomEvent): void => {
     pxxs_ids.splice(event.detail.chipIndex, 1);
-
-    pxxs_chips = pxxs_chips.map(
-      (label: string, index: number) =>
-        `P${(currentrace?.pxx ?? -10) + index - 3}: ${label.split(" ").pop()}`,
-    );
   };
 
   const on_dnfs_chip_select = (event: CustomEvent<AutocompleteOption<string>>): void => {
@@ -233,7 +213,6 @@
       name="race"
       bind:value={race_select_value}
       options={race_dropdown_options(races)}
-      onchange={on_race_select}
       {labelwidth}
       {disabled}
       {required}
