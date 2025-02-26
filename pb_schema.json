@@ -1,0 +1,1807 @@
+[
+  {
+    "id": "pbc_1736455494",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "admin = false",
+    "updateRule": "@request.auth.id != \"\" &&\n@request.auth.id = id",
+    "deleteRule": null,
+    "name": "users",
+    "type": "auth",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text4166911607",
+        "max": 10,
+        "min": 3,
+        "name": "username",
+        "pattern": "",
+        "presentable": true,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text2208304744",
+        "max": 0,
+        "min": 0,
+        "name": "firstname",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "file376926767",
+        "maxSelect": 1,
+        "maxSize": 0,
+        "mimeTypes": [
+          "image/avif"
+        ],
+        "name": "avatar",
+        "presentable": false,
+        "protected": false,
+        "required": false,
+        "system": false,
+        "thumbs": [],
+        "type": "file"
+      },
+      {
+        "hidden": false,
+        "id": "bool2282622326",
+        "name": "admin",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
+        "cost": 0,
+        "hidden": true,
+        "id": "password901924565",
+        "max": 0,
+        "min": 1,
+        "name": "password",
+        "pattern": "",
+        "presentable": false,
+        "required": true,
+        "system": true,
+        "type": "password"
+      },
+      {
+        "autogeneratePattern": "[a-zA-Z0-9]{50}",
+        "hidden": true,
+        "id": "text2504183744",
+        "max": 60,
+        "min": 30,
+        "name": "tokenKey",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "exceptDomains": null,
+        "hidden": false,
+        "id": "email3885137012",
+        "name": "email",
+        "onlyDomains": null,
+        "presentable": false,
+        "required": false,
+        "system": true,
+        "type": "email"
+      },
+      {
+        "hidden": true,
+        "id": "bool1547992806",
+        "name": "emailVisibility",
+        "presentable": false,
+        "required": false,
+        "system": true,
+        "type": "bool"
+      },
+      {
+        "hidden": true,
+        "id": "bool256245529",
+        "name": "verified",
+        "presentable": false,
+        "required": false,
+        "system": true,
+        "type": "bool"
+      },
+      {
+        "hidden": true,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": true,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_tokenKey_pbc_1736455494` ON `users` (`tokenKey`)",
+      "CREATE UNIQUE INDEX `idx_S35D9NRBbr` ON `users` (`username`)",
+      "CREATE UNIQUE INDEX `idx_email_pbc_1736455494` ON `users` (`email`) WHERE `email` != ''"
+    ],
+    "system": false,
+    "authRule": "",
+    "manageRule": null,
+    "authAlert": {
+      "enabled": false,
+      "emailTemplate": {
+        "subject": "Login from a new location",
+        "body": "<p>Hello,</p>\n<p>We noticed a login to your {APP_NAME} account from a new location.</p>\n<p>If this was you, you may disregard this email.</p>\n<p><strong>If this wasn't you, you should immediately change your {APP_NAME} account password to revoke access from all other locations.</strong></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+      }
+    },
+    "oauth2": {
+      "mappedFields": {
+        "id": "",
+        "name": "",
+        "username": "",
+        "avatarURL": ""
+      },
+      "enabled": false
+    },
+    "passwordAuth": {
+      "enabled": true,
+      "identityFields": [
+        "username"
+      ]
+    },
+    "mfa": {
+      "enabled": false,
+      "duration": 1800,
+      "rule": ""
+    },
+    "otp": {
+      "enabled": false,
+      "duration": 180,
+      "length": 8,
+      "emailTemplate": {
+        "subject": "OTP for {APP_NAME}",
+        "body": "<p>Hello,</p>\n<p>Your one-time password is: <strong>{OTP}</strong></p>\n<p><i>If you didn't ask for the one-time password, you can ignore this email.</i></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+      }
+    },
+    "authToken": {
+      "duration": 2592000
+    },
+    "passwordResetToken": {
+      "duration": 1800
+    },
+    "emailChangeToken": {
+      "duration": 1800
+    },
+    "verificationToken": {
+      "duration": 259200
+    },
+    "fileToken": {
+      "duration": 180
+    },
+    "verificationTemplate": {
+      "subject": "Verify your {APP_NAME} email",
+      "body": "<p>Hello,</p>\n<p>Thank you for joining us at {APP_NAME}.</p>\n<p>Click on the button below to verify your email address.</p>\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-verification/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Verify</a>\n</p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+    },
+    "resetPasswordTemplate": {
+      "subject": "Reset your {APP_NAME} password",
+      "body": "<p>Hello,</p>\n<p>Click on the button below to reset your password.</p>\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-password-reset/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Reset password</a>\n</p>\n<p><i>If you didn't ask to reset your password, you can ignore this email.</i></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+    },
+    "confirmEmailChangeTemplate": {
+      "subject": "Confirm your {APP_NAME} new email address",
+      "body": "<p>Hello,</p>\n<p>Click on the button below to confirm your new email address.</p>\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-email-change/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Confirm new email</a>\n</p>\n<p><i>If you didn't ask to change your email address, you can ignore this email.</i></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+    }
+  },
+  {
+    "id": "pbc_1967373549",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "name": "drivers",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3170058525",
+        "max": 3,
+        "min": 3,
+        "name": "code",
+        "pattern": "",
+        "presentable": true,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text2208304744",
+        "max": 0,
+        "min": 0,
+        "name": "firstname",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text824489398",
+        "max": 0,
+        "min": 0,
+        "name": "lastname",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "file2600164848",
+        "maxSelect": 1,
+        "maxSize": 0,
+        "mimeTypes": [
+          "image/avif"
+        ],
+        "name": "headshot",
+        "presentable": false,
+        "protected": false,
+        "required": false,
+        "system": false,
+        "thumbs": [],
+        "type": "file"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1568971955",
+        "hidden": false,
+        "id": "relation3303056927",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "team",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "bool1260321794",
+        "name": "active",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
+        "hidden": true,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": true,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_AK9arhApMx` ON `drivers` (`code`)"
+    ],
+    "system": false
+  },
+  {
+    "id": "pbc_2156389441",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "graphics",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text1579384326",
+        "max": 0,
+        "min": 0,
+        "name": "name",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "file1542800728",
+        "maxSelect": 1,
+        "maxSize": 0,
+        "mimeTypes": [
+          "image/avif"
+        ],
+        "name": "file",
+        "presentable": false,
+        "protected": false,
+        "required": true,
+        "system": false,
+        "thumbs": [],
+        "type": "file"
+      },
+      {
+        "hidden": true,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": true,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_iRolOJcYaN` ON `graphics` (`name`)"
+    ],
+    "system": false
+  },
+  {
+    "id": "pbc_406441476",
+    "listRule": "@request.auth.id != \"\" // If you know what you're doing you can easily request all picks here. But If I restrict this to the current user, the subscription events are blocked...",
+    "viewRule": "@request.auth.id != \"\" &&\n@request.auth.id = user // Can only view your own picks in this collection - otherwise use \"visibleracepicks\" collection",
+    "createRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@now <= race.racedate",
+    "updateRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@now <= race.racedate",
+    "deleteRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@now <= race.racedate",
+    "name": "racepicks",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1736455494",
+        "hidden": false,
+        "id": "relation2375276105",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "user",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_2533072930",
+        "hidden": false,
+        "id": "relation3664755631",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "race",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation310950834",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "pxx",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation4012914858",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "dnf",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": true,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": true,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_2auZU3ZYMO` ON `racepicks` (\n  `user`,\n  `race`\n)"
+    ],
+    "system": false
+  },
+  {
+    "id": "pbc_4231478832",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != \"\" &&\n@request.auth.admin = true &&\n@now >= race.racedate",
+    "updateRule": "@request.auth.id != \"\" && \n@request.auth.admin = true &&\n@now >= race.racedate",
+    "deleteRule": null,
+    "name": "raceresults",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_2533072930",
+        "hidden": false,
+        "id": "relation3664755631",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "race",
+        "presentable": true,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation1047762192",
+        "maxSelect": 7,
+        "minSelect": 7,
+        "name": "pxxs",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation769832389",
+        "maxSelect": 20,
+        "minSelect": 0,
+        "name": "dnfs",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": true,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": true,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_sEW62VJfmW` ON `raceresults` (`race`)"
+    ],
+    "system": false
+  },
+  {
+    "id": "pbc_2533072930",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "name": "races",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text1579384326",
+        "max": 0,
+        "min": 0,
+        "name": "name",
+        "pattern": "",
+        "presentable": true,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "number1136262716",
+        "max": null,
+        "min": null,
+        "name": "step",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "file1457561951",
+        "maxSelect": 1,
+        "maxSize": 0,
+        "mimeTypes": [
+          "image/avif"
+        ],
+        "name": "pictogram",
+        "presentable": false,
+        "protected": false,
+        "required": true,
+        "system": false,
+        "thumbs": [],
+        "type": "file"
+      },
+      {
+        "hidden": false,
+        "id": "number310950834",
+        "max": null,
+        "min": null,
+        "name": "pxx",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "date4138285749",
+        "max": "",
+        "min": "",
+        "name": "sprintqualidate",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "date"
+      },
+      {
+        "hidden": false,
+        "id": "date1266338464",
+        "max": "",
+        "min": "",
+        "name": "sprintdate",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "date"
+      },
+      {
+        "hidden": false,
+        "id": "date2825791974",
+        "max": "",
+        "min": "",
+        "name": "qualidate",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "date"
+      },
+      {
+        "hidden": false,
+        "id": "date4076757882",
+        "max": "",
+        "min": "",
+        "name": "racedate",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "date"
+      },
+      {
+        "hidden": true,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": true,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_MOzS2Ww4Sk` ON `races` (`name`)",
+      "CREATE UNIQUE INDEX `idx_Uiw6vPV2wy` ON `races` (`step`)"
+    ],
+    "system": false
+  },
+  {
+    "id": "pbc_1473742649",
+    "listRule": "@request.auth.id != \"\" &&\n@request.auth.id = user // Can only view your own picks in this collection - otherwise use \"visibleseasonpicks\" collection",
+    "viewRule": "@request.auth.id != \"\" &&\n@request.auth.id = user // Can only view your own picks in this collection - otherwise use \"visibleseasonpicks\" collection",
+    "createRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@now <= \"2025-03-16\"",
+    "updateRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@now <= \"2025-03-16\"",
+    "deleteRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@now <= \"2025-03-16\"",
+    "name": "seasonpicks",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1736455494",
+        "hidden": false,
+        "id": "relation2375276105",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "user",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3327956763",
+        "max": 0,
+        "min": 0,
+        "name": "hottake",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation553681702",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "wdcwinner",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1568971955",
+        "hidden": false,
+        "id": "relation1540110664",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "wccwinner",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation3896658669",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "mostovertakes",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation3731883446",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "mostdnfs",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "number1147572598",
+        "max": null,
+        "min": null,
+        "name": "doohanstarts",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation1938994230",
+        "maxSelect": 10,
+        "minSelect": 10,
+        "name": "teamwinners",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation3915334665",
+        "maxSelect": 20,
+        "minSelect": 3,
+        "name": "podiums",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": true,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": true,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_gt281Qtgxw` ON `seasonpicks` (`user`)"
+    ],
+    "system": false
+  },
+  {
+    "id": "pbc_1391974664",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "name": "substitutions",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation3488830393",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "substitute",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "relation291929305",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "for",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_2533072930",
+        "hidden": false,
+        "id": "relation3664755631",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "race",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": true,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": true,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_xq8hlnWI6F` ON `substitutions` (\n  `substitute`,\n  `race`\n)",
+      "CREATE UNIQUE INDEX `idx_AnXs2xjbGH` ON `substitutions` (\n  `for`,\n  `race`\n)"
+    ],
+    "system": false
+  },
+  {
+    "id": "pbc_1568971955",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "updateRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "deleteRule": "@request.auth.id != \"\" && @request.auth.admin = true",
+    "name": "teams",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text1579384326",
+        "max": 0,
+        "min": 0,
+        "name": "name",
+        "pattern": "",
+        "presentable": true,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "file3834550803",
+        "maxSelect": 1,
+        "maxSize": 0,
+        "mimeTypes": [
+          "image/avif"
+        ],
+        "name": "banner",
+        "presentable": false,
+        "protected": false,
+        "required": true,
+        "system": false,
+        "thumbs": [],
+        "type": "file"
+      },
+      {
+        "hidden": false,
+        "id": "file1704208859",
+        "maxSelect": 1,
+        "maxSize": 0,
+        "mimeTypes": [
+          "image/avif"
+        ],
+        "name": "logo",
+        "presentable": false,
+        "protected": false,
+        "required": true,
+        "system": false,
+        "thumbs": [],
+        "type": "file"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text1716930793",
+        "max": 0,
+        "min": 0,
+        "name": "color",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": true,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": true,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_lDc1lxx3SD` ON `teams` (`name`)"
+    ],
+    "system": false
+  },
+  {
+    "id": "pbc_2516393357",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "currentpickedusers",
+    "type": "view",
+    "fields": [
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 0,
+        "min": 0,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "_clone_E3yC",
+        "max": 10,
+        "min": 3,
+        "name": "username",
+        "pattern": "",
+        "presentable": true,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "_clone_wfxT",
+        "max": 0,
+        "min": 0,
+        "name": "firstname",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_bgsF",
+        "maxSelect": 1,
+        "maxSize": 0,
+        "mimeTypes": [
+          "image/avif"
+        ],
+        "name": "avatar",
+        "presentable": false,
+        "protected": false,
+        "required": false,
+        "system": false,
+        "thumbs": [],
+        "type": "file"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_r1JL",
+        "name": "admin",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
+        "hidden": false,
+        "id": "json294059985",
+        "maxSize": 1,
+        "name": "picked",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      }
+    ],
+    "indexes": [],
+    "system": false,
+    "viewQuery": "-- This query returns users with an extra field \"picked\", depending on if they made their picks for the next race yet\nSELECT\n    user.id, user.username, user.firstname, user.avatar, user.admin,\n    -- Generate the additional field \"picked\" that contains the current picks ID if the user occurs in the picks for the current race and NULL otherwise\n    (CASE\n        WHEN rp.user IS NOT NULL THEN rp.id\n        ELSE NULL\n    END) AS picked\nFROM\n    users user\n-- Join users and racepicks where the race matches the current race id (user ids that are missing from this join will receive picked=false)\nLEFT JOIN\n    racepicks rp ON user.id = rp.user AND rp.race IN (SELECT id FROM currentrace)\nORDER BY user.id ASC;"
+  },
+  {
+    "id": "pbc_1737461865",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "currentrace",
+    "type": "view",
+    "fields": [
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 0,
+        "min": 0,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "_clone_wBWE",
+        "max": 0,
+        "min": 0,
+        "name": "name",
+        "pattern": "",
+        "presentable": true,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_GAG5",
+        "max": null,
+        "min": null,
+        "name": "step",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_jqcN",
+        "maxSelect": 1,
+        "maxSize": 0,
+        "mimeTypes": [
+          "image/avif"
+        ],
+        "name": "pictogram",
+        "presentable": false,
+        "protected": false,
+        "required": true,
+        "system": false,
+        "thumbs": [],
+        "type": "file"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_BRqQ",
+        "max": null,
+        "min": null,
+        "name": "pxx",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_PftQ",
+        "max": "",
+        "min": "",
+        "name": "sprintqualidate",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "date"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_wSrB",
+        "max": "",
+        "min": "",
+        "name": "sprintdate",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "date"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_NFx9",
+        "max": "",
+        "min": "",
+        "name": "qualidate",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "date"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_YYyB",
+        "max": "",
+        "min": "",
+        "name": "racedate",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "date"
+      }
+    ],
+    "indexes": [],
+    "system": false,
+    "viewQuery": "-- This query will select the first race that doesn't have a related result (ordered by race step)\nSELECT race.id, race.name, race.step, race.pictogram, race.pxx, race.sprintqualidate, race.sprintdate, race.qualidate, race.racedate\nFROM races race\n\n-- Join the races to the raceresults (keeps all races rows)\nLEFT JOIN raceresults raceresult ON race.id = raceresult.race\n\n-- Choose entries that don't have a raceresult\nWHERE raceresult.race IS NULL\n\n-- Order by race step\nORDER BY race.step ASC\n\n-- Only choose the first entry\nLIMIT 1;"
+  },
+  {
+    "id": "pbc_3434655479",
+    "listRule": null,
+    "viewRule": null,
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "hottakes",
+    "type": "view",
+    "fields": [
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 0,
+        "min": 0,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1736455494",
+        "hidden": false,
+        "id": "_clone_QEH9",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "user",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "_clone_HGsl",
+        "max": 0,
+        "min": 0,
+        "name": "hottake",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      }
+    ],
+    "indexes": [],
+    "system": false,
+    "viewQuery": "SELECT sp.id, sp.user, sp.hottake\nFROM seasonpicks sp;"
+  },
+  {
+    "id": "pbc_2823555101",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "raceresultsdesc",
+    "type": "view",
+    "fields": [
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 0,
+        "min": 0,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_2533072930",
+        "hidden": false,
+        "id": "_clone_NX00",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "race",
+        "presentable": true,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "_clone_RMyl",
+        "maxSelect": 7,
+        "minSelect": 7,
+        "name": "pxxs",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "_clone_tWkO",
+        "maxSelect": 20,
+        "minSelect": 0,
+        "name": "dnfs",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      }
+    ],
+    "indexes": [],
+    "system": false,
+    "viewQuery": "-- This query simply returns the raceresults sorted by their race steps (descending).\nSELECT result.id, result.race, result.pxxs, result.dnfs\nFROM raceresults result\nJOIN races race ON result.race = race.id\nORDER BY race.step DESC;"
+  },
+  {
+    "id": "pbc_1743016826",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "seasonpickedusers",
+    "type": "view",
+    "fields": [
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 0,
+        "min": 0,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "_clone_ds2o",
+        "max": 10,
+        "min": 3,
+        "name": "username",
+        "pattern": "",
+        "presentable": true,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "_clone_r41d",
+        "max": 0,
+        "min": 0,
+        "name": "firstname",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_lfEH",
+        "maxSelect": 1,
+        "maxSize": 0,
+        "mimeTypes": [
+          "image/avif"
+        ],
+        "name": "avatar",
+        "presentable": false,
+        "protected": false,
+        "required": false,
+        "system": false,
+        "thumbs": [],
+        "type": "file"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_2VGz",
+        "name": "admin",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
+        "hidden": false,
+        "id": "json294059985",
+        "maxSize": 1,
+        "name": "picked",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      }
+    ],
+    "indexes": [],
+    "system": false,
+    "viewQuery": "-- This query returns users with an extra field \"picked\", depending on if they made their season picks yet\nSELECT\n    user.id, user.username, user.firstname, user.avatar, user.admin,\n    -- Generate the additional field \"picked\" that contains the season pick ID if the user occurs in the seasonpicks and false otherwise\n    (CASE\n        WHEN sp.user IS NOT NULL THEN sp.id\n        ELSE NULL\n    END) AS picked\nFROM\n    users user\n-- Join users and seasonpicks (user ids that are missing from this join will receive picked=false)\nLEFT JOIN\n    seasonpicks sp ON user.id = sp.user\nORDER BY user.id ASC;"
+  },
+  {
+    "id": "pbc_575507001",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "visibleracepicks",
+    "type": "view",
+    "fields": [
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 0,
+        "min": 0,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1736455494",
+        "hidden": false,
+        "id": "_clone_7f09",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "user",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_2533072930",
+        "hidden": false,
+        "id": "_clone_3gFx",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "race",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "_clone_6rnW",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "pxx",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "_clone_SlAh",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "dnf",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "relation"
+      }
+    ],
+    "indexes": [],
+    "system": false,
+    "viewQuery": "-- This query returns all racepicks except the ones for the currentrace\nSELECT pick.id, pick.user, pick.race, pick.pxx, pick.dnf\nFROM racepicks pick\nWHERE pick.race NOT IN (SELECT cr.id FROM currentrace cr);"
+  },
+  {
+    "id": "pbc_1284403322",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "visibleseasonpicks",
+    "type": "view",
+    "fields": [
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 0,
+        "min": 0,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1736455494",
+        "hidden": false,
+        "id": "_clone_3f24",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "user",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "_clone_1T09",
+        "max": 0,
+        "min": 0,
+        "name": "hottake",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "_clone_MpwO",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "wdcwinner",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1568971955",
+        "hidden": false,
+        "id": "_clone_RcA9",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "wccwinner",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "_clone_rGiM",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "mostovertakes",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "_clone_kElK",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "mostdnfs",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_8zYy",
+        "max": null,
+        "min": null,
+        "name": "doohanstarts",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "_clone_MaXG",
+        "maxSelect": 10,
+        "minSelect": 10,
+        "name": "teamwinners",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1967373549",
+        "hidden": false,
+        "id": "_clone_prCR",
+        "maxSelect": 20,
+        "minSelect": 3,
+        "name": "podiums",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      }
+    ],
+    "indexes": [],
+    "system": false,
+    "viewQuery": "-- This query only returns the season picks if the first race has started\nSELECT pick.id, pick.user, pick.hottake, pick.wdcwinner, pick.wccwinner, pick.mostovertakes, pick.mostdnfs, pick.doohanstarts, pick.teamwinners, pick.podiums\nFROM seasonpicks pick\nWHERE DATE('now') > '2025-03-16';"
+  }
+]
