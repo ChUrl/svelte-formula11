@@ -103,14 +103,16 @@
         active_and_substitutes[for_index] = (drivers ?? [])[sub_index];
       });
 
-    return active_and_substitutes.map((driver: Driver) => {
-      return {
-        // NOTE: Because Skeleton displays the values inside the autocomplete input,
-        //       we have to supply the driver code twice and manage a list of ids manually (ugh)
-        label: driver.code,
-        value: driver.code,
-      };
-    });
+    return active_and_substitutes
+      .sort((a: Driver, b: Driver) => a.firstname.localeCompare(b.firstname))
+      .map((driver: Driver) => {
+        return {
+          // NOTE: Because Skeleton displays the values inside the autocomplete input,
+          //       we have to supply the driver code twice and manage a list of ids manually (ugh)
+          label: `${driver.firstname} ${driver.lastname}`,
+          value: driver.code,
+        };
+      });
   });
 
   let pxxs_whitelist: string[] = $derived.by(() =>
@@ -121,7 +123,7 @@
 
   // Event handlers
   const on_pxxs_chip_select = (event: CustomEvent<AutocompleteOption<string>>): void => {
-    if (disabled || !currentrace || !drivers) return;
+    if (disabled || !drivers) return;
 
     // Can only select 7 drivers
     if (pxxs_chips.length >= 7) return;
