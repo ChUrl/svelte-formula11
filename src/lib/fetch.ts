@@ -139,7 +139,6 @@ export const fetch_currentrace = async (
   return currentrace[0];
 };
 
-// TODO: This will make the hidden racepicks by other users visible inside the browser console...
 /**
  * Fetch all [RacePicks] from the database
  */
@@ -174,7 +173,6 @@ export const fetch_currentracepick = async (
   return racepick;
 };
 
-// TODO: This will make the hidden seasonpicks by other users visible inside the browser console...
 /**
  * Fetch all [SeasonPicks] from the database
  */
