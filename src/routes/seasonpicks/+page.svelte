@@ -7,7 +7,7 @@
     type ModalStore,
   } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
-  import type { Hottake, SeasonPick, SeasonPickedUser } from "$lib/schema";
+  import type { Driver, Hottake, SeasonPick, SeasonPickedUser } from "$lib/schema";
   import { ChequeredFlagIcon, LazyImage } from "$lib/components";
   import {
     get_by_value,
@@ -71,10 +71,14 @@
           <!-- Only show the stuff if signed in -->
           {#if data.user}
             {@const teamwinners = data.seasonpick
-              ? data.seasonpick.teamwinners.map((id: string) => get_by_value(drivers, "id", id))
+              ? data.seasonpick.teamwinners
+                  .map((id: string) => get_by_value(drivers, "id", id) as Driver)
+                  .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
               : [undefined]}
             {@const podiums = data.seasonpick
-              ? data.seasonpick.podiums.map((id: string) => get_by_value(drivers, "id", id))
+              ? data.seasonpick.podiums
+                  .map((id: string) => get_by_value(drivers, "id", id) as Driver)
+                  .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
               : [undefined]}
 
             <!-- Hottake + Doohanstarts -->
@@ -323,10 +327,14 @@
         {@const mostovertakes = pick ? get_by_value(drivers, "id", pick.mostovertakes) : undefined}
         {@const mostdnfs = pick ? get_by_value(drivers, "id", pick.mostdnfs) : undefined}
         {@const teamwinners = pick
-          ? pick.teamwinners.map((id: string) => get_by_value(drivers, "id", id))
+          ? pick.teamwinners
+              .map((id: string) => get_by_value(drivers, "id", id) as Driver)
+              .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
           : [undefined]}
         {@const podiums = pick
-          ? pick.podiums.map((id: string) => get_by_value(drivers, "id", id))
+          ? pick.podiums
+              .map((id: string) => get_by_value(drivers, "id", id) as Driver)
+              .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
           : [undefined]}
 
         <div
@@ -422,7 +430,6 @@
             </div>
 
             <!-- Teamwinners -->
-            <!-- TODO: Sort teamwinners by team (and by code inside teams), so they are sorted equally for each column -->
             <div
               class="mt-2 h-[360px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 sm:h-[220px] md:h-[150px] lg:px-2"
             >
@@ -444,7 +451,6 @@
 
             <!-- Podiums -->
             <!-- TODO: Replace all style tags throughout the page with custom classes like height here -->
-            <!-- TODO: Sort podiums by driver code, so they are sorted equally for each column -->
             <div
               class="mt-2 h-[360px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 md:h-[220px] lg:px-2 xl:h-[150px]"
             >
