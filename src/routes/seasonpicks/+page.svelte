@@ -7,7 +7,7 @@
     type ModalStore,
   } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
-  import type { Hottake, SeasonPick } from "$lib/schema";
+  import type { Hottake, SeasonPick, SeasonPickedUser } from "$lib/schema";
   import { ChequeredFlagIcon, LazyImage } from "$lib/components";
   import {
     get_by_value,
@@ -38,32 +38,207 @@
 
     modalStore.trigger(modalSettings);
   };
+
+  // Users that have already picked the season
+  let pickedusers: Promise<SeasonPickedUser[]> = $derived.by(async () =>
+    (await data.seasonpickedusers).filter(
+      (seasonpickeduser: SeasonPickedUser) => seasonpickeduser.picked,
+    ),
+  );
+
+  // Users that didn't already pick the season
+  let outstandingusers: Promise<SeasonPickedUser[]> = $derived.by(async () =>
+    (await data.seasonpickedusers).filter(
+      (seasonpickeduser: SeasonPickedUser) => !seasonpickeduser.picked,
+    ),
+  );
 </script>
 
 <svelte:head>
   <title>Formula 11 - Season Picks</title>
 </svelte:head>
 
-<Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-2" width="w-full">
-  <AccordionItem>
-    <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
-    <svelte:fragment slot="summary">
-      <span class="font-bold">Your Season Pick</span>
-    </svelte:fragment>
-    <svelte:fragment slot="content">
-      {data.seasonpick?.hottake ?? "Invalid"}
-    </svelte:fragment>
-  </AccordionItem>
-</Accordion>
+<!-- Await this here so the accordion doesn't lag when opening -->
+{#await Promise.all([data.drivers, data.teams]) then [drivers, teams]}
+  <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-2" width="w-full">
+    <AccordionItem>
+      <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
+      <svelte:fragment slot="summary">
+        <span class="font-bold">Your Season Pick</span>
+      </svelte:fragment>
+      <svelte:fragment slot="content">
+        <div class="justify-center gap-2 lg:flex">
+          <!-- Only show the stuff if signed in -->
+          {#if data.user}
+            {@const teamwinners = data.seasonpick
+              ? data.seasonpick.teamwinners.map((id: string) => get_by_value(drivers, "id", id))
+              : [undefined]}
+            {@const podiums = data.seasonpick
+              ? data.seasonpick.podiums.map((id: string) => get_by_value(drivers, "id", id))
+              : [undefined]}
+
+            <!-- Hottake + Doohanstarts -->
+            <div class="mt-2 flex gap-2">
+              <div class="card w-full min-w-40 p-2 shadow">
+                <h1 class="mb-2 text-nowrap font-bold">Hottake:</h1>
+                <span class="text-sm">{data.seasonpick?.hottake}</span>
+              </div>
+              <div class="card w-full min-w-40 p-2 shadow">
+                <h1 class="mb-2 text-nowrap font-bold">Doohan Starts:</h1>
+                <span class="text-sm">
+                  Jack Doohan startet {data.seasonpick?.doohanstarts} mal.
+                </span>
+              </div>
+            </div>
+
+            <!-- WDC + WCC -->
+            <div class="mt-2 flex gap-2">
+              <div class="card w-full min-w-40 p-2 pb-0 shadow">
+                <h1 class="mb-2 text-nowrap font-bold">WDC:</h1>
+                <LazyImage
+                  src={get_by_value(drivers, "id", data.seasonpick?.wdcwinner ?? "")
+                    ?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                  imgwidth={DRIVER_HEADSHOT_WIDTH}
+                  imgheight={DRIVER_HEADSHOT_HEIGHT}
+                  containerstyle="height: 115px; margin: auto;"
+                  imgclass="bg-transparent cursor-pointer"
+                  hoverzoom
+                  onclick={seasonpick_handler}
+                />
+              </div>
+              <div class="card w-full min-w-40 p-2 pb-0 shadow">
+                <h1 class="mb-2 text-nowrap font-bold">WCC:</h1>
+                <LazyImage
+                  src={get_by_value(teams, "id", data.seasonpick?.wccwinner ?? "")?.banner_url ??
+                    get_team_banner_template(data.graphics)}
+                  imgwidth={TEAM_BANNER_WIDTH}
+                  imgheight={TEAM_BANNER_HEIGHT}
+                  containerstyle="height: 80px; margin: auto;"
+                  imgclass="bg-transparent cursor-pointer rounded-md"
+                  hoverzoom
+                  onclick={seasonpick_handler}
+                />
+              </div>
+            </div>
+
+            <!-- Overtakes + DNFs -->
+            <div class="mt-2 flex gap-2">
+              <div class="card w-full min-w-40 p-2 pb-0 shadow">
+                <h1 class="mb-2 text-nowrap font-bold">Most Overtakes:</h1>
+                <LazyImage
+                  src={get_by_value(drivers, "id", data.seasonpick?.mostovertakes ?? "")
+                    ?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                  imgwidth={DRIVER_HEADSHOT_WIDTH}
+                  imgheight={DRIVER_HEADSHOT_HEIGHT}
+                  containerstyle="height: 115px; margin: auto;"
+                  imgclass="bg-transparent cursor-pointer"
+                  hoverzoom
+                  onclick={seasonpick_handler}
+                />
+              </div>
+              <div class="card w-full min-w-40 p-2 pb-0 shadow">
+                <h1 class="mb-2 text-nowrap font-bold">Most DNFs:</h1>
+                <LazyImage
+                  src={get_by_value(drivers, "id", data.seasonpick?.mostdnfs ?? "")?.headshot_url ??
+                    get_driver_headshot_template(data.graphics)}
+                  imgwidth={DRIVER_HEADSHOT_WIDTH}
+                  imgheight={DRIVER_HEADSHOT_HEIGHT}
+                  containerstyle="height: 115px; margin: auto;"
+                  imgclass="bg-transparent cursor-pointer"
+                  hoverzoom
+                  onclick={seasonpick_handler}
+                />
+              </div>
+            </div>
+
+            <!-- Teamwinners + Podiums -->
+            <div class="mt-2 flex gap-2">
+              <div class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow">
+                <h1 class="mb-2 text-nowrap font-bold">Teamwinners:</h1>
+                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                  {#each teamwinners.slice(0, 12) as winner}
+                    <LazyImage
+                      src={winner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                    />
+                  {/each}
+                </div>
+              </div>
+              <div class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow">
+                <h1 class="mb-2 text-nowrap font-bold">Podiums:</h1>
+                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                  {#each podiums as podium}
+                    <LazyImage
+                      src={podium?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                    />
+                  {/each}
+                </div>
+              </div>
+            </div>
+          {/if}
+
+          <!-- Show users that have and have not picked yet -->
+          {#await Promise.all( [data.seasonpicks, data.seasonpickedusers, pickedusers, outstandingusers], ) then [seasonpicks, currentpicked, picked, outstanding]}
+            {#if seasonpicks.length === 0}
+              <div class="mt-2 flex gap-2">
+                <div
+                  class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+                >
+                  <h1 class="text-nowrap font-bold">
+                    Picked ({picked.length}/{currentpicked.length}):
+                  </h1>
+                  <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                    {#each picked.slice(0, 16) as user}
+                      <LazyImage
+                        src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                        imgwidth={AVATAR_WIDTH}
+                        imgheight={AVATAR_HEIGHT}
+                        containerstyle="height: 35px; width: 35px;"
+                        imgclass="bg-surface-400 rounded-full"
+                      />
+                    {/each}
+                  </div>
+                </div>
+                <div
+                  class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+                >
+                  <h1 class="text-nowrap font-bold">
+                    Missing ({outstanding.length}/{currentpicked.length}):
+                  </h1>
+                  <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                    {#each outstanding.slice(0, 16) as user}
+                      <LazyImage
+                        src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                        imgwidth={AVATAR_WIDTH}
+                        imgheight={AVATAR_HEIGHT}
+                        containerstyle="height: 35px; width: 35px;"
+                        imgclass="bg-surface-400 rounded-full"
+                      />
+                    {/each}
+                  </div>
+                </div>
+              </div>
+            {/if}
+          {/await}
+        </div>
+      </svelte:fragment>
+    </AccordionItem>
+  </Accordion>
+{/await}
 
 <!-- The fookin table -->
-<!-- TODO: Hide this thing if no picks... -->
 <div class="flex">
   <div>
     <!-- TODO: Points popup? -->
     <div class="mt-4 h-10 w-7 lg:w-36"></div>
 
-    <!-- TODO: Show the guess categories like the races in racepicks -->
     <!-- Hottake -->
     <div class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36">
       <span class="hidden text-nowrap text-sm font-bold lg:block">Hottake</span>
@@ -120,7 +295,7 @@
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block">Team-Battle<br />Winners</span
           >
-          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Teamwin.</span>
+          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Teamwinners</span>
         </div>
 
         <!-- Podiums -->
@@ -134,7 +309,6 @@
     {/await}
   </div>
 
-  <!-- TODO: Datelock the guess display (except hottake for review) -->
   <!-- TODO: Add user option to display driver codes instead of headshots (or both) -->
   <div class="flex w-full overflow-x-scroll pb-2">
     {#await Promise.all( [data.seasonpickedusers, data.seasonpicks, data.hottakes, data.drivers, data.teams], ) then [seasonpicked, seasonpicks, hottakes, drivers, teams]}
@@ -154,7 +328,7 @@
           : [undefined]}
 
         <div
-          class="card ml-1 mt-2 w-full min-w-36 overflow-hidden py-2 shadow lg:ml-2 {data.user &&
+          class="card ml-1 mt-2 w-full min-w-[9.5rem] overflow-hidden py-2 shadow lg:ml-2 {data.user &&
           data.user.username === user.username
             ? 'bg-primary-300'
             : ''}"
