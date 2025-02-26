@@ -69,7 +69,7 @@
 </svelte:head>
 
 {#if data.currentrace}
-  {#await data.drivers then drivers}
+  {#await Promise.all( [data.drivers, data.currentpickedusers, pickedusers, outstandingusers], ) then [drivers, currentpicked, picked, outstanding]}
     <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-0" width="w-full">
       <AccordionItem>
         <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
@@ -154,44 +154,42 @@
             {/if}
 
             <!-- Show users that have and have not picked yet -->
-            {#await Promise.all( [data.currentpickedusers, pickedusers, outstandingusers], ) then [currentpicked, picked, outstanding]}
-              <div class="mt-2 flex max-h-[155px] gap-2 overflow-y-scroll">
-                <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
-                  <h1 class="text-nowrap font-bold">
-                    Picked ({picked.length}/{currentpicked.length}):
-                  </h1>
-                  <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                    {#each picked as user}
-                      <LazyImage
-                        src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
-                        imgwidth={AVATAR_WIDTH}
-                        imgheight={AVATAR_HEIGHT}
-                        containerstyle="height: 35px; width: 35px;"
-                        imgclass="bg-surface-400 rounded-full"
-                      />
-                    {/each}
-                  </div>
-                </div>
-                <div
-                  class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-                >
-                  <h1 class="text-nowrap font-bold">
-                    Missing ({outstanding.length}/{currentpicked.length}):
-                  </h1>
-                  <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                    {#each outstanding as user}
-                      <LazyImage
-                        src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
-                        imgwidth={AVATAR_WIDTH}
-                        imgheight={AVATAR_HEIGHT}
-                        containerstyle="height: 35px; width: 35px;"
-                        imgclass="bg-surface-400 rounded-full"
-                      />
-                    {/each}
-                  </div>
+            <div class="mt-2 flex max-h-[155px] gap-2 overflow-y-scroll">
+              <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+                <h1 class="text-nowrap font-bold">
+                  Picked ({picked.length}/{currentpicked.length}):
+                </h1>
+                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                  {#each picked as user}
+                    <LazyImage
+                      src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                    />
+                  {/each}
                 </div>
               </div>
-            {/await}
+              <div
+                class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+              >
+                <h1 class="text-nowrap font-bold">
+                  Missing ({outstanding.length}/{currentpicked.length}):
+                </h1>
+                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                  {#each outstanding as user}
+                    <LazyImage
+                      src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                    />
+                  {/each}
+                </div>
+              </div>
+            </div>
           </div>
         </svelte:fragment>
       </AccordionItem>
