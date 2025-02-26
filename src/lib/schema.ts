@@ -93,6 +93,12 @@ export interface SeasonPick {
   };
 }
 
+export interface Hottake {
+  id: string;
+  user: string;
+  hottake: string;
+}
+
 export interface RaceResult {
   id: string;
   race: string;
@@ -107,7 +113,7 @@ export interface CurrentPickedUser {
   avatar: string;
   avatar_url?: string;
   admin: boolean;
-  picked: boolean;
+  picked: string | null;
 }
 
 export interface SeasonPickedUser {
@@ -117,5 +123,5 @@ export interface SeasonPickedUser {
   avatar: string;
   avatar_url?: string;
   admin: boolean;
-  picked: boolean;
+  picked: string | null;
 }
