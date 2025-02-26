@@ -25,15 +25,6 @@
 
   let { data }: { data: PageData } = $props();
 
-  const racepick: Promise<RacePick | undefined> = $derived.by(
-    async () =>
-      (await data.racepicks).filter(
-        (racepick: RacePick) =>
-          racepick.expand.user.username === data.user?.username &&
-          racepick.race === data.currentrace?.id,
-      )[0] ?? undefined,
-  );
-
   const modalStore: ModalStore = getModalStore();
   const racepick_handler = async (event: Event) => {
     const modalSettings: ModalSettings = {
@@ -41,7 +32,7 @@
       component: "racePickCard",
       meta: {
         data,
-        racepick: await racepick,
+        racepick: data.racepick,
       },
     };
 
@@ -131,12 +122,12 @@
 
           <!-- Only show the userguess if signed in -->
           {#if data.user}
-            {#await Promise.all([data.drivers, racepick]) then [drivers, pick]}
+            {#await data.drivers then drivers}
               <div class="mt-2 flex gap-2">
                 <div class="card w-full min-w-40 p-2 pb-0 shadow">
                   <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
                   <LazyImage
-                    src={get_by_value(drivers, "id", pick?.pxx ?? "")?.headshot_url ??
+                    src={get_by_value(drivers, "id", data.racepick?.pxx ?? "")?.headshot_url ??
                       get_driver_headshot_template(data.graphics)}
                     imgwidth={DRIVER_HEADSHOT_WIDTH}
                     imgheight={DRIVER_HEADSHOT_HEIGHT}
@@ -149,7 +140,7 @@
                 <div class="card w-full min-w-40 p-2 pb-0 shadow">
                   <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
                   <LazyImage
-                    src={get_by_value(drivers, "id", pick?.dnf ?? "")?.headshot_url ??
+                    src={get_by_value(drivers, "id", data.racepick?.dnf ?? "")?.headshot_url ??
                       get_driver_headshot_template(data.graphics)}
                     imgwidth={DRIVER_HEADSHOT_WIDTH}
                     imgheight={DRIVER_HEADSHOT_HEIGHT}
@@ -207,6 +198,7 @@
 {/if}
 
 <!-- The fookin table -->
+<!-- TODO: Hide this thing if no picks... -->
 <div class="flex">
   <div>
     <!-- Points color coding legend -->
