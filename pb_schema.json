@@ -1363,8 +1363,8 @@
   },
   {
     "id": "pbc_3434655479",
-    "listRule": null,
-    "viewRule": null,
+    "listRule": "",
+    "viewRule": "",
     "createRule": null,
     "updateRule": null,
     "deleteRule": null,
@@ -1389,7 +1389,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1736455494",
         "hidden": false,
-        "id": "_clone_QEH9",
+        "id": "_clone_US3n",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "user",
@@ -1401,7 +1401,7 @@
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "_clone_HGsl",
+        "id": "_clone_5Ma5",
         "max": 0,
         "min": 0,
         "name": "hottake",
