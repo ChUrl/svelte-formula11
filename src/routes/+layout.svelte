@@ -164,15 +164,6 @@
 
   const update_profile = (create?: boolean): (() => Promise<void>) => {
     const handler = async (): Promise<void> => {
-      if (!username_value || username_value === "") {
-        toastStore.trigger(get_error_toast("Please enter a username!"));
-        return;
-      }
-      if (!firstname_value || firstname_value === "") {
-        toastStore.trigger(get_error_toast("Please enter your first name!"));
-        return;
-      }
-
       // Avatar handling
       let avatar_avif: Blob | undefined = undefined;
       const avatar_file: File | undefined =
@@ -202,6 +193,14 @@
 
       try {
         if (create) {
+          if (!username_value || username_value === "") {
+            toastStore.trigger(get_error_toast("Please enter a username!"));
+            return;
+          }
+          if (!firstname_value || firstname_value === "") {
+            toastStore.trigger(get_error_toast("Please enter your first name!"));
+            return;
+          }
           if (!password_value || password_value === "") {
             toastStore.trigger(get_error_toast("Please enter a password!"));
             return;
@@ -223,8 +222,8 @@
           }
 
           await pb.collection("users").update(data.user.id, {
-            username: username_value,
-            firstname: firstname_value,
+            username: username_value.length > 0 ? username_value : undefined,
+            firstname: firstname_value.length > 0 ? firstname_value : undefined,
             avatar: avatar_avif,
           });
           drawerStore.close();
