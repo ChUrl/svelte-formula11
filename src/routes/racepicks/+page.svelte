@@ -19,7 +19,7 @@
     RACE_PICTOGRAM_HEIGHT,
     RACE_PICTOGRAM_WIDTH,
   } from "$lib/config";
-  import { format_date } from "$lib/date";
+  import { format_date, shortdatetimeformat } from "$lib/date";
   import type { CurrentPickedUser, RacePick } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
 
@@ -53,8 +53,6 @@
     ),
   );
 
-  const dateformat: string = "dd.MM' 'HH:mm";
-
   const race_popupsettings = (target: string): PopupSettings => {
     return {
       event: "click",
@@ -87,20 +85,21 @@
                 {#if data.currentrace.sprintdate}
                   <div class="flex gap-2">
                     <span class="w-12">SQuali:</span>
-                    <span>{format_date(data.currentrace.sprintqualidate, dateformat)}</span>
+                    <span>{format_date(data.currentrace.sprintqualidate, shortdatetimeformat)}</span
+                    >
                   </div>
                   <div class="flex gap-2">
                     <span class="w-12">SRace:</span>
-                    <span>{format_date(data.currentrace.sprintdate, dateformat)}</span>
+                    <span>{format_date(data.currentrace.sprintdate, shortdatetimeformat)}</span>
                   </div>
                 {/if}
                 <div class="flex gap-2">
                   <span class="w-12">Quali:</span>
-                  <span>{format_date(data.currentrace.qualidate, dateformat)}</span>
+                  <span>{format_date(data.currentrace.qualidate, shortdatetimeformat)}</span>
                 </div>
                 <div class="flex gap-2">
                   <span class="w-12">Race:</span>
-                  <span>{format_date(data.currentrace.racedate, dateformat)}</span>
+                  <span>{format_date(data.currentrace.racedate, shortdatetimeformat)}</span>
                 </div>
                 <div class="m-auto flex">
                   <div class="mr-1 mt-1">
@@ -255,7 +254,7 @@
             {race?.step}: {race?.name}
           </span>
           <span class="hidden text-sm lg:block">
-            Date: {format_date(race?.racedate ?? "", dateformat)}
+            Date: {format_date(race?.racedate ?? "", shortdatetimeformat)}
           </span>
           <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
 
