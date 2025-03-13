@@ -11,7 +11,7 @@
   import type { Race } from "$lib/schema";
   import { RACE_PICTOGRAM_HEIGHT, RACE_PICTOGRAM_WIDTH } from "$lib/config";
   import { get_race_pictogram_template } from "$lib/database";
-  import { format_date } from "$lib/date";
+  import { format_date, isodatetimeformat } from "$lib/date";
   import { get_error_toast } from "$lib/toast";
   import { pb } from "$lib/pocketbase";
   import { error } from "@sveltejs/kit";
@@ -38,12 +38,14 @@
   const toastStore: ToastStore = getToastStore();
 
   // Constants
-  const labelwidth = "80px";
-  const dateformat: string = "yyyy-MM-dd'T'HH:mm";
+  const labelwidth = "85px";
 
   const clear_sprint = () => {
     (document.getElementById("sqdate") as HTMLInputElement).value = "";
     (document.getElementById("sdate") as HTMLInputElement).value = "";
+
+    sprintqualidate_value = "";
+    sprintdate_value = "";
   };
 
   // Reactive state
@@ -58,14 +60,16 @@
   let racedate_value: string = $state("");
   let pictogram_value: FileList | undefined = $state();
 
+  // Set the initial values if we've clicked on an existing race
+  // PocketBase stores in UTC, so resulting values will be offset by 1h here
   if (race) {
     if (race.sprintqualidate && race.sprintdate) {
-      sprintqualidate_value = format_date(race.sprintqualidate, dateformat);
-      sprintdate_value = format_date(race.sprintdate, dateformat);
+      sprintqualidate_value = format_date(race.sprintqualidate, isodatetimeformat);
+      sprintdate_value = format_date(race.sprintdate, isodatetimeformat);
     }
 
-    qualidate_value = format_date(race.qualidate, dateformat);
-    racedate_value = format_date(race.racedate, dateformat);
+    qualidate_value = format_date(race.qualidate, isodatetimeformat);
+    racedate_value = format_date(race.racedate, isodatetimeformat);
   }
 
   // Database actions
@@ -119,6 +123,7 @@
         }
       }
 
+      // Use toISOString here, as we want to convert from localtime to UTC, which PocketBase uses
       const race_data = {
         name: name_value,
         step: step_value,
@@ -214,9 +219,9 @@
     <!-- NOTE: Input datetime-local accepts YYYY-mm-ddTHH:MM format -->
     <Input
       id="sqdate"
+      type="datetime-local"
       bind:value={sprintqualidate_value}
       autocomplete="off"
-      type="datetime-local"
       {labelwidth}
       {disabled}
     >
@@ -224,18 +229,18 @@
     </Input>
     <Input
       id="sdate"
+      type="datetime-local"
       bind:value={sprintdate_value}
       autocomplete="off"
-      type="datetime-local"
       {labelwidth}
       {disabled}
     >
       SRace
     </Input>
     <Input
+      type="datetime-local"
       bind:value={qualidate_value}
       autocomplete="off"
-      type="datetime-local"
       {labelwidth}
       {disabled}
       {required}
@@ -243,9 +248,9 @@
       Quali
     </Input>
     <Input
+      type="datetime-local"
       bind:value={racedate_value}
       autocomplete="off"
-      type="datetime-local"
       {labelwidth}
       {disabled}
       {required}
