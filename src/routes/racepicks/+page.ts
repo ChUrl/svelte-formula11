@@ -11,7 +11,14 @@ import {
 import type { PageLoad } from "../$types";
 
 export const load: PageLoad = async ({ fetch, depends }) => {
-  depends("data:racepicks", "data:users", "data:raceresults", "data:drivers", "data:races");
+  depends(
+    "data:racepicks",
+    "data:user",
+    "data:users",
+    "data:raceresults",
+    "data:drivers",
+    "data:races",
+  );
 
   return {
     racepicks: fetch_visibleracepicks(fetch),
