@@ -4,6 +4,7 @@
   import type { PageData } from "./$types";
   import { get_by_value } from "$lib/database";
   import type { Race } from "$lib/schema";
+  import { format_date, shortdatetimeformat } from "$lib/date";
 
   let { data }: { data: PageData } = $props();
 
@@ -26,7 +27,7 @@
     modalStore.trigger(modalSettings);
   };
 
-  // TODO: Displayed dates differ from actual dates by 1 hour
+  // The date value functions convert UTC from PocketBase to localtime
   const races_columns: TableColumn[] = $derived([
     {
       data_value_name: "name",
@@ -38,22 +39,22 @@
     {
       data_value_name: "sprintqualidate",
       label: "Sprint Quali",
-      valuefun: async (value: string): Promise<string> => value.slice(0, -5), // Cutoff the "Z" from the ISO datetime
+      valuefun: async (value: string): Promise<string> => format_date(value, shortdatetimeformat),
     },
     {
       data_value_name: "sprintdate",
       label: "Sprint Race",
-      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
+      valuefun: async (value: string): Promise<string> => format_date(value, shortdatetimeformat),
     },
     {
       data_value_name: "qualidate",
       label: "Quali",
-      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
+      valuefun: async (value: string): Promise<string> => format_date(value, shortdatetimeformat),
     },
     {
       data_value_name: "racedate",
       label: "Race",
-      valuefun: async (value: string): Promise<string> => value.slice(0, -5),
+      valuefun: async (value: string): Promise<string> => format_date(value, shortdatetimeformat),
     },
   ]);
 </script>
