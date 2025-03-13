@@ -26,7 +26,7 @@
 
 <div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
   <div
-    class="input-group-shim select-none text-nowrap text-neutral-900"
+    class="input-group-shim select-none text-nowrap border-r text-neutral-900"
     style="width: {labelwidth};"
   >
     {@render children()}
