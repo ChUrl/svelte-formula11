@@ -75,7 +75,11 @@
           <span class="font-bold">Next Race Guess</span>
         </svelte:fragment>
         <svelte:fragment slot="content">
-          <div class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit lg:grid-cols-6">
+          <div
+            class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit {data.user
+              ? 'lg:grid-cols-6'
+              : 'lg:grid-cols-4'}"
+          >
             <!-- Show information about the next race -->
             <div class="card flex w-full min-w-40 flex-col p-2 shadow lg:max-w-40">
               <span class="font-bold">
