@@ -126,11 +126,11 @@
         sprintqualidate:
           sprintqualidate_value && sprintqualidate_value !== ""
             ? new Date(sprintqualidate_value).toISOString()
-            : undefined,
+            : null,
         sprintdate:
           sprintdate_value && sprintdate_value != ""
             ? new Date(sprintdate_value).toISOString()
-            : undefined,
+            : null,
         qualidate: new Date(qualidate_value).toISOString(),
         racedate: new Date(racedate_value).toISOString(),
         pictogram: pictogram_avif,
