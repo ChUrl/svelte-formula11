@@ -75,118 +75,118 @@
           <span class="font-bold">Next Race Guess</span>
         </svelte:fragment>
         <svelte:fragment slot="content">
-          <div class="justify-center gap-2 lg:flex">
+          <div class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit lg:grid-cols-6">
             <!-- Show information about the next race -->
-            <div class="mt-2 flex gap-2">
-              <div class="card flex w-full min-w-40 flex-col p-2 shadow">
-                <span class="font-bold">
-                  {data.currentrace.name}
-                </span>
-                {#if data.currentrace.sprintdate}
-                  <div class="flex gap-2">
-                    <span class="w-12">SQuali:</span>
-                    <span>{format_date(data.currentrace.sprintqualidate, shortdatetimeformat)}</span
-                    >
-                  </div>
-                  <div class="flex gap-2">
-                    <span class="w-12">SRace:</span>
-                    <span>{format_date(data.currentrace.sprintdate, shortdatetimeformat)}</span>
-                  </div>
-                {/if}
+            <div class="card flex w-full min-w-40 flex-col p-2 shadow lg:max-w-40">
+              <span class="font-bold">
+                {data.currentrace.name}
+              </span>
+              {#if data.currentrace.sprintdate}
                 <div class="flex gap-2">
-                  <span class="w-12">Quali:</span>
-                  <span>{format_date(data.currentrace.qualidate, shortdatetimeformat)}</span>
+                  <span class="w-12">SQuali:</span>
+                  <span>{format_date(data.currentrace.sprintqualidate, shortdatetimeformat)}</span>
                 </div>
                 <div class="flex gap-2">
-                  <span class="w-12">Race:</span>
-                  <span>{format_date(data.currentrace.racedate, shortdatetimeformat)}</span>
+                  <span class="w-12">SRace:</span>
+                  <span>{format_date(data.currentrace.sprintdate, shortdatetimeformat)}</span>
                 </div>
-                <div class="m-auto flex">
-                  <div class="mr-1 mt-1">
-                    <StopwatchIcon />
-                  </div>
-                  <Countdown date={data.currentrace.racedate} extraclass="font-bold" />
+              {/if}
+              <div class="flex gap-2">
+                <span class="w-12">Quali:</span>
+                <span>{format_date(data.currentrace.qualidate, shortdatetimeformat)}</span>
+              </div>
+              <div class="flex gap-2">
+                <span class="w-12">Race:</span>
+                <span>{format_date(data.currentrace.racedate, shortdatetimeformat)}</span>
+              </div>
+              <div class="m-auto flex">
+                <div class="mr-1 mt-1">
+                  <StopwatchIcon />
                 </div>
+                <Countdown date={data.currentrace.racedate} extraclass="font-bold" />
               </div>
-              <div class="card w-full min-w-40 p-2 shadow">
-                <h1 class="mb-2 text-nowrap font-bold">Track Layout:</h1>
-                <LazyImage
-                  src={data.currentrace.pictogram_url ?? "Invalid"}
-                  imgwidth={RACE_PICTOGRAM_WIDTH}
-                  imgheight={RACE_PICTOGRAM_HEIGHT}
-                  containerstyle="height: 105px; margin: auto;"
-                  imgstyle="background: transparent;"
-                />
-              </div>
+            </div>
+
+            <!-- Show race pictogram -->
+            <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+              <h1 class="mb-2 text-nowrap font-bold">Track Layout:</h1>
+              <LazyImage
+                src={data.currentrace.pictogram_url ?? "Invalid"}
+                imgwidth={RACE_PICTOGRAM_WIDTH}
+                imgheight={RACE_PICTOGRAM_HEIGHT}
+                containerstyle="height: 105px; margin: auto;"
+                imgstyle="background: transparent;"
+              />
             </div>
 
             <!-- Only show the userguess if signed in -->
             {#if data.user}
-              <div class="mt-2 flex gap-2">
-                <div class="card w-full min-w-40 p-2 pb-0 shadow">
-                  <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
-                  <LazyImage
-                    src={get_by_value(drivers, "id", data.racepick?.pxx ?? "")?.headshot_url ??
-                      get_driver_headshot_template(data.graphics)}
-                    imgwidth={DRIVER_HEADSHOT_WIDTH}
-                    imgheight={DRIVER_HEADSHOT_HEIGHT}
-                    containerstyle="height: 115px; margin: auto;"
-                    imgclass="bg-transparent cursor-pointer"
-                    hoverzoom
-                    onclick={racepick_handler}
-                  />
-                </div>
-                <div class="card w-full min-w-40 p-2 pb-0 shadow">
-                  <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
-                  <LazyImage
-                    src={get_by_value(drivers, "id", data.racepick?.dnf ?? "")?.headshot_url ??
-                      get_driver_headshot_template(data.graphics)}
-                    imgwidth={DRIVER_HEADSHOT_WIDTH}
-                    imgheight={DRIVER_HEADSHOT_HEIGHT}
-                    containerstyle="height: 115px; margin: auto;"
-                    imgclass="bg-transparent cursor-pointer"
-                    hoverzoom
-                    onclick={racepick_handler}
-                  />
-                </div>
+              <!-- PXX pick -->
+              <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+                <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
+                <LazyImage
+                  src={get_by_value(drivers, "id", data.racepick?.pxx ?? "")?.headshot_url ??
+                    get_driver_headshot_template(data.graphics)}
+                  imgwidth={DRIVER_HEADSHOT_WIDTH}
+                  imgheight={DRIVER_HEADSHOT_HEIGHT}
+                  containerstyle="height: 115px; margin: auto;"
+                  imgclass="bg-transparent cursor-pointer"
+                  hoverzoom
+                  onclick={racepick_handler}
+                />
+              </div>
+
+              <!-- DNF pick -->
+              <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+                <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
+                <LazyImage
+                  src={get_by_value(drivers, "id", data.racepick?.dnf ?? "")?.headshot_url ??
+                    get_driver_headshot_template(data.graphics)}
+                  imgwidth={DRIVER_HEADSHOT_WIDTH}
+                  imgheight={DRIVER_HEADSHOT_HEIGHT}
+                  containerstyle="height: 115px; margin: auto;"
+                  imgclass="bg-transparent cursor-pointer"
+                  hoverzoom
+                  onclick={racepick_handler}
+                />
               </div>
             {/if}
 
-            <!-- Show users that have and have not picked yet -->
-            <div class="mt-2 flex max-h-[155px] gap-2 overflow-y-scroll">
-              <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
-                <h1 class="text-nowrap font-bold">
-                  Picked ({picked.length}/{currentpicked.length}):
-                </h1>
-                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                  {#each picked as user}
-                    <LazyImage
-                      src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
-                      imgwidth={AVATAR_WIDTH}
-                      imgheight={AVATAR_HEIGHT}
-                      containerstyle="height: 35px; width: 35px;"
-                      imgclass="bg-surface-400 rounded-full"
-                    />
-                  {/each}
-                </div>
+            <!-- Show users that have picked -->
+            <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+              <h1 class="text-nowrap font-bold">
+                Picked ({picked.length}/{currentpicked.length}):
+              </h1>
+              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                {#each picked as user}
+                  <LazyImage
+                    src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={AVATAR_WIDTH}
+                    imgheight={AVATAR_HEIGHT}
+                    containerstyle="height: 35px; width: 35px;"
+                    imgclass="bg-surface-400 rounded-full"
+                  />
+                {/each}
               </div>
-              <div
-                class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-              >
-                <h1 class="text-nowrap font-bold">
-                  Missing ({outstanding.length}/{currentpicked.length}):
-                </h1>
-                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                  {#each outstanding as user}
-                    <LazyImage
-                      src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
-                      imgwidth={AVATAR_WIDTH}
-                      imgheight={AVATAR_HEIGHT}
-                      containerstyle="height: 35px; width: 35px;"
-                      imgclass="bg-surface-400 rounded-full"
-                    />
-                  {/each}
-                </div>
+            </div>
+
+            <!-- Show users that have not picked yet -->
+            <div
+              class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+            >
+              <h1 class="text-nowrap font-bold">
+                Missing ({outstanding.length}/{currentpicked.length}):
+              </h1>
+              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                {#each outstanding as user}
+                  <LazyImage
+                    src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={AVATAR_WIDTH}
+                    imgheight={AVATAR_HEIGHT}
+                    containerstyle="height: 35px; width: 35px;"
+                    imgclass="bg-surface-400 rounded-full"
+                  />
+                {/each}
               </div>
             </div>
           </div>
