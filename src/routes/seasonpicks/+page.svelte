@@ -67,7 +67,7 @@
         <span class="font-bold">Your Season Pick</span>
       </svelte:fragment>
       <svelte:fragment slot="content">
-        <div class="justify-center gap-2 lg:flex">
+        <div class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit lg:grid-cols-5 2xl:grid-cols-10">
           <!-- Only show the stuff if signed in -->
           {#if data.user}
             {@const teamwinners = data.seasonpick
@@ -81,153 +81,157 @@
                   .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
               : [undefined]}
 
-            <!-- Hottake + Doohanstarts -->
-            <div class="mt-2 flex gap-2">
-              <div class="card w-full min-w-40 p-2 shadow">
-                <h1 class="mb-2 text-nowrap font-bold">Hottake:</h1>
-                <span class="text-sm">{data.seasonpick?.hottake}</span>
-              </div>
-              <div class="card w-full min-w-40 p-2 shadow">
-                <h1 class="mb-2 text-nowrap font-bold">Doohan Starts:</h1>
-                {#if data.seasonpick}
-                  <span class="text-sm">
-                    Jack Doohan startet {data.seasonpick?.doohanstarts} mal.
-                  </span>
-                {/if}
+            <!-- Hottake -->
+            <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+              <h1 class="mb-2 text-nowrap font-bold">Hottake:</h1>
+              <span class="text-sm">{data.seasonpick?.hottake}</span>
+            </div>
+
+            <!-- Doohanstarts -->
+            <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+              <h1 class="mb-2 text-nowrap font-bold">Doohan Starts:</h1>
+              {#if data.seasonpick}
+                <span class="text-sm">
+                  Jack Doohan startet {data.seasonpick?.doohanstarts} mal.
+                </span>
+              {/if}
+            </div>
+
+            <!-- WDC -->
+            <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+              <h1 class="mb-2 text-nowrap font-bold">WDC:</h1>
+              <LazyImage
+                src={get_by_value(drivers, "id", data.seasonpick?.wdcwinner ?? "")?.headshot_url ??
+                  get_driver_headshot_template(data.graphics)}
+                imgwidth={DRIVER_HEADSHOT_WIDTH}
+                imgheight={DRIVER_HEADSHOT_HEIGHT}
+                containerstyle="height: 115px; margin: auto;"
+                imgclass="bg-transparent cursor-pointer"
+                hoverzoom
+                onclick={seasonpick_handler}
+              />
+            </div>
+
+            <!-- WDC -->
+            <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+              <h1 class="mb-2 text-nowrap font-bold">WCC:</h1>
+              <LazyImage
+                src={get_by_value(teams, "id", data.seasonpick?.wccwinner ?? "")?.banner_url ??
+                  get_team_banner_template(data.graphics)}
+                imgwidth={TEAM_BANNER_WIDTH}
+                imgheight={TEAM_BANNER_HEIGHT}
+                containerstyle="height: 80px; margin: auto;"
+                imgclass="bg-transparent cursor-pointer rounded-md"
+                hoverzoom
+                onclick={seasonpick_handler}
+              />
+            </div>
+
+            <!-- Overtakes -->
+            <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+              <h1 class="mb-2 text-nowrap font-bold">Most Overtakes:</h1>
+              <LazyImage
+                src={get_by_value(drivers, "id", data.seasonpick?.mostovertakes ?? "")
+                  ?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                imgwidth={DRIVER_HEADSHOT_WIDTH}
+                imgheight={DRIVER_HEADSHOT_HEIGHT}
+                containerstyle="height: 115px; margin: auto;"
+                imgclass="bg-transparent cursor-pointer"
+                hoverzoom
+                onclick={seasonpick_handler}
+              />
+            </div>
+
+            <!-- DNFs -->
+            <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+              <h1 class="mb-2 text-nowrap font-bold">Most DNFs:</h1>
+              <LazyImage
+                src={get_by_value(drivers, "id", data.seasonpick?.mostdnfs ?? "")?.headshot_url ??
+                  get_driver_headshot_template(data.graphics)}
+                imgwidth={DRIVER_HEADSHOT_WIDTH}
+                imgheight={DRIVER_HEADSHOT_HEIGHT}
+                containerstyle="height: 115px; margin: auto;"
+                imgclass="bg-transparent cursor-pointer"
+                hoverzoom
+                onclick={seasonpick_handler}
+              />
+            </div>
+
+            <!-- Teamwinners -->
+            <div
+              class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+            >
+              <h1 class="mb-2 text-nowrap font-bold">Teamwinners:</h1>
+              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                {#each teamwinners.slice(0, 12) as winner}
+                  <LazyImage
+                    src={winner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={AVATAR_WIDTH}
+                    imgheight={AVATAR_HEIGHT}
+                    containerstyle="height: 35px; width: 35px;"
+                    imgclass="bg-surface-400 rounded-full"
+                  />
+                {/each}
               </div>
             </div>
 
-            <!-- WDC + WCC -->
-            <div class="mt-2 flex gap-2">
-              <div class="card w-full min-w-40 p-2 pb-0 shadow">
-                <h1 class="mb-2 text-nowrap font-bold">WDC:</h1>
-                <LazyImage
-                  src={get_by_value(drivers, "id", data.seasonpick?.wdcwinner ?? "")
-                    ?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                  imgwidth={DRIVER_HEADSHOT_WIDTH}
-                  imgheight={DRIVER_HEADSHOT_HEIGHT}
-                  containerstyle="height: 115px; margin: auto;"
-                  imgclass="bg-transparent cursor-pointer"
-                  hoverzoom
-                  onclick={seasonpick_handler}
-                />
-              </div>
-              <div class="card w-full min-w-40 p-2 pb-0 shadow">
-                <h1 class="mb-2 text-nowrap font-bold">WCC:</h1>
-                <LazyImage
-                  src={get_by_value(teams, "id", data.seasonpick?.wccwinner ?? "")?.banner_url ??
-                    get_team_banner_template(data.graphics)}
-                  imgwidth={TEAM_BANNER_WIDTH}
-                  imgheight={TEAM_BANNER_HEIGHT}
-                  containerstyle="height: 80px; margin: auto;"
-                  imgclass="bg-transparent cursor-pointer rounded-md"
-                  hoverzoom
-                  onclick={seasonpick_handler}
-                />
-              </div>
-            </div>
-
-            <!-- Overtakes + DNFs -->
-            <div class="mt-2 flex gap-2">
-              <div class="card w-full min-w-40 p-2 pb-0 shadow">
-                <h1 class="mb-2 text-nowrap font-bold">Most Overtakes:</h1>
-                <LazyImage
-                  src={get_by_value(drivers, "id", data.seasonpick?.mostovertakes ?? "")
-                    ?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                  imgwidth={DRIVER_HEADSHOT_WIDTH}
-                  imgheight={DRIVER_HEADSHOT_HEIGHT}
-                  containerstyle="height: 115px; margin: auto;"
-                  imgclass="bg-transparent cursor-pointer"
-                  hoverzoom
-                  onclick={seasonpick_handler}
-                />
-              </div>
-              <div class="card w-full min-w-40 p-2 pb-0 shadow">
-                <h1 class="mb-2 text-nowrap font-bold">Most DNFs:</h1>
-                <LazyImage
-                  src={get_by_value(drivers, "id", data.seasonpick?.mostdnfs ?? "")?.headshot_url ??
-                    get_driver_headshot_template(data.graphics)}
-                  imgwidth={DRIVER_HEADSHOT_WIDTH}
-                  imgheight={DRIVER_HEADSHOT_HEIGHT}
-                  containerstyle="height: 115px; margin: auto;"
-                  imgclass="bg-transparent cursor-pointer"
-                  hoverzoom
-                  onclick={seasonpick_handler}
-                />
-              </div>
-            </div>
-
-            <!-- Teamwinners + Podiums -->
-            <div class="mt-2 flex gap-2">
-              <div class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow">
-                <h1 class="mb-2 text-nowrap font-bold">Teamwinners:</h1>
-                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                  {#each teamwinners.slice(0, 12) as winner}
-                    <LazyImage
-                      src={winner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                      imgwidth={AVATAR_WIDTH}
-                      imgheight={AVATAR_HEIGHT}
-                      containerstyle="height: 35px; width: 35px;"
-                      imgclass="bg-surface-400 rounded-full"
-                    />
-                  {/each}
-                </div>
-              </div>
-              <div class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow">
-                <h1 class="mb-2 text-nowrap font-bold">Podiums:</h1>
-                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                  {#each podiums as podium}
-                    <LazyImage
-                      src={podium?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                      imgwidth={AVATAR_WIDTH}
-                      imgheight={AVATAR_HEIGHT}
-                      containerstyle="height: 35px; width: 35px;"
-                      imgclass="bg-surface-400 rounded-full"
-                    />
-                  {/each}
-                </div>
+            <!-- Podiums -->
+            <div
+              class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+            >
+              <h1 class="mb-2 text-nowrap font-bold">Podiums:</h1>
+              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                {#each podiums as podium}
+                  <LazyImage
+                    src={podium?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={AVATAR_WIDTH}
+                    imgheight={AVATAR_HEIGHT}
+                    containerstyle="height: 35px; width: 35px;"
+                    imgclass="bg-surface-400 rounded-full"
+                  />
+                {/each}
               </div>
             </div>
           {/if}
 
-          <!-- Show users that have and have not picked yet -->
+          <!-- Show users that have picked -->
           {#if seasonpicks.length === 0}
-            <div class="mt-2 flex gap-2">
-              <div
-                class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-              >
-                <h1 class="text-nowrap font-bold">
-                  Picked ({picked.length}/{currentpicked.length}):
-                </h1>
-                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                  {#each picked.slice(0, 16) as user}
-                    <LazyImage
-                      src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
-                      imgwidth={AVATAR_WIDTH}
-                      imgheight={AVATAR_HEIGHT}
-                      containerstyle="height: 35px; width: 35px;"
-                      imgclass="bg-surface-400 rounded-full"
-                    />
-                  {/each}
-                </div>
+            <div
+              class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+            >
+              <h1 class="text-nowrap font-bold">
+                Picked ({picked.length}/{currentpicked.length}):
+              </h1>
+              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                {#each picked.slice(0, 16) as user}
+                  <LazyImage
+                    src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={AVATAR_WIDTH}
+                    imgheight={AVATAR_HEIGHT}
+                    containerstyle="height: 35px; width: 35px;"
+                    imgclass="bg-surface-400 rounded-full"
+                  />
+                {/each}
               </div>
-              <div
-                class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-              >
-                <h1 class="text-nowrap font-bold">
-                  Missing ({outstanding.length}/{currentpicked.length}):
-                </h1>
-                <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                  {#each outstanding.slice(0, 16) as user}
-                    <LazyImage
-                      src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
-                      imgwidth={AVATAR_WIDTH}
-                      imgheight={AVATAR_HEIGHT}
-                      containerstyle="height: 35px; width: 35px;"
-                      imgclass="bg-surface-400 rounded-full"
-                    />
-                  {/each}
-                </div>
+            </div>
+
+            <!-- Show users that have not picked yet -->
+            <div
+              class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
+            >
+              <h1 class="text-nowrap font-bold">
+                Missing ({outstanding.length}/{currentpicked.length}):
+              </h1>
+              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+                {#each outstanding.slice(0, 16) as user}
+                  <LazyImage
+                    src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={AVATAR_WIDTH}
+                    imgheight={AVATAR_HEIGHT}
+                    containerstyle="height: 35px; width: 35px;"
+                    imgclass="bg-surface-400 rounded-full"
+                  />
+                {/each}
               </div>
             </div>
           {/if}
