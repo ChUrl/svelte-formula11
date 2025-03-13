@@ -67,7 +67,11 @@
         <span class="font-bold">Your Season Pick</span>
       </svelte:fragment>
       <svelte:fragment slot="content">
-        <div class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit lg:grid-cols-5 2xl:grid-cols-10">
+        <div
+          class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit {data.user
+            ? 'lg:grid-cols-5 2xl:grid-cols-10'
+            : 'lg:grid-cols-2 2xl:grid-cols-2'}"
+        >
           <!-- Only show the stuff if signed in -->
           {#if data.user}
             {@const teamwinners = data.seasonpick
