@@ -244,7 +244,7 @@
     <div class="mt-4 h-10 w-7 lg:w-36"></div>
 
     <!-- Hottake -->
-    <div class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36">
+    <div class="card mt-2 flex h-32 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36">
       <span class="hidden text-nowrap text-sm font-bold lg:block">Hottake</span>
       <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Hottake</span>
     </div>
@@ -361,7 +361,7 @@
 
           <!-- Hottake -->
           <div
-            class="mt-2 h-20 w-full overflow-y-scroll border bg-surface-300 px-1 py-2 leading-3 lg:px-2"
+            class="mt-2 h-32 w-full overflow-y-scroll border bg-surface-300 px-1 py-2 leading-3 lg:px-2"
           >
             <div class="mx-auto w-fit text-xs font-bold lg:text-sm">{hottake?.hottake ?? "?"}</div>
           </div>
