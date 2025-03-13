@@ -193,24 +193,24 @@
 
       try {
         if (create) {
-          if (!username_value || username_value === "") {
+          if (!username_value || username_value.trim() === "") {
             toastStore.trigger(get_error_toast("Please enter a username!"));
             return;
           }
-          if (!firstname_value || firstname_value === "") {
+          if (!firstname_value || firstname_value.trim() === "") {
             toastStore.trigger(get_error_toast("Please enter your first name!"));
             return;
           }
-          if (!password_value || password_value === "") {
+          if (!password_value || password_value.trim() === "") {
             toastStore.trigger(get_error_toast("Please enter a password!"));
             return;
           }
 
           await pb.collection("users").create({
-            username: username_value,
-            firstname: firstname_value,
-            password: password_value,
-            passwordConfirm: password_value, // lol
+            username: username_value.trim(),
+            firstname: firstname_value.trim(),
+            password: password_value.trim(),
+            passwordConfirm: password_value.trim(), // lol
             admin: false,
           });
 
@@ -222,8 +222,9 @@
           }
 
           await pb.collection("users").update(data.user.id, {
-            username: username_value.length > 0 ? username_value : undefined,
-            firstname: firstname_value.length > 0 ? firstname_value : undefined,
+            username: username_value.trim().length > 0 ? username_value.trim() : data.user.username,
+            firstname:
+              firstname_value.trim().length > 0 ? firstname_value.trim() : data.user.firstname,
             avatar: avatar_avif,
           });
           drawerStore.close();
@@ -322,7 +323,14 @@
     <!-- Login Drawer -->
     <div class="flex flex-col gap-2 p-2 pt-3">
       <h4 class="h4 select-none">Enter Username and Password</h4>
-      <Input bind:value={username_value} placeholder="Username" autocomplete="username" required>
+      <Input
+        bind:value={username_value}
+        placeholder="Username"
+        autocomplete="username"
+        minlength={3}
+        maxlength={10}
+        required
+      >
         <UserIcon />
       </Input>
       <Input
