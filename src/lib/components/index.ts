@@ -4,7 +4,6 @@ import LoadingIndicator from "./LoadingIndicator.svelte";
 import Table from "./Table.svelte";
 
 import Button from "./form/Button.svelte";
-import DateTimeInput from "./form/DateTimeInput.svelte";
 import Dropdown from "./form/Dropdown.svelte";
 import Input from "./form/Input.svelte";
 
@@ -36,7 +35,6 @@ export {
 
   // Form
   Button,
-  DateTimeInput,
   Dropdown,
   Input,
 
