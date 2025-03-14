@@ -13,6 +13,8 @@
 
     /** The type of the input element, e.g. "text". */
     type?: string;
+
+    tail?: Snippet;
   }
 
   let {
@@ -20,6 +22,7 @@
     labelwidth = "auto",
     value = $bindable(),
     type = "text",
+    tail = undefined,
     ...restProps
   }: InputProps = $props();
 </script>
@@ -32,4 +35,7 @@
     {@render children()}
   </div>
   <input bind:value class="!outline-none" {type} {...restProps} />
+  {#if tail}
+    {@render tail()}
+  {/if}
 </div>
