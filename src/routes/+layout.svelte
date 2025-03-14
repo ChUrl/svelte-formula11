@@ -276,7 +276,7 @@
             await logout();
             toastStore.trigger(get_info_toast("Check your inbox!"));
             toastStore.trigger(
-              get_warning_toast("Please login again AFTER confirming the email address!"),
+              get_warning_toast("Please login AFTER confirming your e-mail address!", 5000),
             );
           }
 
@@ -481,6 +481,16 @@
       </Input>
       <Input bind:value={email_value} placeholder="E-Mail" autocomplete="email">
         <EMailIcon />
+        {#snippet tail()}
+          {#if $pbUser}
+            <div
+              class="input-group-shim select-none text-nowrap border-l text-neutral-900
+              {$pbUser.verified ? 'bg-tertiary-500' : 'bg-primary-500'}"
+            >
+              {$pbUser.verified ? "Verified" : "Not Verified"}
+            </div>
+          {/if}
+        {/snippet}
       </Input>
       <FileDropzone
         name="avatar"
