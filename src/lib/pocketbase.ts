@@ -23,6 +23,7 @@ const update_user = async (record: RecordModel): Promise<void> => {
 
   pbUser.set({
     id: record.id,
+    verified: record.verified,
     username: record.username,
     firstname: record.firstname,
     email: record.email ?? "",
@@ -47,8 +48,6 @@ pb.authStore.onChange(async () => {
 
   await update_user(pb.authStore.record);
 
-  // TODO: If the user has not chosen an avatar,
-  //       the page keeps displaying the "Login" button (wtf)
   console.log("Updating pbUser...");
   console.dir(get(pbUser), { depth: null });
 }, true);
