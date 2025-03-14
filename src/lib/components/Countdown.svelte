@@ -1,10 +1,11 @@
 <script lang="ts">
   interface CountdownProps {
     date: string;
+    gotext?: string;
     extraclass?: string;
   }
 
-  let { date, extraclass = "" }: CountdownProps = $props();
+  let { date, gotext = "Go Go Go", extraclass = "" }: CountdownProps = $props();
 
   // Set the date we're counting down to
   const countDownDate = new Date(date).getTime();
@@ -35,6 +36,6 @@
   {#if distance > 0}
     {days + "d " + hours + "h " + minutes + "m "}
   {:else}
-    GO GO GO GO
+    {gotext}
   {/if}
 </span>
