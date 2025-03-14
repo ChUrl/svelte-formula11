@@ -17,7 +17,7 @@
   } from "$lib/config";
   import { get_team_banner_template, get_team_logo_template } from "$lib/database";
   import { get_error_toast } from "$lib/toast";
-  import { pb } from "$lib/pocketbase";
+  import { pb, pbUser } from "$lib/pocketbase";
   import { error } from "@sveltejs/kit";
   import type { PageData } from "../../../routes/data/season/teams/$types";
 
@@ -46,7 +46,7 @@
 
   // Reactive state
   let required: boolean = $derived(!team);
-  let disabled: boolean = $derived(!data.admin);
+  let disabled: boolean = $derived(!pbUser?.admin);
   let name_value: string = $state(team?.name ?? "");
   let color_value: string = $state(team?.color ?? "");
   let banner_value: FileList | undefined = $state();

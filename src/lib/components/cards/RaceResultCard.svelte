@@ -12,7 +12,7 @@
   import type { Driver, Race, RaceResult, Substitution } from "$lib/schema";
   import { get_by_value } from "$lib/database";
   import { race_dropdown_options } from "$lib/dropdown";
-  import { pb } from "$lib/pocketbase";
+  import { pb, pbUser } from "$lib/pocketbase";
   import { get_error_toast } from "$lib/toast";
   import type { PageData } from "../../../routes/data/raceresults/$types";
 
@@ -51,7 +51,7 @@
 
   // Reactive state
   let required: boolean = $derived(!result);
-  let disabled: boolean = $derived(!data.admin); // TODO: Datelock (prevent entering future result)
+  let disabled: boolean = $derived(!pbUser?.admin); // TODO: Datelock (prevent entering future result)
   let race_select_value: string = $state(result?.race ?? "");
 
   let currentrace: Race | undefined = $derived(

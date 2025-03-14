@@ -22,6 +22,7 @@
   import { format_date, shortdatetimeformat } from "$lib/date";
   import type { CurrentPickedUser, RacePick } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
+  import { pbUser } from "$lib/pocketbase";
 
   let { data }: { data: PageData } = $props();
 
@@ -76,9 +77,8 @@
         </svelte:fragment>
         <svelte:fragment slot="content">
           <div
-            class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit {data.user
-              ? 'lg:grid-cols-6'
-              : 'lg:grid-cols-4'}"
+            class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit
+            {pbUser ? 'lg:grid-cols-6' : 'lg:grid-cols-4'}"
           >
             <!-- Show information about the next race -->
             <div class="card flex w-full min-w-40 flex-col p-2 shadow lg:max-w-40">
@@ -124,7 +124,7 @@
             </div>
 
             <!-- Only show the userguess if signed in -->
-            {#if data.user}
+            {#if pbUser}
               <!-- PXX pick -->
               <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
                 <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
@@ -309,10 +309,8 @@
         {@const picks = racepicks.filter((pick: RacePick) => pick.user === user.id)}
 
         <div
-          class="card ml-1 mt-2 w-full min-w-12 overflow-hidden py-2 shadow lg:ml-2 lg:min-w-40 {data.user &&
-          data.user.username === user.username
-            ? 'bg-primary-300'
-            : ''}"
+          class="card ml-1 mt-2 w-full min-w-12 overflow-hidden py-2 shadow lg:ml-2 lg:min-w-40
+          {pbUser && pbUser.username === user.username ? 'bg-primary-300' : ''}"
         >
           <!-- Avatar + name display at the top -->
           <div class="mx-auto flex h-10 w-fit">

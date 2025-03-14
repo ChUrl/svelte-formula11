@@ -11,7 +11,7 @@
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { driver_dropdown_options, race_dropdown_options } from "$lib/dropdown";
   import { get_error_toast } from "$lib/toast";
-  import { pb } from "$lib/pocketbase";
+  import { pb, pbUser } from "$lib/pocketbase";
   import type { PageData } from "../../../routes/data/season/substitutions/$types";
 
   interface SubstitutionCardProps {
@@ -43,7 +43,7 @@
 
   // Reactive state
   let required: boolean = $derived(!substitution);
-  let disabled: boolean = $derived(!data.admin);
+  let disabled: boolean = $derived(!pbUser?.admin);
   let active_drivers: Driver[] = $derived((drivers ?? []).filter((d: Driver) => d.active));
   let inactive_drivers: Driver[] = $derived((drivers ?? []).filter((d: Driver) => !d.active));
   let substitute_value: string = $state(substitution?.substitute ?? "");

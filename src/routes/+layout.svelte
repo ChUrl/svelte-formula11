@@ -46,6 +46,7 @@
   import { pb, pbUser, subscribe, unsubscribe } from "$lib/pocketbase";
   import { AVATAR_HEIGHT, AVATAR_WIDTH } from "$lib/config";
   import { error } from "@sveltejs/kit";
+  import { get } from "svelte/store";
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -138,9 +139,9 @@
   storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
   // Reactive state
-  let username_value: string = $state(data.user?.username ?? "");
-  let firstname_value: string = $state(data.user?.firstname ?? "");
-  let email_value: string = $state(data.user?.email ?? "");
+  let username_value: string = $state(pbUser?.username ?? "");
+  let firstname_value: string = $state(pbUser?.firstname ?? "");
+  let email_value: string = $state(pbUser?.email ?? "");
   let password_value: string = $state("");
   let avatar_value: FileList | undefined = $state();
 
@@ -172,11 +173,12 @@
     } catch (error) {
       toastStore.trigger(get_error_toast("" + error));
     }
+
     await invalidate("data:user");
     drawerStore.close();
-    username_value = data.user?.username ?? "";
-    firstname_value = data.user?.firstname ?? "";
-    email_value = data.user?.email ?? "";
+    username_value = pbUser?.username ?? "";
+    firstname_value = pbUser?.firstname ?? "";
+    email_value = pbUser?.email ?? "";
     password_value = "";
   };
 
@@ -254,20 +256,20 @@
 
           await login();
         } else {
-          if (!data.user?.id || data.user.id === "") {
+          if (!pbUser?.id || pbUser.id === "") {
             toastStore.trigger(get_error_toast("Invalid user id!"));
             return;
           }
 
-          if (email_value && email_value.trim() !== data.user.email) {
+          if (email_value && email_value.trim() !== pbUser.email) {
             await pb.collection("users").requestEmailChange(email_value.trim());
             toastStore.trigger(get_info_toast("Check your inbox!"));
           }
 
-          await pb.collection("users").update(data.user.id, {
-            username: username_value.trim().length > 0 ? username_value.trim() : data.user.username,
+          await pb.collection("users").update(pbUser.id, {
+            username: username_value.trim().length > 0 ? username_value.trim() : pbUser.username,
             firstname:
-              firstname_value.trim().length > 0 ? firstname_value.trim() : data.user.firstname,
+              firstname_value.trim().length > 0 ? firstname_value.trim() : pbUser.firstname,
             avatar: avatar_avif,
           });
 
@@ -455,7 +457,7 @@
         </Button>
       </div>
     </div>
-  {:else if $drawerStore.id === "profile_drawer" && data.user}
+  {:else if $drawerStore.id === "profile_drawer" && pbUser}
     <!-- Profile Drawer -->
     <!-- Profile Drawer -->
     <!-- Profile Drawer -->
@@ -537,14 +539,14 @@
             activate={$page.url.pathname.startsWith("/data")}>Data</Button
           >
 
-          {#if !data.user}
+          {#if !pbUser}
             <!-- Login drawer -->
             <Button color="primary" onclick={login_drawer}>Login</Button>
           {:else}
             <!-- Profile drawer -->
             <Avatar
               id="user_avatar_preview"
-              src={data.user.avatar_url}
+              src={pbUser?.avatar_url}
               rounded="rounded-full"
               width="w-10"
               background="bg-primary-50"

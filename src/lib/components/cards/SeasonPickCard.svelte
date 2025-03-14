@@ -14,7 +14,7 @@
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { driver_dropdown_options, team_dropdown_options } from "$lib/dropdown";
   import { get_error_toast } from "$lib/toast";
-  import { pb } from "$lib/pocketbase";
+  import { pb, pbUser } from "$lib/pocketbase";
   import type { PageData } from "../../../routes/seasonpicks/$types";
 
   interface SeasonPickCardProps {
@@ -184,7 +184,7 @@
   // Database actions
   const update_seasonpick = (create?: boolean): (() => Promise<void>) => {
     const handler = async (): Promise<void> => {
-      if (!data.user?.id || data.user.id === "") {
+      if (!pbUser?.id || pbUser.id === "") {
         toastStore.trigger(get_error_toast("Invalid user id!"));
         return;
       }
@@ -229,7 +229,7 @@
       }
 
       const seasonpick_data = {
-        user: data.user.id,
+        user: pbUser.id,
         hottake: hottake_value,
         wdcwinner: wdc_value,
         wccwinner: wcc_value,

@@ -11,7 +11,7 @@
   import { DRIVER_HEADSHOT_HEIGHT, DRIVER_HEADSHOT_WIDTH } from "$lib/config";
   import { driver_dropdown_options } from "$lib/dropdown";
   import { get_error_toast } from "$lib/toast";
-  import { pb } from "$lib/pocketbase";
+  import { pb, pbUser } from "$lib/pocketbase";
   import type { PageData } from "../../../routes/racepicks/$types";
 
   interface RacePickCardProps {
@@ -96,7 +96,7 @@
   // Database actions
   const update_racepick = (create?: boolean): (() => Promise<void>) => {
     const handler = async (): Promise<void> => {
-      if (!data.user?.id || data.user.id === "") {
+      if (!pbUser?.id || pbUser.id === "") {
         toastStore.trigger(get_error_toast("Invalid user id!"));
         return;
       }
@@ -114,7 +114,7 @@
       }
 
       const racepick_data = {
-        user: data.user.id,
+        user: pbUser.id,
         race: data.currentrace.id,
         pxx: pxx_select_value,
         dnf: dnf_select_value,

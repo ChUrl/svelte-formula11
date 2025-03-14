@@ -13,7 +13,7 @@
   import { get_race_pictogram_template } from "$lib/database";
   import { format_date, isodatetimeformat } from "$lib/date";
   import { get_error_toast } from "$lib/toast";
-  import { pb } from "$lib/pocketbase";
+  import { pb, pbUser } from "$lib/pocketbase";
   import { error } from "@sveltejs/kit";
   import type { PageData } from "../../../routes/data/season/races/$types";
 
@@ -50,7 +50,7 @@
 
   // Reactive state
   let required: boolean = $derived(!race);
-  let disabled: boolean = $derived(!data.admin);
+  let disabled: boolean = $derived(!pbUser?.admin);
   let name_value: string = $state(race?.name ?? "");
   let step_value: string = $state(race?.step.toString() ?? "");
   let pxx_value: string = $state(race?.pxx.toString() ?? "");

@@ -1,3 +1,4 @@
+import { get } from "svelte/store";
 import { pb, pbUser } from "./pocketbase";
 import type {
   CurrentPickedUser,

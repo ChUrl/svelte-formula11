@@ -14,7 +14,7 @@
   import { team_dropdown_options } from "$lib/dropdown";
   import { get_driver_headshot_template } from "$lib/database";
   import { get_error_toast } from "$lib/toast";
-  import { pb } from "$lib/pocketbase";
+  import { pb, pbUser } from "$lib/pocketbase";
   import { error } from "@sveltejs/kit";
   import type { PageData } from "../../../routes/data/season/drivers/$types";
 
@@ -43,7 +43,7 @@
 
   // Reactive state
   let required: boolean = $derived(!driver);
-  let disabled: boolean = $derived(!data.admin);
+  let disabled: boolean = $derived(!pbUser?.admin);
   let firstname_input_value: string = $state(driver?.firstname ?? "");
   let lastname_input_value: string = $state(driver?.lastname ?? "");
   let code_input_value: string = $state(driver?.code ?? "");

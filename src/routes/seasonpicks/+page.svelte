@@ -23,6 +23,7 @@
     TEAM_BANNER_WIDTH,
   } from "$lib/config";
   import Countdown from "$lib/components/Countdown.svelte";
+  import { pbUser } from "$lib/pocketbase";
 
   let { data }: { data: PageData } = $props();
 
@@ -69,12 +70,12 @@
       </svelte:fragment>
       <svelte:fragment slot="content">
         <div
-          class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit {data.user
+          class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit {pbUser
             ? 'lg:grid-cols-5 2xl:grid-cols-10'
             : 'lg:grid-cols-2 2xl:grid-cols-2'}"
         >
           <!-- Only show the stuff if signed in -->
-          {#if data.user}
+          {#if pbUser}
             {@const teamwinners = data.seasonpick
               ? data.seasonpick.teamwinners
                   .map((id: string) => get_by_value(drivers, "id", id) as Driver)
@@ -345,8 +346,8 @@
           : [undefined]}
 
         <div
-          class="card ml-1 mt-2 w-full min-w-[9.5rem] overflow-hidden py-2 shadow lg:ml-2 {data.user &&
-          data.user.username === user.username
+          class="card ml-1 mt-2 w-full min-w-[9.5rem] overflow-hidden py-2 shadow lg:ml-2 {pbUser &&
+          pbUser.username === user.username
             ? 'bg-primary-300'
             : ''}"
         >
