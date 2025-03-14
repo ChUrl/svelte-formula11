@@ -14,6 +14,7 @@
     /** The type of the input element, e.g. "text". */
     type?: string;
 
+    /** An optional element at the end of the input group */
     tail?: Snippet;
   }
 
@@ -29,12 +30,12 @@
 
 <div class="input-group input-group-divider grid-cols-[auto_1fr_auto]">
   <div
-    class="input-group-shim select-none text-nowrap border-r text-neutral-900"
+    class="input-group-shim select-none text-nowrap text-neutral-900"
     style="width: {labelwidth};"
   >
     {@render children()}
   </div>
-  <input bind:value class="!outline-none" {type} {...restProps} />
+  <input bind:value class="{tail ? '!border-r' : ''} !border-l" {type} {...restProps} />
   {#if tail}
     {@render tail()}
   {/if}
