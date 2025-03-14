@@ -46,6 +46,8 @@
   import { clear_auth, pb, pbUser, refresh_auth, subscribe, unsubscribe } from "$lib/pocketbase";
   import { AVATAR_HEIGHT, AVATAR_WIDTH } from "$lib/config";
   import { error } from "@sveltejs/kit";
+  import type { User } from "$lib/schema";
+  import type { RecordModel } from "pocketbase";
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -192,6 +194,29 @@
     password_value = "";
   };
 
+  const forgot_password = async (): Promise<void> => {
+    if (!username_value || username_value.trim() === "") {
+      toastStore.trigger(get_error_toast("Please enter a username!"));
+      return;
+    }
+
+    try {
+      const user: RecordModel = await pb
+        .collection("users")
+        .getFirstListItem(`username="${username_value}"`);
+
+      if (!user.email) {
+        toastStore.trigger(get_error_toast("You did not set a recovery e-mail address!"));
+        return;
+      }
+
+      await pb.collection("users").requestPasswordReset(user.email);
+      toastStore.trigger(get_info_toast("Check your inbox!"));
+    } catch (error) {
+      toastStore.trigger(get_error_toast("" + error));
+    }
+  };
+
   const update_profile = (create?: boolean): (() => Promise<void>) => {
     const handler = async (): Promise<void> => {
       // Avatar handling
@@ -244,6 +269,7 @@
             username: username_value.trim(),
             firstname: firstname_value.trim(),
             email: email_value.trim(),
+            emailVisibility: true,
             password: password_value.trim(),
             passwordConfirm: password_value.trim(), // lol
             admin: false,
@@ -448,8 +474,9 @@
       <div
         class="{!registration_mode
           ? ''
-          : 'mt-[-8px] h-0'} w-full overflow-hidden transition-all duration-150 ease-out"
+          : 'mt-[-8px] h-0'} flex w-full gap-2 overflow-hidden transition-all duration-150 ease-out"
       >
+        <Button onclick={forgot_password} color="primary" width="w-full">Forgot Password</Button>
         <Button onclick={login} color="tertiary" width="w-full" shadow>Login</Button>
       </div>
       <div
@@ -484,7 +511,7 @@
         {#snippet tail()}
           {#if $pbUser}
             <div
-              class="input-group-shim select-none text-nowrap border-l text-neutral-900
+              class="input-group-shim select-none text-nowrap text-neutral-900
               {$pbUser.verified ? 'bg-tertiary-500' : 'bg-primary-500'}"
             >
               {$pbUser.verified ? "Verified" : "Not Verified"}
