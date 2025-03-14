@@ -165,7 +165,7 @@
             <div
               class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
             >
-              <h1 class="mb-2 text-nowrap font-bold">Teamwinners:</h1>
+              <h1 class="text-nowrap font-bold">Teamwinners:</h1>
               <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
                 {#each teamwinners.slice(0, 12) as winner}
                   <LazyImage
@@ -183,7 +183,7 @@
             <div
               class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
             >
-              <h1 class="mb-2 text-nowrap font-bold">Podiums:</h1>
+              <h1 class="text-nowrap font-bold">Podiums:</h1>
               <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
                 {#each podiums as podium}
                   <LazyImage
