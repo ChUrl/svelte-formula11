@@ -20,6 +20,7 @@ import type { DropdownOption } from "./form/Dropdown";
 import type { TableColumn } from "./Table";
 
 import ChequeredFlagIcon from "./svg/ChequeredFlagIcon.svelte";
+import EMailIcon from "./svg/EMailIcon.svelte";
 import MenuDrawerIcon from "./svg/MenuDrawerIcon.svelte";
 import NameIcon from "./svg/NameIcon.svelte";
 import PasswordIcon from "./svg/PasswordIcon.svelte";
@@ -54,6 +55,7 @@ export {
 
   // SVG
   ChequeredFlagIcon,
+  EMailIcon,
   NameIcon,
   MenuDrawerIcon,
   PasswordIcon,
