@@ -159,11 +159,12 @@ export const fetch_visibleracepicks = async (
 export const fetch_currentracepick = async (
   fetch: (_: any) => Promise<Response>,
 ): Promise<RacePick | undefined> => {
-  if (!pbUser) return undefined;
+  const user: User | undefined = get(pbUser);
+  if (!user) return undefined;
 
   const currentpickeduser: CurrentPickedUser = await pb
     .collection("currentpickedusers")
-    .getOne(pbUser.id, { fetch: fetch });
+    .getOne(user.id, { fetch: fetch });
 
   if (!currentpickeduser.picked) return undefined;
 
@@ -204,11 +205,12 @@ export const fetch_hottakes = async (fetch: (_: any) => Promise<Response>): Prom
 export const fetch_currentseasonpick = async (
   fetch: (_: any) => Promise<Response>,
 ): Promise<SeasonPick | undefined> => {
-  if (!pbUser) return undefined;
+  const user: User | undefined = get(pbUser);
+  if (!user) return undefined;
 
   const seasonpickeduser: CurrentPickedUser = await pb
     .collection("seasonpickedusers")
-    .getOne(pbUser.id, { fetch: fetch });
+    .getOne(user.id, { fetch: fetch });
 
   if (!seasonpickeduser.picked) return undefined;
 

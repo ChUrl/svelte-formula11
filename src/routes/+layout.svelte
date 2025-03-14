@@ -42,11 +42,10 @@
   } from "@skeletonlabs/skeleton";
   import { computePosition, autoUpdate, offset, shift, flip, arrow } from "@floating-ui/dom";
   import { invalidate } from "$app/navigation";
-  import { get_error_toast, get_info_toast } from "$lib/toast";
-  import { pb, pbUser, subscribe, unsubscribe } from "$lib/pocketbase";
+  import { get_error_toast, get_info_toast, get_warning_toast } from "$lib/toast";
+  import { clear_auth, pb, pbUser, refresh_auth, subscribe, unsubscribe } from "$lib/pocketbase";
   import { AVATAR_HEIGHT, AVATAR_WIDTH } from "$lib/config";
   import { error } from "@sveltejs/kit";
-  import { get } from "svelte/store";
 
   let { data, children }: { data: LayoutData; children: Snippet } = $props();
 
@@ -139,9 +138,9 @@
   storePopup.set({ computePosition, autoUpdate, offset, shift, flip, arrow });
 
   // Reactive state
-  let username_value: string = $state(pbUser?.username ?? "");
-  let firstname_value: string = $state(pbUser?.firstname ?? "");
-  let email_value: string = $state(pbUser?.email ?? "");
+  let username_value: string = $state($pbUser?.username ?? "");
+  let firstname_value: string = $state($pbUser?.firstname ?? "");
+  let email_value: string = $state($pbUser?.email ?? "");
   let password_value: string = $state("");
   let avatar_value: FileList | undefined = $state();
 
@@ -176,14 +175,15 @@
 
     await invalidate("data:user");
     drawerStore.close();
-    username_value = pbUser?.username ?? "";
-    firstname_value = pbUser?.firstname ?? "";
-    email_value = pbUser?.email ?? "";
+    username_value = $pbUser?.username ?? "";
+    firstname_value = $pbUser?.firstname ?? "";
+    email_value = $pbUser?.email ?? "";
     password_value = "";
   };
 
   const logout = async (): Promise<void> => {
-    pb.authStore.clear();
+    clear_auth();
+
     await invalidate("data:user");
     drawerStore.close();
     username_value = "";
@@ -252,29 +252,34 @@
           await pb.collection("users").requestVerification(email_value.trim());
           toastStore.trigger(get_info_toast("Check your inbox!"));
 
-          pb.authStore.clear();
+          // Just in case
+          clear_auth();
 
           await login();
         } else {
-          if (!pbUser?.id || pbUser.id === "") {
+          if (!$pbUser?.id || $pbUser.id === "") {
             toastStore.trigger(get_error_toast("Invalid user id!"));
             return;
           }
 
-          if (email_value && email_value.trim() !== pbUser.email) {
-            await pb.collection("users").requestEmailChange(email_value.trim());
-            toastStore.trigger(get_info_toast("Check your inbox!"));
-          }
-
-          await pb.collection("users").update(pbUser.id, {
-            username: username_value.trim().length > 0 ? username_value.trim() : pbUser.username,
+          await pb.collection("users").update($pbUser.id, {
+            username: username_value.trim().length > 0 ? username_value.trim() : $pbUser.username,
             firstname:
-              firstname_value.trim().length > 0 ? firstname_value.trim() : pbUser.firstname,
+              firstname_value.trim().length > 0 ? firstname_value.trim() : $pbUser.firstname,
             avatar: avatar_avif,
           });
 
-          pb.authStore.clear();
-          toastStore.trigger(get_info_toast("Please login again (sry UwU)!"));
+          if (email_value && email_value.trim() !== $pbUser.email) {
+            await pb.collection("users").requestEmailChange(email_value.trim());
+
+            // When changing the email address, the auth token is invalidated
+            await logout();
+            toastStore.trigger(get_info_toast("Check your inbox!"));
+            toastStore.trigger(
+              get_warning_toast("Please login again AFTER confirming the email address!"),
+            );
+          }
+
           drawerStore.close();
         }
       } catch (error) {
@@ -539,14 +544,14 @@
             activate={$page.url.pathname.startsWith("/data")}>Data</Button
           >
 
-          {#if !pbUser}
+          {#if !$pbUser}
             <!-- Login drawer -->
             <Button color="primary" onclick={login_drawer}>Login</Button>
           {:else}
             <!-- Profile drawer -->
             <Avatar
               id="user_avatar_preview"
-              src={pbUser?.avatar_url}
+              src={$pbUser?.avatar_url}
               rounded="rounded-full"
               width="w-10"
               background="bg-primary-50"

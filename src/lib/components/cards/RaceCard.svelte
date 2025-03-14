@@ -50,7 +50,7 @@
 
   // Reactive state
   let required: boolean = $derived(!race);
-  let disabled: boolean = $derived(!pbUser?.admin);
+  let disabled: boolean = $derived(!$pbUser?.admin);
   let name_value: string = $state(race?.name ?? "");
   let step_value: string = $state(race?.step.toString() ?? "");
   let pxx_value: string = $state(race?.pxx.toString() ?? "");

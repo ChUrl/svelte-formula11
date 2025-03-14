@@ -184,7 +184,7 @@
   // Database actions
   const update_seasonpick = (create?: boolean): (() => Promise<void>) => {
     const handler = async (): Promise<void> => {
-      if (!pbUser?.id || pbUser.id === "") {
+      if (!$pbUser?.id || $pbUser.id === "") {
         toastStore.trigger(get_error_toast("Invalid user id!"));
         return;
       }
@@ -229,7 +229,7 @@
       }
 
       const seasonpick_data = {
-        user: pbUser.id,
+        user: $pbUser.id,
         hottake: hottake_value,
         wdcwinner: wdc_value,
         wccwinner: wcc_value,

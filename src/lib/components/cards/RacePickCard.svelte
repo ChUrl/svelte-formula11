@@ -96,7 +96,7 @@
   // Database actions
   const update_racepick = (create?: boolean): (() => Promise<void>) => {
     const handler = async (): Promise<void> => {
-      if (!pbUser?.id || pbUser.id === "") {
+      if (!$pbUser?.id || $pbUser.id === "") {
         toastStore.trigger(get_error_toast("Invalid user id!"));
         return;
       }
@@ -114,7 +114,7 @@
       }
 
       const racepick_data = {
-        user: pbUser.id,
+        user: $pbUser.id,
         race: data.currentrace.id,
         pxx: pxx_select_value,
         dnf: dnf_select_value,

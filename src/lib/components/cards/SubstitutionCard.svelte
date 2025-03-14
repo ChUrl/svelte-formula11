@@ -43,7 +43,7 @@
 
   // Reactive state
   let required: boolean = $derived(!substitution);
-  let disabled: boolean = $derived(!pbUser?.admin);
+  let disabled: boolean = $derived(!$pbUser?.admin);
   let active_drivers: Driver[] = $derived((drivers ?? []).filter((d: Driver) => d.active));
   let inactive_drivers: Driver[] = $derived((drivers ?? []).filter((d: Driver) => !d.active));
   let substitute_value: string = $state(substitution?.substitute ?? "");

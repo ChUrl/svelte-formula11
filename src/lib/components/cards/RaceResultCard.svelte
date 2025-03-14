@@ -51,7 +51,7 @@
 
   // Reactive state
   let required: boolean = $derived(!result);
-  let disabled: boolean = $derived(!pbUser?.admin); // TODO: Datelock (prevent entering future result)
+  let disabled: boolean = $derived(!$pbUser?.admin); // TODO: Datelock (prevent entering future result)
   let race_select_value: string = $state(result?.race ?? "");
 
   let currentrace: Race | undefined = $derived(

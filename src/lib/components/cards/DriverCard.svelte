@@ -43,7 +43,7 @@
 
   // Reactive state
   let required: boolean = $derived(!driver);
-  let disabled: boolean = $derived(!pbUser?.admin);
+  let disabled: boolean = $derived(!$pbUser?.admin);
   let firstname_input_value: string = $state(driver?.firstname ?? "");
   let lastname_input_value: string = $state(driver?.lastname ?? "");
   let code_input_value: string = $state(driver?.code ?? "");

@@ -7,7 +7,7 @@
     type ModalStore,
   } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
-  import type { Driver, Hottake, SeasonPick, SeasonPickedUser } from "$lib/schema";
+  import type { Driver, Hottake, SeasonPick, SeasonPickedUser, User } from "$lib/schema";
   import { ChequeredFlagIcon, LazyImage } from "$lib/components";
   import {
     get_by_value,
@@ -75,7 +75,7 @@
             : 'lg:grid-cols-2 2xl:grid-cols-2'}"
         >
           <!-- Only show the stuff if signed in -->
-          {#if pbUser}
+          {#if $pbUser}
             {@const teamwinners = data.seasonpick
               ? data.seasonpick.teamwinners
                   .map((id: string) => get_by_value(drivers, "id", id) as Driver)
@@ -346,10 +346,8 @@
           : [undefined]}
 
         <div
-          class="card ml-1 mt-2 w-full min-w-[9.5rem] overflow-hidden py-2 shadow lg:ml-2 {pbUser &&
-          pbUser.username === user.username
-            ? 'bg-primary-300'
-            : ''}"
+          class="card ml-1 mt-2 w-full min-w-[9.5rem] overflow-hidden py-2 shadow lg:ml-2
+          {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
         >
           <!-- Avatar + name display at the top -->
           <div class="mx-auto flex h-10 w-fit">

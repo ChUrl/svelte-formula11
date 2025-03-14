@@ -46,7 +46,7 @@
 
   // Reactive state
   let required: boolean = $derived(!team);
-  let disabled: boolean = $derived(!pbUser?.admin);
+  let disabled: boolean = $derived(!$pbUser?.admin);
   let name_value: string = $state(team?.name ?? "");
   let color_value: string = $state(team?.color ?? "");
   let banner_value: FileList | undefined = $state();
