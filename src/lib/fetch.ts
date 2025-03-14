@@ -140,7 +140,7 @@ export const fetch_currentrace = async (
 };
 
 /**
- * Fetch all [RacePicks] from the database
+ * Fetch all visible [RacePicks] from the database
  */
 export const fetch_visibleracepicks = async (
   fetch: (_: any) => Promise<Response>,
@@ -174,9 +174,9 @@ export const fetch_currentracepick = async (
 };
 
 /**
- * Fetch all [SeasonPicks] from the database
+ * Fetch all visible [SeasonPicks] from the database
  */
-export const fetch_seasonpicks = async (
+export const fetch_visibleseasonpicks = async (
   fetch: (_: any) => Promise<Response>,
 ): Promise<SeasonPick[]> => {
   const seasonpicks: SeasonPick[] = await pb
