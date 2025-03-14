@@ -18,6 +18,9 @@
   <!-- Prefetch data specified in "load" functions on link hover -->
   <body data-theme="formula11Theme" data-sveltekit-preload-data="hover">
     <!-- SvelteKit inserts the body contents here -->
-    <div style="display: contents; user-select: none; -moz-user-select: none">%sveltekit.body%</div>
+    <!-- TODO: The fucking user-select: none doesn't work in firefox -->
+    <div style="display: contents; user-select: none; -moz-user-select: -moz-none">
+      %sveltekit.body%
+    </div>
   </body>
 </html>

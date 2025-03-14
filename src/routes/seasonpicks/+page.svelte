@@ -22,6 +22,7 @@
     TEAM_BANNER_HEIGHT,
     TEAM_BANNER_WIDTH,
   } from "$lib/config";
+  import Countdown from "$lib/components/Countdown.svelte";
 
   let { data }: { data: PageData } = $props();
 
@@ -481,3 +482,13 @@
     {/await}
   </div>
 </div>
+
+{#await Promise.all([data.seasonpicks, data.currentrace]) then [seasonpicks, currentrace]}
+  {#if seasonpicks.length <= 0 && currentrace}
+    <div class="card mx-auto w-fit p-2 shadow">
+      <span class="mr-2 text-xl font-medium">Season pick modification will be locked in</span>
+      <Countdown date={currentrace.qualidate} gotext="0d 0h 0m" extraclass="font-bold text-xl" />
+      <span class="ml-2 text-xl font-medium">.</span>
+    </div>
+  {/if}
+{/await}

@@ -5,6 +5,7 @@ import {
   fetch_seasonpickedusers,
   fetch_visibleseasonpicks,
   fetch_teams,
+  fetch_currentrace,
 } from "$lib/fetch";
 import type { PageLoad } from "../$types";
 
@@ -17,6 +18,7 @@ export const load: PageLoad = async ({ fetch, depends }) => {
     seasonpicks: fetch_visibleseasonpicks(fetch),
     hottakes: fetch_hottakes(fetch),
     seasonpickedusers: fetch_seasonpickedusers(fetch),
+    currentrace: fetch_currentrace(fetch), // Used for countdown
 
     seasonpick: await fetch_currentseasonpick(fetch),
   };
