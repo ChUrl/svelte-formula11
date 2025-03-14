@@ -11,6 +11,7 @@ export interface Graphic {
 
 export interface User {
   id: string;
+  verified: boolean;
   username: string;
   firstname: string;
   email?: string;
