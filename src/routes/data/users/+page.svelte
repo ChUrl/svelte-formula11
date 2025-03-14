@@ -7,12 +7,13 @@
   let { data }: { data: PageData } = $props();
 
   const users_columns: TableColumn[] = [
-    {
-      data_value_name: "username",
-      label: "Username",
-      valuefun: async (value: string): Promise<string> =>
-        `<span class='badge variant-filled-surface'>${value}</span>`,
-    },
+    // Don't display the username for login "security" (lol)
+    // {
+    //   data_value_name: "username",
+    //   label: "Username",
+    //   valuefun: async (value: string): Promise<string> =>
+    //     `<span class='badge variant-filled-surface'>${value}</span>`,
+    // },
     {
       data_value_name: "firstname",
       label: "First Name",
