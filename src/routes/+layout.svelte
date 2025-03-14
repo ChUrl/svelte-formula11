@@ -18,6 +18,7 @@
     RacePickCard,
     RaceResultCard,
     SeasonPickCard,
+    EMailIcon,
   } from "$lib/components";
   import { get_avatar_preview_event_handler } from "$lib/image";
   import {
@@ -37,11 +38,12 @@
     type ModalComponent,
     type ToastStore,
     getToastStore,
+    SlideToggle,
   } from "@skeletonlabs/skeleton";
   import { computePosition, autoUpdate, offset, shift, flip, arrow } from "@floating-ui/dom";
   import { invalidate } from "$app/navigation";
-  import { get_error_toast } from "$lib/toast";
-  import { pb, subscribe, unsubscribe } from "$lib/pocketbase";
+  import { get_error_toast, get_info_toast } from "$lib/toast";
+  import { pb, pbUser, subscribe, unsubscribe } from "$lib/pocketbase";
   import { AVATAR_HEIGHT, AVATAR_WIDTH } from "$lib/config";
   import { error } from "@sveltejs/kit";
 
@@ -138,11 +140,33 @@
   // Reactive state
   let username_value: string = $state(data.user?.username ?? "");
   let firstname_value: string = $state(data.user?.firstname ?? "");
+  let email_value: string = $state(data.user?.email ?? "");
   let password_value: string = $state("");
   let avatar_value: FileList | undefined = $state();
 
+  let registration_mode: boolean = $state(false);
+
+  // Add "Enter" event listeners for login/register text inputs
+  const enter_handler = (event: KeyboardEvent) => {
+    if (event.key === "Enter") {
+      // Cancel the default action, if needed
+      event.preventDefault();
+
+      registration_mode ? update_profile(true) : login();
+    }
+  };
+
   // Database actions
   const login = async (): Promise<void> => {
+    if (!username_value || username_value.trim() === "") {
+      toastStore.trigger(get_error_toast("Please enter your username!"));
+      return;
+    }
+    if (!password_value || password_value.trim() === "") {
+      toastStore.trigger(get_error_toast("Please enter your password!"));
+      return;
+    }
+
     try {
       await pb.collection("users").authWithPassword(username_value, password_value);
     } catch (error) {
@@ -150,6 +174,9 @@
     }
     await invalidate("data:user");
     drawerStore.close();
+    username_value = data.user?.username ?? "";
+    firstname_value = data.user?.firstname ?? "";
+    email_value = data.user?.email ?? "";
     password_value = "";
   };
 
@@ -159,6 +186,7 @@
     drawerStore.close();
     username_value = "";
     firstname_value = "";
+    email_value = "";
     password_value = "";
   };
 
@@ -201,6 +229,10 @@
             toastStore.trigger(get_error_toast("Please enter your first name!"));
             return;
           }
+          if (!email_value || email_value.trim() === "") {
+            toastStore.trigger(get_error_toast("Please enter your e-mail address!"));
+            return;
+          }
           if (!password_value || password_value.trim() === "") {
             toastStore.trigger(get_error_toast("Please enter a password!"));
             return;
@@ -209,10 +241,16 @@
           await pb.collection("users").create({
             username: username_value.trim(),
             firstname: firstname_value.trim(),
+            email: email_value.trim(),
             password: password_value.trim(),
             passwordConfirm: password_value.trim(), // lol
             admin: false,
           });
+
+          await pb.collection("users").requestVerification(email_value.trim());
+          toastStore.trigger(get_info_toast("Check your inbox!"));
+
+          pb.authStore.clear();
 
           await login();
         } else {
@@ -221,12 +259,20 @@
             return;
           }
 
+          if (email_value && email_value.trim() !== data.user.email) {
+            await pb.collection("users").requestEmailChange(email_value.trim());
+            toastStore.trigger(get_info_toast("Check your inbox!"));
+          }
+
           await pb.collection("users").update(data.user.id, {
             username: username_value.trim().length > 0 ? username_value.trim() : data.user.username,
             firstname:
               firstname_value.trim().length > 0 ? firstname_value.trim() : data.user.firstname,
             avatar: avatar_avif,
           });
+
+          pb.authStore.clear();
+          toastStore.trigger(get_info_toast("Please login again (sry UwU)!"));
           drawerStore.close();
         }
       } catch (error) {
@@ -322,7 +368,22 @@
     <!-- Login Drawer -->
     <!-- Login Drawer -->
     <div class="flex flex-col gap-2 p-2 pt-3">
-      <h4 class="h4 select-none">Enter Username and Password</h4>
+      <div class="flex">
+        <h4 class="h4 select-none text-nowrap align-middle font-bold" style="line-height: 32px;">
+          Login or Register
+        </h4>
+        <div class="w-full"></div>
+        <div class="flex gap-2">
+          <span class="align-middle" style="line-height: 32px;">Login</span>
+          <SlideToggle
+            name="registrationmode"
+            background="bg-tertiary-500"
+            active="bg-tertiary-500"
+            bind:checked={registration_mode}
+          />
+          <span class="align-middle" style="line-height: 32px;">Register</span>
+        </div>
+      </div>
       <Input
         bind:value={username_value}
         placeholder="Username"
@@ -330,28 +391,68 @@
         minlength={3}
         maxlength={10}
         required
+        onkeypress={enter_handler}
       >
         <UserIcon />
       </Input>
-      <Input
-        bind:value={firstname_value}
-        placeholder="First Name (leave empty for login)"
-        autocomplete="off"
+      <div
+        class="{registration_mode
+          ? ''
+          : 'mt-[-8px] h-0'} overflow-hidden transition-all duration-150 ease-out"
       >
-        <NameIcon />
-      </Input>
+        <Input
+          bind:value={firstname_value}
+          placeholder="First Name"
+          autocomplete="off"
+          tabindex={registration_mode ? 0 : -1}
+          onkeypress={enter_handler}
+        >
+          <NameIcon />
+        </Input>
+      </div>
+      <div
+        class="{registration_mode
+          ? ''
+          : 'mt-[-8px] h-0'} overflow-hidden transition-all duration-150 ease-out"
+      >
+        <Input
+          id="login_email"
+          type="email"
+          bind:value={email_value}
+          placeholder="E-Mail"
+          autocomplete="email"
+          tabindex={registration_mode ? 0 : -1}
+          onkeypress={enter_handler}
+        >
+          <EMailIcon />
+        </Input>
+      </div>
       <Input
+        id="login_password"
         bind:value={password_value}
         type="password"
         placeholder="Password"
         autocomplete="off"
         required
+        onkeypress={enter_handler}
       >
         <PasswordIcon />
       </Input>
-      <div class="flex justify-end gap-2">
-        <Button onclick={login} color="tertiary" shadow>Login</Button>
-        <Button onclick={update_profile(true)} color="tertiary" shadow>Register</Button>
+      <div
+        class="{!registration_mode
+          ? ''
+          : 'mt-[-8px] h-0'} w-full overflow-hidden transition-all duration-150 ease-out"
+      >
+        <Button onclick={login} color="tertiary" width="w-full" shadow>Login</Button>
+      </div>
+      <div
+        class="{registration_mode
+          ? ''
+          : 'mt-[-8px] h-0'} w-full overflow-hidden transition-all duration-150 ease-out"
+      >
+        <Button onclick={update_profile(true)} color="tertiary" width="w-full" shadow>
+          Register
+        </Button>
       </div>
     </div>
   {:else if $drawerStore.id === "profile_drawer" && data.user}
@@ -359,7 +460,7 @@
     <!-- Profile Drawer -->
     <!-- Profile Drawer -->
     <div class="flex flex-col gap-2 p-2 pt-3">
-      <h4 class="h4 select-none">Edit Profile</h4>
+      <h4 class="h4 select-none align-middle font-bold" style="line-height: 32px;">Edit Profile</h4>
       <Input
         bind:value={username_value}
         maxlength={10}
@@ -371,6 +472,9 @@
       <Input bind:value={firstname_value} placeholder="First Name" autocomplete="off">
         <NameIcon />
       </Input>
+      <Input bind:value={email_value} placeholder="E-Mail" autocomplete="email">
+        <EMailIcon />
+      </Input>
       <FileDropzone
         name="avatar"
         bind:files={avatar_value}
@@ -381,8 +485,10 @@
         </svelte:fragment>
       </FileDropzone>
       <div class="flex justify-end gap-2">
-        <Button onclick={update_profile()} color="secondary" shadow>Save Changes</Button>
-        <Button onclick={logout} color="primary" shadow>Logout</Button>
+        <Button onclick={update_profile()} color="secondary" width="w-full" shadow>
+          Save Changes
+        </Button>
+        <Button onclick={logout} color="primary" width="w-full" shadow>Logout</Button>
       </div>
     </div>
   {/if}
