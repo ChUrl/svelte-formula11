@@ -440,7 +440,7 @@
                     <div class="mx-auto w-fit text-xs lg:text-sm">
                       <div
                         class="flex gap-1"
-                        style="opacity: {pick.teamwinners.includes(driver.id) ? 0.15 : 1.0};"
+                        style="opacity: {pick.teamwinners.includes(driver.id) ? 0.1 : 1.0};"
                       >
                         <span
                           class="badge h-5 w-5"
@@ -469,7 +469,7 @@
                     <div class="mx-auto w-fit text-xs lg:text-sm">
                       <div
                         class="flex gap-1"
-                        style="opacity: {pick.podiums.includes(driver.id) ? 0.15 : 1.0};"
+                        style="opacity: {pick.podiums.includes(driver.id) ? 0.1 : 1.0};"
                       >
                         <span
                           class="badge h-5 w-5"
