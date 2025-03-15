@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import type { Snippet } from "svelte";
   import { popup, type PopupSettings } from "@skeletonlabs/skeleton";
 
   const is_at_path = (path: string): boolean => {
-    const pathname: string = $page.url.pathname;
+    const pathname: string = page.url.pathname;
     // return pathname === path;
     return pathname.endsWith(path);
   };
