@@ -2,7 +2,7 @@
   import "../app.css";
   import { onDestroy, onMount, type Snippet } from "svelte";
   import type { LayoutData } from "./$types";
-  import { page } from "$app/stores";
+  import { page } from "$app/state";
   import {
     Button,
     MenuDrawerIcon,
@@ -578,7 +578,7 @@
           <Button
             color="primary"
             onclick={data_drawer}
-            activate={$page.url.pathname.startsWith("/data")}>Data</Button
+            activate={page.url.pathname.startsWith("/data")}>Data</Button
           >
 
           {#if !$pbUser}
