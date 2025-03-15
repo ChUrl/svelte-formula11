@@ -314,7 +314,7 @@
 
         <!-- Podiums -->
         <div
-          class="card mt-2 flex h-[500px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
+          class="card mt-2 flex h-64 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block">Podiums</span>
           <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Podiums</span>
@@ -334,20 +334,13 @@
         {@const wccwinner = pick ? get_by_value(teams, "id", pick.wccwinner) : undefined}
         {@const mostovertakes = pick ? get_by_value(drivers, "id", pick.mostovertakes) : undefined}
         {@const mostdnfs = pick ? get_by_value(drivers, "id", pick.mostdnfs) : undefined}
-        {@const teamwinners = pick
-          ? pick.teamwinners
-              .map((id: string) => get_by_value(drivers, "id", id) as Driver)
-              .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
-          : [undefined]}
-        {@const podiums = pick
-          ? pick.podiums
-              .map((id: string) => get_by_value(drivers, "id", id) as Driver)
-              .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
-              .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
-          : [undefined]}
+        {@const drivers_sorted = drivers
+          .filter((driver: Driver) => driver.active)
+          .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
+          .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))}
 
         <div
-          class="card ml-1 mt-2 w-full min-w-32 overflow-hidden py-2 shadow lg:ml-2
+          class="card ml-1 mt-2 w-full min-w-36 overflow-hidden py-2 shadow lg:ml-2
           {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
         >
           <!-- Avatar + name display at the top -->
@@ -440,37 +433,57 @@
             <div
               class="mt-2 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2"
             >
-              <div class="flex flex-col gap-1">
-                {#each teamwinners as teamwinner}
-                  {@const color: string = get_by_value(teams, "id", teamwinner?.team ?? "")?.color ?? ""}
-                  <div class="mx-auto w-fit text-xs lg:text-sm">
-                    <div class="flex gap-2">
-                      <span class="badge h-5 w-5" style="color: {color}; background-color: {color};"
-                      ></span>
-                      <span class="w-7">{teamwinner?.code}</span>
+              {#if pick && pick.teamwinners}
+                <div class="grid grid-cols-2 gap-1">
+                  {#each drivers_sorted as driver}
+                    {@const color: string = get_by_value(teams, "id", driver?.team ?? "")?.color ?? ""}
+                    <div class="mx-auto w-fit text-xs lg:text-sm">
+                      <div
+                        class="flex gap-1"
+                        style="opacity: {pick.teamwinners.includes(driver.id) ? 0.15 : 1.0};"
+                      >
+                        <span
+                          class="badge h-5 w-5"
+                          style="color: {color}; background-color: {color};"
+                        >
+                        </span>
+                        <span class="w-7 align-middle" style="line-height: 20px;">
+                          {driver?.code}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                {/each}
-              </div>
+                  {/each}
+                </div>
+              {/if}
             </div>
 
             <!-- Podiums -->
             <!-- TODO: Replace all style tags throughout the page with custom classes like height here -->
             <div
-              class="mt-2 h-[500px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2"
+              class="mt-2 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2"
             >
-              <div class="flex flex-col gap-1">
-                {#each podiums as podium}
-                  {@const color: string = get_by_value(teams, "id", podium?.team ?? "")?.color ?? ""}
-                  <div class="mx-auto w-fit text-xs lg:text-sm">
-                    <div class="flex gap-2">
-                      <span class="badge h-5 w-5" style="color: {color}; background-color: {color};"
-                      ></span>
-                      <span class="w-7">{podium?.code}</span>
+              {#if pick && pick.podiums}
+                <div class="grid grid-cols-2 gap-1">
+                  {#each drivers_sorted as driver}
+                    {@const color: string = get_by_value(teams, "id", driver?.team ?? "")?.color ?? ""}
+                    <div class="mx-auto w-fit text-xs lg:text-sm">
+                      <div
+                        class="flex gap-1"
+                        style="opacity: {pick.podiums.includes(driver.id) ? 0.15 : 1.0};"
+                      >
+                        <span
+                          class="badge h-5 w-5"
+                          style="color: {color}; background-color: {color};"
+                        >
+                        </span>
+                        <span class="w-7 align-middle" style="line-height: 20px;">
+                          {driver?.code}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                {/each}
-              </div>
+                  {/each}
+                </div>
+              {/if}
             </div>
           {/if}
         </div>
