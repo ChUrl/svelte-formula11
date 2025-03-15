@@ -305,7 +305,7 @@
 
         <!-- Teamwinners -->
         <div
-          class="card mt-2 flex h-[360px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow sm:h-[220px] md:h-[150px] lg:w-36"
+          class="card mt-2 flex h-64 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block">Team-Battle<br />Winners</span
           >
@@ -314,7 +314,7 @@
 
         <!-- Podiums -->
         <div
-          class="card mt-2 flex h-[360px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow md:h-[220px] lg:w-36 xl:h-[150px]"
+          class="card mt-2 flex h-[500px] w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
           <span class="hidden text-nowrap text-sm font-bold lg:block">Podiums</span>
           <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Podiums</span>
@@ -343,10 +343,11 @@
           ? pick.podiums
               .map((id: string) => get_by_value(drivers, "id", id) as Driver)
               .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
+              .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
           : [undefined]}
 
         <div
-          class="card ml-1 mt-2 w-full min-w-[9.5rem] overflow-hidden py-2 shadow lg:ml-2
+          class="card ml-1 mt-2 w-full min-w-32 overflow-hidden py-2 shadow lg:ml-2
           {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
         >
           <!-- Avatar + name display at the top -->
@@ -437,20 +438,18 @@
 
             <!-- Teamwinners -->
             <div
-              class="mt-2 h-[360px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 sm:h-[220px] md:h-[150px] lg:px-2"
+              class="mt-2 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2"
             >
-              <div
-                class="grid gap-2"
-                style="grid-template-columns: repeat(auto-fill, minmax(62px, 1fr)); grid-template-rows: repeat(auto, 62px);"
-              >
+              <div class="flex flex-col gap-1">
                 {#each teamwinners as teamwinner}
-                  <LazyImage
-                    src={teamwinner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                    imgwidth={DRIVER_HEADSHOT_HEIGHT}
-                    imgheight={DRIVER_HEADSHOT_WIDTH}
-                    containerstyle="height: 62px;"
-                    imgclass="bg-surface-400 rounded-md"
-                  />
+                  {@const color: string = get_by_value(teams, "id", teamwinner?.team ?? "")?.color ?? ""}
+                  <div class="mx-auto w-fit text-xs lg:text-sm">
+                    <div class="flex gap-2">
+                      <span class="badge h-5 w-5" style="color: {color}; background-color: {color};"
+                      ></span>
+                      <span class="w-7">{teamwinner?.code}</span>
+                    </div>
+                  </div>
                 {/each}
               </div>
             </div>
@@ -458,20 +457,18 @@
             <!-- Podiums -->
             <!-- TODO: Replace all style tags throughout the page with custom classes like height here -->
             <div
-              class="mt-2 h-[360px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 md:h-[220px] lg:px-2 xl:h-[150px]"
+              class="mt-2 h-[500px] w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2"
             >
-              <div
-                class="mx-auto grid gap-2"
-                style="grid-template-columns: repeat(auto-fill, minmax(62px, 1fr));"
-              >
+              <div class="flex flex-col gap-1">
                 {#each podiums as podium}
-                  <LazyImage
-                    src={podium?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                    imgwidth={DRIVER_HEADSHOT_HEIGHT}
-                    imgheight={DRIVER_HEADSHOT_WIDTH}
-                    containerstyle="height: 62px; width: 62px;"
-                    imgclass="bg-surface-400 rounded-md"
-                  />
+                  {@const color: string = get_by_value(teams, "id", podium?.team ?? "")?.color ?? ""}
+                  <div class="mx-auto w-fit text-xs lg:text-sm">
+                    <div class="flex gap-2">
+                      <span class="badge h-5 w-5" style="color: {color}; background-color: {color};"
+                      ></span>
+                      <span class="w-7">{podium?.code}</span>
+                    </div>
+                  </div>
                 {/each}
               </div>
             </div>
