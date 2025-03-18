@@ -68,13 +68,13 @@
       ? data.seasonpick.teamwinners
           .map((id: string) => get_by_value(drivers, "id", id) as Driver)
           .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
-      : [undefined]}
+      : undefined}
     {@const podiums = data.seasonpick
       ? data.seasonpick.podiums
           .map((id: string) => get_by_value(drivers, "id", id) as Driver)
           .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
           .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
-      : [undefined]}
+      : undefined}
 
     <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-2" width="w-full">
       <AccordionItem>
@@ -164,15 +164,18 @@
             <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="text-nowrap font-bold">Teamwinners:</h1>
               <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
-                {#each teamwinners as winner}
-                  <LazyImage
-                    src={winner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                    imgwidth={AVATAR_WIDTH}
-                    imgheight={AVATAR_HEIGHT}
-                    containerstyle="height: 35px; width: 35px;"
-                    imgclass="bg-surface-400 rounded-full"
-                  />
-                {/each}
+                {#if teamwinners}
+                  {#each teamwinners as winner}
+                    <LazyImage
+                      src={winner.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                      tooltip={winner ? `${winner.firstname} ${winner.lastname}` : undefined}
+                    />
+                  {/each}
+                {/if}
               </div>
             </div>
 
@@ -180,15 +183,18 @@
             <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="text-nowrap font-bold">Podiums:</h1>
               <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
-                {#each podiums as podium}
-                  <LazyImage
-                    src={podium?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                    imgwidth={AVATAR_WIDTH}
-                    imgheight={AVATAR_HEIGHT}
-                    containerstyle="height: 35px; width: 35px;"
-                    imgclass="bg-surface-400 rounded-full"
-                  />
-                {/each}
+                {#if podiums}
+                  {#each podiums as podium}
+                    <LazyImage
+                      src={podium.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                      imgwidth={AVATAR_WIDTH}
+                      imgheight={AVATAR_HEIGHT}
+                      containerstyle="height: 35px; width: 35px;"
+                      imgclass="bg-surface-400 rounded-full"
+                      tooltip={podium ? `${podium.firstname} ${podium.lastname}` : undefined}
+                    />
+                  {/each}
+                {/if}
               </div>
             </div>
 
@@ -205,6 +211,7 @@
                     imgheight={AVATAR_HEIGHT}
                     containerstyle="height: 35px; width: 35px;"
                     imgclass="bg-surface-400 rounded-full"
+                    tooltip={user.firstname}
                   />
                 {/each}
               </div>
@@ -223,6 +230,7 @@
                     imgheight={AVATAR_HEIGHT}
                     containerstyle="height: 35px; width: 35px;"
                     imgclass="bg-surface-400 rounded-full"
+                    tooltip={user.firstname}
                   />
                 {/each}
               </div>
@@ -338,6 +346,7 @@
               imgheight={AVATAR_HEIGHT}
               containerstyle="height: 40px; width: 40px;"
               imgclass="bg-surface-400 rounded-full"
+              tooltip={user.firstname}
             />
             <div
               style="height: 40px; line-height: 40px;"
@@ -366,6 +375,7 @@
                   imgheight={DRIVER_HEADSHOT_WIDTH}
                   containerstyle="height: 62px;"
                   imgclass="bg-surface-400 rounded-md"
+                  tooltip={wdcwinner ? `${wdcwinner.firstname} ${wdcwinner.lastname}` : undefined}
                 />
               </div>
             </div>
@@ -379,6 +389,7 @@
                   imgheight={TEAM_BANNER_HEIGHT}
                   containerstyle="height: 62px;"
                   imgclass="bg-surface-400 rounded-md"
+                  tooltip={wccwinner?.name}
                 />
               </div>
             </div>
@@ -392,6 +403,9 @@
                   imgheight={DRIVER_HEADSHOT_WIDTH}
                   containerstyle="height: 62px;"
                   imgclass="bg-surface-400 rounded-md"
+                  tooltip={mostovertakes
+                    ? `${mostovertakes.firstname} ${mostovertakes.lastname}`
+                    : undefined}
                 />
               </div>
             </div>
@@ -405,6 +419,7 @@
                   imgheight={DRIVER_HEADSHOT_WIDTH}
                   containerstyle="height: 62px;"
                   imgclass="bg-surface-400 rounded-md"
+                  tooltip={mostdnfs ? `${mostdnfs.firstname} ${mostdnfs.lastname}` : undefined}
                 />
               </div>
             </div>
