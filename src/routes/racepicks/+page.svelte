@@ -67,7 +67,8 @@
   <title>Formula 11 - Race Picks</title>
 </svelte:head>
 
-{#if data.currentrace}
+<!-- Only show the userguess if signed in and we have a next race -->
+{#if $pbUser && data.currentrace}
   {#await Promise.all( [data.drivers, data.currentpickedusers, pickedusers, outstandingusers], ) then [drivers, currentpicked, picked, outstanding]}
     <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-0" width="w-full">
       <AccordionItem>
@@ -76,10 +77,7 @@
           <span class="font-bold">Next Race Guess</span>
         </svelte:fragment>
         <svelte:fragment slot="content">
-          <div
-            class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit
-            {pbUser ? 'lg:grid-cols-6' : 'lg:grid-cols-4'}"
-          >
+          <div class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit lg:grid-cols-6">
             <!-- Show information about the next race -->
             <div class="card flex w-full min-w-40 flex-col p-2 shadow lg:max-w-40">
               <span class="font-bold">
@@ -123,38 +121,35 @@
               />
             </div>
 
-            <!-- Only show the userguess if signed in -->
-            {#if pbUser}
-              <!-- PXX pick -->
-              <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
-                <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
-                <LazyImage
-                  src={get_by_value(drivers, "id", data.racepick?.pxx ?? "")?.headshot_url ??
-                    get_driver_headshot_template(data.graphics)}
-                  imgwidth={DRIVER_HEADSHOT_WIDTH}
-                  imgheight={DRIVER_HEADSHOT_HEIGHT}
-                  containerstyle="height: 115px; margin: auto;"
-                  imgclass="bg-transparent cursor-pointer"
-                  hoverzoom
-                  onclick={racepick_handler}
-                />
-              </div>
+            <!-- PXX pick -->
+            <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+              <h1 class="mb-2 text-nowrap font-bold">Your P{data.currentrace.pxx} Pick:</h1>
+              <LazyImage
+                src={get_by_value(drivers, "id", data.racepick?.pxx ?? "")?.headshot_url ??
+                  get_driver_headshot_template(data.graphics)}
+                imgwidth={DRIVER_HEADSHOT_WIDTH}
+                imgheight={DRIVER_HEADSHOT_HEIGHT}
+                containerstyle="height: 115px; margin: auto;"
+                imgclass="bg-transparent cursor-pointer"
+                hoverzoom
+                onclick={racepick_handler}
+              />
+            </div>
 
-              <!-- DNF pick -->
-              <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
-                <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
-                <LazyImage
-                  src={get_by_value(drivers, "id", data.racepick?.dnf ?? "")?.headshot_url ??
-                    get_driver_headshot_template(data.graphics)}
-                  imgwidth={DRIVER_HEADSHOT_WIDTH}
-                  imgheight={DRIVER_HEADSHOT_HEIGHT}
-                  containerstyle="height: 115px; margin: auto;"
-                  imgclass="bg-transparent cursor-pointer"
-                  hoverzoom
-                  onclick={racepick_handler}
-                />
-              </div>
-            {/if}
+            <!-- DNF pick -->
+            <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+              <h1 class="mb-2 text-nowrap font-bold">Your DNF Pick:</h1>
+              <LazyImage
+                src={get_by_value(drivers, "id", data.racepick?.dnf ?? "")?.headshot_url ??
+                  get_driver_headshot_template(data.graphics)}
+                imgwidth={DRIVER_HEADSHOT_WIDTH}
+                imgheight={DRIVER_HEADSHOT_HEIGHT}
+                containerstyle="height: 115px; margin: auto;"
+                imgclass="bg-transparent cursor-pointer"
+                hoverzoom
+                onclick={racepick_handler}
+              />
+            </div>
 
             <!-- Show users that have picked -->
             <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
@@ -199,7 +194,7 @@
 {/if}
 
 <!-- The fookin table -->
-<div class="flex">
+<div class="flex {!$pbUser ? 'mt-[-8px]' : ''}">
   <div>
     <!-- Points color coding legend -->
     <!-- Use mt-3/mt-4 to account for 2x padding around the avatar. -->
