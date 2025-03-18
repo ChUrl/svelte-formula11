@@ -99,7 +99,7 @@
   const drawer_settings_base: DrawerSettings = {
     position: "top",
     height: "auto",
-    padding: "lg:px-96 pt-14", // pt-14 is 56px, so its missing 4px for the 60px navbar...
+    padding: "2xl:px-96 pt-14", // pt-14 is 56px, so its missing 4px for the 60px navbar...
     bgDrawer: "bg-surface-100",
     duration: 150,
   };
