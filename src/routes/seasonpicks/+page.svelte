@@ -349,7 +349,7 @@
             />
             <div
               style="height: 40px; line-height: 40px;"
-              class="ml-2 hidden text-nowrap text-center align-middle lg:block"
+              class="ml-2 text-nowrap text-center align-middle"
             >
               {user.firstname}
             </div>
