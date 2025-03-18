@@ -304,7 +304,7 @@
         {@const picks = racepicks.filter((pick: RacePick) => pick.user === user.id)}
 
         <div
-          class="card ml-1 mt-2 w-full min-w-12 overflow-hidden py-2 shadow lg:ml-2 lg:min-w-40
+          class="card ml-1 mt-2 w-full min-w-12 overflow-hidden py-2 shadow lg:ml-2 lg:min-w-36
           {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
         >
           <!-- Avatar + name display at the top -->
