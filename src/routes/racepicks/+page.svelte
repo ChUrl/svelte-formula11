@@ -70,7 +70,12 @@
 <!-- Only show the userguess if signed in and we have a next race -->
 {#if $pbUser && data.currentrace}
   {#await Promise.all( [data.drivers, data.currentpickedusers, pickedusers, outstandingusers], ) then [drivers, currentpicked, picked, outstanding]}
-    <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-0" width="w-full">
+    <!-- HACK: relative was required to get the shadow to show up above the upper table occluder? -->
+    <Accordion
+      class="card relative z-20 mx-auto bg-surface-500 shadow"
+      regionPanel="pt-0"
+      width="w-full"
+    >
       <AccordionItem>
         <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
         <svelte:fragment slot="summary">
@@ -196,14 +201,20 @@
 {/if}
 
 <!-- The fookin table -->
-<div class="flex {!$pbUser ? 'mt-[-8px]' : ''}">
-  <div>
+<div
+  class="{!$pbUser
+    ? 'mt-[-8px]'
+    : ''} relative h-[calc(100vh-200px)] w-[calc(100vw-16px)] scroll-pl-8 scroll-pt-[72px] flex-col overflow-scroll max-lg:hide-scrollbar lg:h-[calc(100vh-116px)] lg:scroll-pl-[152px]"
+>
+  <div class="sticky top-0 z-[15] flex w-full min-w-fit">
     <!-- Points color coding legend -->
     <!-- Use mt-3/mt-4 to account for 2x padding around the avatar. -->
-    <div class="mt-4 h-10 w-7 lg:w-36">
+    <div
+      class="sticky left-0 z-20 h-16 w-7 min-w-7 max-w-7 bg-surface-50 pt-2 lg:w-36 lg:min-w-36 lg:max-w-36 lg:pt-4"
+    >
       <div class="hidden h-5 text-sm font-bold lg:block">Points:</div>
       <div
-        class="flex h-full flex-col overflow-hidden rounded-b-lg rounded-t-lg shadow lg:h-5 lg:flex-row lg:!rounded-l-lg lg:!rounded-r-lg lg:rounded-b-none lg:rounded-t-none"
+        class="flex h-full flex-col overflow-hidden rounded-b-lg rounded-t-lg lg:h-5 lg:flex-row lg:!rounded-l-lg lg:!rounded-r-lg lg:rounded-b-none lg:rounded-t-none"
       >
         <!-- Large Screens: -->
         <span
@@ -239,122 +250,137 @@
       </div>
     </div>
 
-    {#await Promise.all( [data.races, data.raceresults, data.drivers], ) then [races, raceresults, drivers]}
-      {#each raceresults as result}
-        {@const race = get_by_value(races, "id", result.race)}
-
-        <!-- Race name display -->
-        <div
-          use:popup={race_popupsettings(race?.id ?? "Invalid")}
-          class="card mt-2 flex h-20 w-7 cursor-pointer flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
-        >
-          <!-- For large screens -->
-          <span class="hidden text-sm font-bold lg:block">
-            {race?.step}: {race?.name}
-          </span>
-          <span class="hidden text-sm lg:block">
-            Date: {format_date(race?.racedate ?? "", shortdatetimeformat)}
-          </span>
-          <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
-
-          <!-- For small screens -->
-          <span class="block rotate-90 text-xs font-bold lg:hidden">
-            {race?.name.slice(0, 9)}{(race?.name.length ?? 9) > 9 ? "." : ""}
-          </span>
-        </div>
-
-        <!-- The race result popup is triggered on click on the race -->
-        <div data-popup={race?.id ?? "Invalid"} class="card z-50 p-2 shadow">
-          <span class="font-bold">Result:</span>
-          <div class="mt-2 flex flex-col gap-1">
-            {#each result.pxxs as pxx, index}
-              {@const driver = get_by_value(drivers, "id", pxx)}
-              <div class="flex gap-2">
-                <span class="w-8">P{(race?.pxx ?? -100) - 3 + index}:</span>
-                <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[index]};">
-                  {driver?.code}
-                </span>
+    <!-- Avatars -->
+    <div class="flex h-16 w-full bg-surface-50">
+      {#await data.currentpickedusers then currentpicked}
+        {#each currentpicked as user}
+          <div
+            class="card ml-1 mt-2 w-full min-w-14 rounded-b-none py-2 lg:ml-2 lg:min-w-36
+            {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
+          >
+            <!-- Avatar + name display at the top -->
+            <div class="m-auto flex h-10 w-fit">
+              <LazyImage
+                src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                imgwidth={AVATAR_WIDTH}
+                imgheight={AVATAR_HEIGHT}
+                containerstyle="height: 40px; width: 40px;"
+                imgclass="bg-surface-400 rounded-full"
+                tooltip={user.firstname}
+              />
+              <div
+                style="height: 40px; line-height: 40px;"
+                class="ml-2 hidden text-nowrap text-center align-middle max-2xl:text-sm max-xl:text-xs lg:block"
+              >
+                {user.firstname}
               </div>
-            {/each}
-
-            {#if result.dnfs.length > 0}
-              <hr class="border-black" style="border-style: inset;" />
-            {/if}
-
-            {#each result.dnfs as dnf}
-              {@const driver = get_by_value(drivers, "id", dnf)}
-              <div class="flex gap-2">
-                <span class="w-8">DNF:</span>
-                <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[3]};">
-                  {driver?.code}
-                </span>
-              </div>
-            {/each}
-          </div>
-        </div>
-      {/each}
-    {/await}
-  </div>
-
-  <!-- TODO: Horizontal scrollbar missing in desktop chrome (fuck chrome)??? -->
-  <div class="flex w-full overflow-x-scroll pb-2">
-    <!-- Not ideal but currentpickedusers contains all users, so we do not need to fetch the users separately -->
-    {#await Promise.all( [data.currentpickedusers, data.racepicks, data.races, data.drivers, data.raceresults], ) then [currentpicked, racepicks, races, drivers, raceresults]}
-      {#each currentpicked as user}
-        {@const picks = racepicks.filter((pick: RacePick) => pick.user === user.id)}
-
-        <div
-          class="card ml-1 mt-2 w-full min-w-12 overflow-hidden py-2 shadow lg:ml-2 lg:min-w-36
-          {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
-        >
-          <!-- Avatar + name display at the top -->
-          <div class="mx-auto flex h-10 w-fit">
-            <LazyImage
-              src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
-              imgwidth={AVATAR_WIDTH}
-              imgheight={AVATAR_HEIGHT}
-              containerstyle="height: 40px; width: 40px;"
-              imgclass="bg-surface-400 rounded-full"
-              tooltip={user.firstname}
-            />
-            <div
-              style="height: 40px; line-height: 40px;"
-              class="ml-2 hidden text-nowrap text-center align-middle lg:block"
-            >
-              {user.firstname}
             </div>
           </div>
+        {/each}
+      {/await}
+    </div>
+  </div>
 
-          {#each raceresults as result}
-            {@const race = get_by_value(races, "id", result.race)}
-            {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
-            {@const pxxcolor = PXX_COLORS[result.pxxs.indexOf(pick?.pxx ?? "Invalid")]}
-            {@const dnfcolor =
-              result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? PXX_COLORS[3] : PXX_COLORS[-1]}
+  <div class="flex w-full min-w-fit">
+    <!-- Race name display -->
+    <div
+      class="sticky left-0 z-10 w-7 min-w-7 max-w-7 bg-surface-50 lg:w-36 lg:min-w-36 lg:max-w-36"
+    >
+      {#await Promise.all( [data.races, data.raceresults, data.drivers], ) then [races, raceresults, drivers]}
+        {#each raceresults as result}
+          {@const race = get_by_value(races, "id", result.race)}
 
-            {#if pick}
-              <div class="mt-2 h-20 w-full border bg-surface-300 p-1 lg:p-2">
-                <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
-                  <span
-                    class="w-10 p-1 text-center text-sm rounded-container-token"
-                    style="background: {pxxcolor};"
-                  >
-                    {get_by_value(drivers, "id", pick?.pxx ?? "")?.code}
-                  </span>
-                  <span
-                    class="w-10 p-1 text-center text-sm rounded-container-token"
-                    style="background: {dnfcolor};"
-                  >
-                    {get_by_value(drivers, "id", pick?.dnf ?? "")?.code}
+          <div
+            use:popup={race_popupsettings(race?.id ?? "Invalid")}
+            class="card mt-1 flex h-20 w-7 cursor-pointer flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36"
+          >
+            <!-- For large screens -->
+            <span class="hidden text-sm font-bold lg:block">
+              {race?.step}: {race?.name}
+            </span>
+            <span class="hidden text-sm lg:block">
+              Date: {format_date(race?.racedate ?? "", shortdatetimeformat)}
+            </span>
+            <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
+
+            <!-- For small screens -->
+            <span class="block rotate-90 text-xs font-bold lg:hidden">
+              {race?.name.slice(0, 9)}{(race?.name.length ?? 9) > 9 ? "." : ""}
+            </span>
+          </div>
+
+          <!-- The race result popup is triggered on click on the race -->
+          <div data-popup={race?.id ?? "Invalid"} class="card z-50 p-2 shadow">
+            <span class="font-bold">Result:</span>
+            <div class="mt-2 flex flex-col gap-1">
+              {#each result.pxxs as pxx, index}
+                {@const driver = get_by_value(drivers, "id", pxx)}
+                <div class="flex gap-2">
+                  <span class="w-8">P{(race?.pxx ?? -100) - 3 + index}:</span>
+                  <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[index]};">
+                    {driver?.code}
                   </span>
                 </div>
-              </div>
-            {:else}
-              <div class="mt-2 h-20 w-full"></div>
-            {/if}
-          {/each}
-        </div>
-      {/each}
-    {/await}
+              {/each}
+
+              {#if result.dnfs.length > 0}
+                <hr class="border-black" style="border-style: inset;" />
+              {/if}
+
+              {#each result.dnfs as dnf}
+                {@const driver = get_by_value(drivers, "id", dnf)}
+                <div class="flex gap-2">
+                  <span class="w-8">DNF:</span>
+                  <span class="badge w-10 p-1 text-center" style="background: {PXX_COLORS[3]};">
+                    {driver?.code}
+                  </span>
+                </div>
+              {/each}
+            </div>
+          </div>
+        {/each}
+      {/await}
+    </div>
+
+    <!-- Picks -->
+    <div class="flex w-full">
+      <!-- Not ideal but currentpickedusers contains all users, so we do not need to fetch the users separately -->
+      {#await Promise.all( [data.currentpickedusers, data.racepicks, data.races, data.drivers, data.raceresults], ) then [currentpicked, racepicks, races, drivers, raceresults]}
+        {#each currentpicked as user}
+          {@const picks = racepicks.filter((pick: RacePick) => pick.user === user.id)}
+
+          <div class="ml-1 w-full min-w-14 lg:ml-2 lg:min-w-36">
+            {#each raceresults as result}
+              {@const race = get_by_value(races, "id", result.race)}
+              {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
+              {@const pxxcolor = PXX_COLORS[result.pxxs.indexOf(pick?.pxx ?? "Invalid")]}
+              {@const dnfcolor =
+                result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? PXX_COLORS[3] : PXX_COLORS[-1]}
+
+              {#if pick}
+                <div class="mt-1 h-20 w-full border bg-surface-300 px-1 py-2 lg:mt-2 lg:px-2">
+                  <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
+                    <span
+                      class="w-10 p-1 text-center text-xs rounded-container-token lg:text-sm"
+                      style="background: {pxxcolor};"
+                    >
+                      {get_by_value(drivers, "id", pick?.pxx ?? "")?.code}
+                    </span>
+                    <span
+                      class="w-10 p-1 text-center text-xs rounded-container-token lg:text-sm"
+                      style="background: {dnfcolor};"
+                    >
+                      {get_by_value(drivers, "id", pick?.dnf ?? "")?.code}
+                    </span>
+                  </div>
+                </div>
+              {:else}
+                <div class="mt-1 h-20 w-full px-1 py-2 lg:mt-2 lg:px-2"></div>
+              {/if}
+            {/each}
+          </div>
+        {/each}
+      {/await}
+    </div>
   </div>
 </div>
