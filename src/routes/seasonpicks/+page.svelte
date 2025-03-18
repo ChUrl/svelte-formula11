@@ -318,7 +318,6 @@
     {/await}
   </div>
 
-  <!-- TODO: Add user option to display driver codes instead of headshots (or both) -->
   <div class="flex w-full overflow-x-scroll pb-2">
     {#await Promise.all( [data.seasonpickedusers, data.seasonpicks, data.hottakes, data.drivers, data.teams], ) then [seasonpicked, seasonpicks, hottakes, drivers, teams]}
       {#each seasonpicked as user}
@@ -352,7 +351,6 @@
               style="height: 40px; line-height: 40px;"
               class="ml-2 hidden text-nowrap text-center align-middle lg:block"
             >
-              <!-- TODO: Setting to toggle between username or firstname display -->
               {user.firstname}
             </div>
           </div>

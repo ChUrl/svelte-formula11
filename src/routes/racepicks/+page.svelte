@@ -321,7 +321,6 @@
               style="height: 40px; line-height: 40px;"
               class="ml-2 hidden text-nowrap text-center align-middle lg:block"
             >
-              <!-- TODO: Setting to toggle between username or firstname display -->
               {user.firstname}
             </div>
           </div>
