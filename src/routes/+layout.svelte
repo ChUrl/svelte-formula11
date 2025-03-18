@@ -489,7 +489,7 @@
         </Button>
       </div>
     </div>
-  {:else if $drawerStore.id === "profile_drawer" && pbUser}
+  {:else if $drawerStore.id === "profile_drawer" && $pbUser}
     <!-- Profile Drawer -->
     <!-- Profile Drawer -->
     <!-- Profile Drawer -->
