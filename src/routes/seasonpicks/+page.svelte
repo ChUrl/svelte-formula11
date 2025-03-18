@@ -165,11 +165,9 @@
             </div>
 
             <!-- Teamwinners -->
-            <div
-              class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-            >
+            <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="text-nowrap font-bold">Teamwinners:</h1>
-              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+              <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
                 {#each teamwinners.slice(0, 12) as winner}
                   <LazyImage
                     src={winner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
@@ -183,11 +181,9 @@
             </div>
 
             <!-- Podiums -->
-            <div
-              class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-            >
+            <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="text-nowrap font-bold">Podiums:</h1>
-              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+              <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
                 {#each podiums as podium}
                   <LazyImage
                     src={podium?.headshot_url ?? get_driver_headshot_template(data.graphics)}
@@ -203,14 +199,12 @@
 
           <!-- Show users that have picked -->
           {#if seasonpicks.length === 0}
-            <div
-              class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-            >
+            <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="text-nowrap font-bold">
                 Picked ({picked.length}/{currentpicked.length}):
               </h1>
-              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                {#each picked.slice(0, 16) as user}
+              <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
+                {#each picked as user}
                   <LazyImage
                     src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
                     imgwidth={AVATAR_WIDTH}
@@ -223,14 +217,12 @@
             </div>
 
             <!-- Show users that have not picked yet -->
-            <div
-              class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-            >
+            <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="text-nowrap font-bold">
                 Missing ({outstanding.length}/{currentpicked.length}):
               </h1>
-              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
-                {#each outstanding.slice(0, 16) as user}
+              <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
+                {#each outstanding as user}
                   <LazyImage
                     src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
                     imgwidth={AVATAR_WIDTH}
@@ -274,9 +266,9 @@
         <div
           class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
         >
-          <span class="hidden text-nowrap text-sm font-bold lg:block"
-            >Constructors<br />Champion</span
-          >
+          <span class="hidden text-nowrap text-sm font-bold lg:block">
+            Constructors<br />Champion
+          </span>
           <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WCC</span>
         </div>
 
