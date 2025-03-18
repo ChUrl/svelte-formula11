@@ -61,33 +61,29 @@
 </svelte:head>
 
 <!-- Await this here so the accordion doesn't lag when opening -->
-{#await Promise.all( [data.drivers, data.teams, data.seasonpicks, data.seasonpickedusers, pickedusers, outstandingusers], ) then [drivers, teams, seasonpicks, currentpicked, picked, outstanding]}
-  <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-2" width="w-full">
-    <AccordionItem>
-      <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
-      <svelte:fragment slot="summary">
-        <span class="font-bold">Your Season Pick</span>
-      </svelte:fragment>
-      <svelte:fragment slot="content">
-        <div
-          class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit {pbUser
-            ? 'lg:grid-cols-5 2xl:grid-cols-10'
-            : 'lg:grid-cols-2 2xl:grid-cols-2'}"
-        >
-          <!-- Only show the stuff if signed in -->
-          {#if $pbUser}
-            {@const teamwinners = data.seasonpick
-              ? data.seasonpick.teamwinners
-                  .map((id: string) => get_by_value(drivers, "id", id) as Driver)
-                  .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
-              : [undefined]}
-            {@const podiums = data.seasonpick
-              ? data.seasonpick.podiums
-                  .map((id: string) => get_by_value(drivers, "id", id) as Driver)
-                  .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
-                  .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
-              : [undefined]}
+<!-- Only show the stuff if signed in -->
+{#if $pbUser}
+  {#await Promise.all( [data.drivers, data.teams, data.seasonpicks, data.seasonpickedusers, pickedusers, outstandingusers], ) then [drivers, teams, seasonpicks, currentpicked, picked, outstanding]}
+    {@const teamwinners = data.seasonpick
+      ? data.seasonpick.teamwinners
+          .map((id: string) => get_by_value(drivers, "id", id) as Driver)
+          .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
+      : [undefined]}
+    {@const podiums = data.seasonpick
+      ? data.seasonpick.podiums
+          .map((id: string) => get_by_value(drivers, "id", id) as Driver)
+          .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
+          .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
+      : [undefined]}
 
+    <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-2" width="w-full">
+      <AccordionItem>
+        <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
+        <svelte:fragment slot="summary">
+          <span class="font-bold">Your Season Pick</span>
+        </svelte:fragment>
+        <svelte:fragment slot="content">
+          <div class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit lg:grid-cols-5 2xl:grid-cols-10">
             <!-- Hottake -->
             <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="mb-2 text-nowrap font-bold">Hottake:</h1>
@@ -195,10 +191,8 @@
                 {/each}
               </div>
             </div>
-          {/if}
 
-          <!-- Show users that have picked -->
-          {#if seasonpicks.length === 0}
+            <!-- Show users that have picked -->
             <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="text-nowrap font-bold">
                 Picked ({picked.length}/{currentpicked.length}):
@@ -233,15 +227,15 @@
                 {/each}
               </div>
             </div>
-          {/if}
-        </div>
-      </svelte:fragment>
-    </AccordionItem>
-  </Accordion>
-{/await}
+          </div>
+        </svelte:fragment>
+      </AccordionItem>
+    </Accordion>
+  {/await}
+{/if}
 
 <!-- The fookin table -->
-<div class="flex">
+<div class="{!$pbUser ? 'mt-[-8px]' : ''} flex">
   <div>
     <!-- TODO: Points popup? -->
     <div class="mt-4 h-10 w-7 lg:w-36"></div>
