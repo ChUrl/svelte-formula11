@@ -164,6 +164,7 @@
                     imgheight={AVATAR_HEIGHT}
                     containerstyle="height: 35px; width: 35px;"
                     imgclass="bg-surface-400 rounded-full"
+                    tooltip={user.firstname}
                   />
                 {/each}
               </div>
@@ -182,6 +183,7 @@
                     imgheight={AVATAR_HEIGHT}
                     containerstyle="height: 35px; width: 35px;"
                     imgclass="bg-surface-400 rounded-full"
+                    tooltip={user.firstname}
                   />
                 {/each}
               </div>
@@ -313,6 +315,7 @@
               imgheight={AVATAR_HEIGHT}
               containerstyle="height: 40px; width: 40px;"
               imgclass="bg-surface-400 rounded-full"
+              tooltip={user.firstname}
             />
             <div
               style="height: 40px; line-height: 40px;"
