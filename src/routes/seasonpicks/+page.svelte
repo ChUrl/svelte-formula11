@@ -63,7 +63,7 @@
 <!-- Await this here so the accordion doesn't lag when opening -->
 <!-- Only show the stuff if signed in -->
 {#if $pbUser}
-  {#await Promise.all( [data.drivers, data.teams, data.seasonpicks, data.seasonpickedusers, pickedusers, outstandingusers], ) then [drivers, teams, seasonpicks, currentpicked, picked, outstanding]}
+  {#await Promise.all( [data.drivers, data.teams, data.seasonpickedusers, pickedusers, outstandingusers], ) then [drivers, teams, currentpicked, picked, outstanding]}
     {@const teamwinners = data.seasonpick
       ? data.seasonpick.teamwinners
           .map((id: string) => get_by_value(drivers, "id", id) as Driver)
