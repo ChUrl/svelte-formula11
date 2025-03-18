@@ -164,7 +164,7 @@
             <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="text-nowrap font-bold">Teamwinners:</h1>
               <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
-                {#each teamwinners.slice(0, 12) as winner}
+                {#each teamwinners as winner}
                   <LazyImage
                     src={winner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
                     imgwidth={AVATAR_WIDTH}
