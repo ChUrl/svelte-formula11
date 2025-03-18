@@ -76,7 +76,7 @@
           .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
       : undefined}
 
-    <Accordion class="card mx-auto bg-surface-500 shadow" regionPanel="pt-2" width="w-full">
+    <Accordion class="card mx-auto bg-surface-500" regionPanel="pt-2" width="w-full">
       <AccordionItem>
         <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
         <svelte:fragment slot="summary">
@@ -85,13 +85,13 @@
         <svelte:fragment slot="content">
           <div class="grid grid-cols-2 gap-2 lg:mx-auto lg:w-fit lg:grid-cols-5 2xl:grid-cols-10">
             <!-- Hottake -->
-            <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+            <div class="card w-full min-w-40 p-2 lg:max-w-40">
               <h1 class="mb-2 text-nowrap font-bold">Hottake:</h1>
               <span class="text-sm">{data.seasonpick?.hottake}</span>
             </div>
 
             <!-- Doohanstarts -->
-            <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+            <div class="card w-full min-w-40 p-2 lg:max-w-40">
               <h1 class="mb-2 text-nowrap font-bold">Doohan Starts:</h1>
               {#if data.seasonpick}
                 <span class="text-sm">
@@ -101,7 +101,7 @@
             </div>
 
             <!-- WDC -->
-            <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+            <div class="card w-full min-w-40 p-2 pb-0 lg:max-w-40">
               <h1 class="mb-2 text-nowrap font-bold">WDC:</h1>
               <LazyImage
                 src={get_by_value(drivers, "id", data.seasonpick?.wdcwinner ?? "")?.headshot_url ??
@@ -116,7 +116,7 @@
             </div>
 
             <!-- WDC -->
-            <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+            <div class="card w-full min-w-40 p-2 pb-0 lg:max-w-40">
               <h1 class="mb-2 text-nowrap font-bold">WCC:</h1>
               <LazyImage
                 src={get_by_value(teams, "id", data.seasonpick?.wccwinner ?? "")?.banner_url ??
@@ -131,7 +131,7 @@
             </div>
 
             <!-- Overtakes -->
-            <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+            <div class="card w-full min-w-40 p-2 pb-0 lg:max-w-40">
               <h1 class="mb-2 text-nowrap font-bold">Most Overtakes:</h1>
               <LazyImage
                 src={get_by_value(drivers, "id", data.seasonpick?.mostovertakes ?? "")
@@ -146,7 +146,7 @@
             </div>
 
             <!-- DNFs -->
-            <div class="card w-full min-w-40 p-2 pb-0 shadow lg:max-w-40">
+            <div class="card w-full min-w-40 p-2 pb-0 lg:max-w-40">
               <h1 class="mb-2 text-nowrap font-bold">Most DNFs:</h1>
               <LazyImage
                 src={get_by_value(drivers, "id", data.seasonpick?.mostdnfs ?? "")?.headshot_url ??
@@ -161,7 +161,7 @@
             </div>
 
             <!-- Teamwinners -->
-            <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
+            <div class="card max-h-[155px] w-full min-w-40 p-2 lg:max-w-40">
               <h1 class="text-nowrap font-bold">Teamwinners:</h1>
               <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
                 {#if teamwinners}
@@ -180,7 +180,7 @@
             </div>
 
             <!-- Podiums -->
-            <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
+            <div class="card max-h-[155px] w-full min-w-40 p-2 lg:max-w-40">
               <h1 class="text-nowrap font-bold">Podiums:</h1>
               <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
                 {#if podiums}
@@ -199,7 +199,7 @@
             </div>
 
             <!-- Show users that have picked -->
-            <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
+            <div class="card max-h-[155px] w-full min-w-40 p-2 lg:max-w-40">
               <h1 class="text-nowrap font-bold">
                 Picked ({picked.length}/{currentpicked.length}):
               </h1>
@@ -218,7 +218,7 @@
             </div>
 
             <!-- Show users that have not picked yet -->
-            <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
+            <div class="card max-h-[155px] w-full min-w-40 p-2 lg:max-w-40">
               <h1 class="text-nowrap font-bold">
                 Missing ({outstanding.length}/{currentpicked.length}):
               </h1>
@@ -242,256 +242,285 @@
   {/await}
 {/if}
 
-<!-- The fookin table -->
-<div class="{!$pbUser ? 'mt-[-8px]' : ''} flex">
-  <div>
+<!-- HACK: Subtract additional ~100px from height because fucking Safari reports the viewport height as if the urlbar was hidden. Original size should be calc(100vh-116px). -->
+<div
+  class="{!$pbUser
+    ? 'mt-[-8px]'
+    : ''} relative h-[calc(100vh-200px)] w-[calc(100vw-16px)] scroll-pl-8 scroll-pt-[72px] flex-col overflow-scroll max-lg:hide-scrollbar lg:h-[calc(100vh-116px)] lg:scroll-pl-[152px]"
+>
+  <div class="sticky top-0 z-[15] flex w-full min-w-fit">
     <!-- TODO: Points popup? -->
-    <div class="mt-4 h-10 w-7 lg:w-36"></div>
+    <div
+      class="sticky left-0 z-20 h-16 w-7 min-w-7 max-w-7 bg-surface-50 lg:w-36 lg:min-w-36 lg:max-w-36"
+    ></div>
 
-    <!-- Hottake -->
-    <div class="card mt-2 flex h-32 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36">
-      <span class="hidden text-nowrap text-sm font-bold lg:block">Hottake</span>
-      <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Hottake</span>
-    </div>
-
-    {#await data.seasonpicks then seasonpicks}
-      {#if seasonpicks.length > 0}
-        <!-- Drivers Champion -->
-        <div
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
-        >
-          <span class="hidden text-nowrap text-sm font-bold lg:block">Drivers<br />Champion</span>
-          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WDC</span>
-        </div>
-
-        <!-- Constructors Champion -->
-        <div
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
-        >
-          <span class="hidden text-nowrap text-sm font-bold lg:block">
-            Constructors<br />Champion
-          </span>
-          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WCC</span>
-        </div>
-
-        <!-- Overtakes -->
-        <div
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
-        >
-          <span class="hidden text-nowrap text-sm font-bold lg:block">Most Overtakes</span>
-          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Overtakes</span>
-        </div>
-
-        <!-- DNFs -->
-        <div
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
-        >
-          <span class="hidden text-nowrap text-sm font-bold lg:block">Most DNFs</span>
-          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">DNFs</span>
-        </div>
-
-        <!-- Doohan Starts -->
-        <div
-          class="card mt-2 flex h-20 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
-        >
-          <span class="hidden text-nowrap text-sm font-bold lg:block">Doohan Starts</span>
-          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Doohan</span>
-        </div>
-
-        <!-- Teamwinners -->
-        <div
-          class="card mt-2 flex h-64 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
-        >
-          <span class="hidden text-nowrap text-sm font-bold lg:block">Team-Battle<br />Winners</span
+    <!-- Avatars -->
+    <div class="flex h-16 w-full bg-surface-50">
+      {#await data.seasonpickedusers then seasonpicked}
+        {#each seasonpicked as user}
+          <div
+            class="card ml-1 mt-2 w-full min-w-36 rounded-b-none py-2 lg:ml-2
+            {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
           >
-          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Teamwinners</span>
-        </div>
-
-        <!-- Podiums -->
-        <div
-          class="card mt-2 flex h-64 w-7 flex-col !rounded-r-none bg-surface-300 p-2 shadow lg:w-36"
-        >
-          <span class="hidden text-nowrap text-sm font-bold lg:block">Podiums</span>
-          <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Podiums</span>
-        </div>
-      {/if}
-    {/await}
+            <!-- Avatar + name display at the top -->
+            <div class="m-auto flex h-10 w-fit">
+              <LazyImage
+                src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
+                imgwidth={AVATAR_WIDTH}
+                imgheight={AVATAR_HEIGHT}
+                containerstyle="height: 40px; width: 40px;"
+                imgclass="bg-surface-400 rounded-full"
+                tooltip={user.firstname}
+              />
+              <div
+                style="height: 40px; line-height: 40px;"
+                class="ml-2 text-nowrap text-center align-middle"
+              >
+                {user.firstname}
+              </div>
+            </div>
+          </div>
+        {/each}
+      {/await}
+    </div>
   </div>
 
-  <div class="flex w-full overflow-x-scroll pb-2">
-    {#await Promise.all( [data.seasonpickedusers, data.seasonpicks, data.hottakes, data.drivers, data.teams], ) then [seasonpicked, seasonpicks, hottakes, drivers, teams]}
-      {#each seasonpicked as user}
-        {@const hottake = hottakes.filter((take: Hottake) => take.user === user.id)[0] ?? undefined}
-        {@const pick =
-          seasonpicks.filter((pick: SeasonPick) => pick.user === user.id)[0] ?? undefined}
-        {@const wdcwinner = pick ? get_by_value(drivers, "id", pick.wdcwinner) : undefined}
-        {@const wccwinner = pick ? get_by_value(teams, "id", pick.wccwinner) : undefined}
-        {@const mostovertakes = pick ? get_by_value(drivers, "id", pick.mostovertakes) : undefined}
-        {@const mostdnfs = pick ? get_by_value(drivers, "id", pick.mostdnfs) : undefined}
-        {@const drivers_sorted = drivers
-          .filter((driver: Driver) => driver.active)
-          .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
-          .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))}
+  <div class="flex w-full min-w-fit">
+    <!-- Categories -->
+    <div
+      class="sticky left-0 z-[10] w-7 min-w-7 max-w-7 bg-surface-50 lg:w-36 lg:min-w-36 lg:max-w-36"
+    >
+      <!-- Hottake -->
+      <div class="card mt-1 flex h-32 w-7 flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36">
+        <span class="hidden text-nowrap text-sm font-bold lg:block">Hottake</span>
+        <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Hottake</span>
+      </div>
 
-        <div
-          class="card ml-1 mt-2 w-full min-w-36 overflow-hidden py-2 shadow lg:ml-2
-          {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
-        >
-          <!-- Avatar + name display at the top -->
-          <div class="mx-auto flex h-10 w-fit">
-            <LazyImage
-              src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
-              imgwidth={AVATAR_WIDTH}
-              imgheight={AVATAR_HEIGHT}
-              containerstyle="height: 40px; width: 40px;"
-              imgclass="bg-surface-400 rounded-full"
-              tooltip={user.firstname}
-            />
-            <div
-              style="height: 40px; line-height: 40px;"
-              class="ml-2 text-nowrap text-center align-middle"
-            >
-              {user.firstname}
-            </div>
+      {#await data.seasonpicks then seasonpicks}
+        {#if seasonpicks.length > 0}
+          <!-- Drivers Champion -->
+          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36">
+            <span class="hidden text-nowrap text-sm font-bold lg:block">Drivers<br />Champion</span>
+            <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WDC</span>
           </div>
 
-          <!-- Hottake -->
+          <!-- Constructors Champion -->
+          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36">
+            <span class="hidden text-nowrap text-sm font-bold lg:block">
+              Constructors<br />Champion
+            </span>
+            <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WCC</span>
+          </div>
+
+          <!-- Overtakes -->
+          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36">
+            <span class="hidden text-nowrap text-sm font-bold lg:block">Most Overtakes</span>
+            <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Overtakes</span>
+          </div>
+
+          <!-- DNFs -->
+          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36">
+            <span class="hidden text-nowrap text-sm font-bold lg:block">Most DNFs</span>
+            <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">DNFs</span>
+          </div>
+
+          <!-- Doohan Starts -->
+          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36">
+            <span class="hidden text-nowrap text-sm font-bold lg:block">Doohan Starts</span>
+            <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Doohan</span>
+          </div>
+
+          <!-- Teamwinners -->
+          <div class="card mt-1 flex h-64 w-7 flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36">
+            <span class="hidden text-nowrap text-sm font-bold lg:block"
+              >Team-Battle<br />Winners</span
+            >
+            <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Teamwinners</span>
+          </div>
+
+          <!-- Podiums -->
+          <div class="card mt-1 flex h-64 w-7 flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36">
+            <span class="hidden text-nowrap text-sm font-bold lg:block">Podiums</span>
+            <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Podiums</span>
+          </div>
+        {/if}
+      {/await}
+    </div>
+
+    <!-- Picks -->
+    <div class="flex w-full">
+      {#await Promise.all( [data.seasonpickedusers, data.seasonpicks, data.hottakes, data.drivers, data.teams], ) then [seasonpicked, seasonpicks, hottakes, drivers, teams]}
+        {#each seasonpicked as user}
+          {@const hottake =
+            hottakes.filter((take: Hottake) => take.user === user.id)[0] ?? undefined}
+          {@const pick =
+            seasonpicks.filter((pick: SeasonPick) => pick.user === user.id)[0] ?? undefined}
+          {@const wdcwinner = pick ? get_by_value(drivers, "id", pick.wdcwinner) : undefined}
+          {@const wccwinner = pick ? get_by_value(teams, "id", pick.wccwinner) : undefined}
+          {@const mostovertakes = pick
+            ? get_by_value(drivers, "id", pick.mostovertakes)
+            : undefined}
+          {@const mostdnfs = pick ? get_by_value(drivers, "id", pick.mostdnfs) : undefined}
+          {@const drivers_sorted = drivers
+            .filter((driver: Driver) => driver.active)
+            .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
+            .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))}
+
           <div
-            class="mt-2 h-32 w-full overflow-y-scroll border bg-surface-300 px-1 py-2 leading-3 lg:px-2"
+            class="ml-1 w-full min-w-36 overflow-hidden lg:ml-2
+          {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
           >
-            <div class="mx-auto w-fit text-xs font-bold lg:text-sm">{hottake?.hottake ?? "?"}</div>
+            <!-- Hottake -->
+            <div
+              class="mt-1 h-32 w-full overflow-y-scroll border bg-surface-300 px-1 py-2 leading-3 lg:mt-2 lg:px-2"
+            >
+              <div class="mx-auto w-fit text-xs font-bold lg:text-sm">
+                {hottake?.hottake ?? "?"}
+              </div>
+            </div>
+
+            {#if seasonpicks.length > 0}
+              <!-- Drivers Champion -->
+              <div
+                class="mt-1 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:mt-2 lg:px-2"
+              >
+                <div class="mx-auto w-fit">
+                  <!-- NOTE: The containerstyle should be 64x64, don't know why that doesn't fit... (also below) -->
+                  <LazyImage
+                    src={wdcwinner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={DRIVER_HEADSHOT_HEIGHT}
+                    imgheight={DRIVER_HEADSHOT_WIDTH}
+                    containerstyle="height: 62px;"
+                    imgclass="bg-surface-400 rounded-md"
+                    tooltip={wdcwinner ? `${wdcwinner.firstname} ${wdcwinner.lastname}` : undefined}
+                  />
+                </div>
+              </div>
+
+              <!-- Constructors Champion -->
+              <div
+                class="mt-1 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:mt-2 lg:px-2"
+              >
+                <div class="mx-auto w-fit">
+                  <LazyImage
+                    src={wccwinner?.banner_url ?? get_team_banner_template(data.graphics)}
+                    imgwidth={TEAM_BANNER_WIDTH}
+                    imgheight={TEAM_BANNER_HEIGHT}
+                    containerstyle="height: 62px;"
+                    imgclass="bg-surface-400 rounded-md"
+                    tooltip={wccwinner?.name}
+                  />
+                </div>
+              </div>
+
+              <!-- Most Overtakes -->
+              <div
+                class="mt-1 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:mt-2 lg:px-2"
+              >
+                <div class="mx-auto w-fit">
+                  <LazyImage
+                    src={mostovertakes?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={DRIVER_HEADSHOT_HEIGHT}
+                    imgheight={DRIVER_HEADSHOT_WIDTH}
+                    containerstyle="height: 62px;"
+                    imgclass="bg-surface-400 rounded-md"
+                    tooltip={mostovertakes
+                      ? `${mostovertakes.firstname} ${mostovertakes.lastname}`
+                      : undefined}
+                  />
+                </div>
+              </div>
+
+              <!-- Most DNFs -->
+              <div
+                class="mt-1 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:mt-2 lg:px-2"
+              >
+                <div class="mx-auto w-fit">
+                  <LazyImage
+                    src={mostdnfs?.headshot_url ?? get_driver_headshot_template(data.graphics)}
+                    imgwidth={DRIVER_HEADSHOT_HEIGHT}
+                    imgheight={DRIVER_HEADSHOT_WIDTH}
+                    containerstyle="height: 62px;"
+                    imgclass="bg-surface-400 rounded-md"
+                    tooltip={mostdnfs ? `${mostdnfs.firstname} ${mostdnfs.lastname}` : undefined}
+                  />
+                </div>
+              </div>
+
+              <!-- Doohan Starts -->
+              <div
+                class="mt-1 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:mt-2 lg:px-2"
+              >
+                <div class="mx-auto w-fit text-xs lg:text-sm">
+                  Jack Doohan startet <span class="font-bold">{pick?.doohanstarts ?? "?"}</span> mal.
+                </div>
+              </div>
+
+              <!-- Teamwinners -->
+              <div
+                class="mt-1 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:mt-2 lg:px-2"
+              >
+                {#if pick && pick.teamwinners}
+                  <div class="grid grid-cols-2 gap-1">
+                    {#each drivers_sorted as driver}
+                      {@const color: string = get_by_value(teams, "id", driver?.team ?? "")?.color ?? ""}
+                      <div class="mx-auto w-fit text-xs lg:text-sm">
+                        <div
+                          class="flex gap-1"
+                          style="opacity: {pick.teamwinners.includes(driver.id) ? 1.0 : 0.1};"
+                        >
+                          <span
+                            class="badge h-5 w-5"
+                            style="color: {color}; background-color: {color};"
+                          >
+                          </span>
+                          <span class="w-7 align-middle" style="line-height: 20px;">
+                            {driver?.code}
+                          </span>
+                        </div>
+                      </div>
+                    {/each}
+                  </div>
+                {/if}
+              </div>
+
+              <!-- Podiums -->
+              <!-- TODO: Replace all style tags throughout the page with custom classes like height here -->
+              <div
+                class="mt-1 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:mt-2 lg:px-2"
+              >
+                {#if pick && pick.podiums}
+                  <div class="grid grid-cols-2 gap-1">
+                    {#each drivers_sorted as driver}
+                      {@const color: string = get_by_value(teams, "id", driver?.team ?? "")?.color ?? ""}
+                      <div class="mx-auto w-fit text-xs lg:text-sm">
+                        <div
+                          class="flex gap-1"
+                          style="opacity: {pick.podiums.includes(driver.id) ? 1.0 : 0.1};"
+                        >
+                          <span
+                            class="badge h-5 w-5"
+                            style="color: {color}; background-color: {color};"
+                          >
+                          </span>
+                          <span class="w-7 align-middle" style="line-height: 20px;">
+                            {driver?.code}
+                          </span>
+                        </div>
+                      </div>
+                    {/each}
+                  </div>
+                {/if}
+              </div>
+            {/if}
           </div>
-
-          {#if seasonpicks.length > 0}
-            <!-- Drivers Champion -->
-            <div class="mt-2 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
-              <div class="mx-auto w-fit">
-                <!-- NOTE: The containerstyle should be 64x64, don't know why that doesn't fit... (also below) -->
-                <LazyImage
-                  src={wdcwinner?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                  imgwidth={DRIVER_HEADSHOT_HEIGHT}
-                  imgheight={DRIVER_HEADSHOT_WIDTH}
-                  containerstyle="height: 62px;"
-                  imgclass="bg-surface-400 rounded-md"
-                  tooltip={wdcwinner ? `${wdcwinner.firstname} ${wdcwinner.lastname}` : undefined}
-                />
-              </div>
-            </div>
-
-            <!-- Constructors Champion -->
-            <div class="mt-2 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2">
-              <div class="mx-auto w-fit">
-                <LazyImage
-                  src={wccwinner?.banner_url ?? get_team_banner_template(data.graphics)}
-                  imgwidth={TEAM_BANNER_WIDTH}
-                  imgheight={TEAM_BANNER_HEIGHT}
-                  containerstyle="height: 62px;"
-                  imgclass="bg-surface-400 rounded-md"
-                  tooltip={wccwinner?.name}
-                />
-              </div>
-            </div>
-
-            <!-- Most Overtakes -->
-            <div class="mt-2 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
-              <div class="mx-auto w-fit">
-                <LazyImage
-                  src={mostovertakes?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                  imgwidth={DRIVER_HEADSHOT_HEIGHT}
-                  imgheight={DRIVER_HEADSHOT_WIDTH}
-                  containerstyle="height: 62px;"
-                  imgclass="bg-surface-400 rounded-md"
-                  tooltip={mostovertakes
-                    ? `${mostovertakes.firstname} ${mostovertakes.lastname}`
-                    : undefined}
-                />
-              </div>
-            </div>
-
-            <!-- Most DNFs -->
-            <div class="mt-2 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
-              <div class="mx-auto w-fit">
-                <LazyImage
-                  src={mostdnfs?.headshot_url ?? get_driver_headshot_template(data.graphics)}
-                  imgwidth={DRIVER_HEADSHOT_HEIGHT}
-                  imgheight={DRIVER_HEADSHOT_WIDTH}
-                  containerstyle="height: 62px;"
-                  imgclass="bg-surface-400 rounded-md"
-                  tooltip={mostdnfs ? `${mostdnfs.firstname} ${mostdnfs.lastname}` : undefined}
-                />
-              </div>
-            </div>
-
-            <!-- Doohan Starts -->
-            <div class="mt-2 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2">
-              <div class="mx-auto w-fit text-xs lg:text-sm">
-                Jack Doohan startet <span class="font-bold">{pick?.doohanstarts ?? "?"}</span> mal.
-              </div>
-            </div>
-
-            <!-- Teamwinners -->
-            <div
-              class="mt-2 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2"
-            >
-              {#if pick && pick.teamwinners}
-                <div class="grid grid-cols-2 gap-1">
-                  {#each drivers_sorted as driver}
-                    {@const color: string = get_by_value(teams, "id", driver?.team ?? "")?.color ?? ""}
-                    <div class="mx-auto w-fit text-xs lg:text-sm">
-                      <div
-                        class="flex gap-1"
-                        style="opacity: {pick.teamwinners.includes(driver.id) ? 1.0 : 0.1};"
-                      >
-                        <span
-                          class="badge h-5 w-5"
-                          style="color: {color}; background-color: {color};"
-                        >
-                        </span>
-                        <span class="w-7 align-middle" style="line-height: 20px;">
-                          {driver?.code}
-                        </span>
-                      </div>
-                    </div>
-                  {/each}
-                </div>
-              {/if}
-            </div>
-
-            <!-- Podiums -->
-            <!-- TODO: Replace all style tags throughout the page with custom classes like height here -->
-            <div
-              class="mt-2 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2"
-            >
-              {#if pick && pick.podiums}
-                <div class="grid grid-cols-2 gap-1">
-                  {#each drivers_sorted as driver}
-                    {@const color: string = get_by_value(teams, "id", driver?.team ?? "")?.color ?? ""}
-                    <div class="mx-auto w-fit text-xs lg:text-sm">
-                      <div
-                        class="flex gap-1"
-                        style="opacity: {pick.podiums.includes(driver.id) ? 1.0 : 0.1};"
-                      >
-                        <span
-                          class="badge h-5 w-5"
-                          style="color: {color}; background-color: {color};"
-                        >
-                        </span>
-                        <span class="w-7 align-middle" style="line-height: 20px;">
-                          {driver?.code}
-                        </span>
-                      </div>
-                    </div>
-                  {/each}
-                </div>
-              {/if}
-            </div>
-          {/if}
-        </div>
-      {/each}
-    {/await}
+        {/each}
+      {/await}
+    </div>
   </div>
 </div>
 
+<!-- Season pick lock countdown -->
 {#await Promise.all([data.seasonpicks, data.currentrace]) then [seasonpicks, currentrace]}
   {#if seasonpicks.length <= 0 && currentrace}
     <div class="card mx-auto w-fit p-2 shadow">
