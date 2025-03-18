@@ -76,7 +76,12 @@
           .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))
       : undefined}
 
-    <Accordion class="card mx-auto bg-surface-500" regionPanel="pt-2" width="w-full">
+    <!-- HACK: relative was required to get the shadow to show up above the upper table occluder? -->
+    <Accordion
+      class="card relative z-20 mx-auto bg-surface-500 shadow"
+      regionPanel="pt-2"
+      width="w-full"
+    >
       <AccordionItem>
         <svelte:fragment slot="lead"><ChequeredFlagIcon /></svelte:fragment>
         <svelte:fragment slot="summary">
@@ -251,7 +256,7 @@
   <div class="sticky top-0 z-[15] flex w-full min-w-fit">
     <!-- TODO: Points popup? -->
     <div
-      class="sticky left-0 z-20 h-16 w-7 min-w-7 max-w-7 bg-surface-50 lg:w-36 lg:min-w-36 lg:max-w-36"
+      class="sticky left-0 z-20 h-16 w-7 min-w-7 max-w-7 rounded-br-none bg-surface-50 lg:w-36 lg:min-w-36 lg:max-w-36"
     ></div>
 
     <!-- Avatars -->
@@ -288,7 +293,7 @@
   <div class="flex w-full min-w-fit">
     <!-- Categories -->
     <div
-      class="sticky left-0 z-[10] w-7 min-w-7 max-w-7 bg-surface-50 lg:w-36 lg:min-w-36 lg:max-w-36"
+      class="sticky left-0 z-10 w-7 min-w-7 max-w-7 bg-surface-50 lg:w-36 lg:min-w-36 lg:max-w-36"
     >
       <!-- Hottake -->
       <div class="card mt-1 flex h-32 w-7 flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36">
@@ -366,10 +371,7 @@
             .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
             .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))}
 
-          <div
-            class="ml-1 w-full min-w-36 overflow-hidden lg:ml-2
-          {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
-          >
+          <div class="ml-1 w-full min-w-36 lg:ml-2">
             <!-- Hottake -->
             <div
               class="mt-1 h-32 w-full overflow-y-scroll border bg-surface-300 px-1 py-2 leading-3 lg:mt-2 lg:px-2"
@@ -487,7 +489,7 @@
               <!-- Podiums -->
               <!-- TODO: Replace all style tags throughout the page with custom classes like height here -->
               <div
-                class="mt-1 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:mt-2 lg:px-2"
+                class="mt-1 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 shadow lg:mt-2 lg:px-2"
               >
                 {#if pick && pick.podiums}
                   <div class="grid grid-cols-2 gap-1">
