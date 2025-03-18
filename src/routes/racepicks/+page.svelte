@@ -157,11 +157,11 @@
             {/if}
 
             <!-- Show users that have picked -->
-            <div class="card w-full min-w-40 p-2 shadow lg:max-w-40">
+            <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="text-nowrap font-bold">
                 Picked ({picked.length}/{currentpicked.length}):
               </h1>
-              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+              <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
                 {#each picked as user}
                   <LazyImage
                     src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
@@ -175,13 +175,11 @@
             </div>
 
             <!-- Show users that have not picked yet -->
-            <div
-              class="card max-h-[155px] w-full min-w-40 overflow-y-scroll p-2 shadow lg:max-w-40"
-            >
+            <div class="card max-h-[155px] w-full min-w-40 p-2 shadow lg:max-w-40">
               <h1 class="text-nowrap font-bold">
                 Missing ({outstanding.length}/{currentpicked.length}):
               </h1>
-              <div class="mt-1 grid grid-cols-4 gap-x-0 gap-y-0.5">
+              <div class="mt-1 grid max-h-[110px] grid-cols-4 gap-x-0 gap-y-0.5 overflow-y-scroll">
                 {#each outstanding as user}
                   <LazyImage
                     src={user.avatar_url ?? get_driver_headshot_template(data.graphics)}
