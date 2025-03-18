@@ -256,7 +256,7 @@
   <div class="sticky top-0 z-[15] flex w-full min-w-fit">
     <!-- TODO: Points popup? -->
     <div
-      class="sticky left-0 z-20 h-16 w-7 min-w-7 max-w-7 rounded-br-none bg-surface-50 lg:w-36 lg:min-w-36 lg:max-w-36"
+      class="sticky left-0 z-20 h-16 w-7 min-w-7 max-w-7 bg-surface-50 lg:w-36 lg:min-w-36 lg:max-w-36"
     ></div>
 
     <!-- Avatars -->
