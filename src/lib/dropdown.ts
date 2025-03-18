@@ -30,7 +30,7 @@ export const team_dropdown_options = (teams: Team[]): DropdownOption[] =>
  */
 export const driver_dropdown_options = (drivers: Driver[]): DropdownOption[] =>
   drivers
-    .sort((a: Driver, b: Driver) => a.firstname.localeCompare(b.firstname))
+    .sort((a: Driver, b: Driver) => a.lastname.localeCompare(b.lastname))
     .map((driver: Driver) => {
       return {
         label: `${driver.firstname} ${driver.lastname}`,
