@@ -187,13 +187,21 @@
   imgonclick={(event: Event) => modalStore.close()}
 >
   <div class="flex flex-col gap-2">
-    <!-- Driver name input -->
-    <Input bind:value={name_value} autocomplete="off" {labelwidth} {disabled} {required}>
+    <!-- Race name input -->
+    <Input
+      bind:value={name_value}
+      autocomplete="off"
+      placeholder="Has to end with an emoji"
+      {labelwidth}
+      {disabled}
+      {required}
+    >
       Name
     </Input>
     <Input
       bind:value={step_value}
       autocomplete="off"
+      placeholder="The step in the race calendar"
       type="number"
       min={1}
       max={24}
@@ -206,6 +214,7 @@
     <Input
       bind:value={pxx_value}
       autocomplete="off"
+      placeholder="The place to guess"
       type="number"
       min={1}
       max={20}
