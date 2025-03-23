@@ -255,7 +255,7 @@
       {#await data.currentpickedusers then currentpicked}
         {#each currentpicked as user}
           <div
-            class="card ml-1 mt-2 w-full min-w-14 rounded-b-none py-2 lg:ml-2 lg:min-w-36
+            class="card ml-1 mt-2 w-full min-w-14 rounded-b-none py-2 lg:ml-2
             {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
           >
             <!-- Avatar + name display at the top -->
@@ -349,7 +349,7 @@
         {#each currentpicked as user}
           {@const picks = racepicks.filter((pick: RacePick) => pick.user === user.id)}
 
-          <div class="ml-1 w-full min-w-14 lg:ml-2 lg:min-w-36">
+          <div class="ml-1 w-full min-w-14 lg:ml-2">
             {#each raceresults as result}
               {@const race = get_by_value(races, "id", result.race)}
               {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
