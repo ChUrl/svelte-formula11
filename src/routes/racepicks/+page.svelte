@@ -58,7 +58,7 @@
     return {
       event: "click",
       target: target,
-      placement: "right",
+      placement: "right-start",
     };
   };
 </script>
