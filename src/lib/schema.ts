@@ -127,3 +127,21 @@ export interface SeasonPickedUser {
   admin: boolean;
   picked: string | null;
 }
+
+// Points Data
+
+export interface RacePickPoints {
+  id: string;
+  user: string;
+  step: number;
+  pxx_points: number;
+  dnf_points: number;
+}
+
+export interface RacePickPointsAcc {
+  id: string;
+  user: string;
+  total_pxx_points: number;
+  total_dnf_points: number;
+  total_points: number;
+}
