@@ -19,6 +19,7 @@
     RACE_PICTOGRAM_HEIGHT,
     RACE_PICTOGRAM_WIDTH,
   } from "$lib/config";
+  import { runes, substring } from "runes2";
   import { format_date, shortdatetimeformat } from "$lib/date";
   import type { CurrentPickedUser, RacePick } from "$lib/schema";
   import { get_by_value, get_driver_headshot_template } from "$lib/database";
@@ -292,7 +293,7 @@
 
           <div
             use:popup={race_popupsettings(race?.id ?? "Invalid")}
-            class="card mt-1 flex h-20 w-7 cursor-pointer flex-col !rounded-r-none p-2 lg:mt-2 lg:w-36"
+            class="card mt-1 flex h-20 w-7 cursor-pointer flex-col !rounded-r-none lg:mt-2 lg:w-36 lg:p-2"
           >
             <!-- For large screens -->
             <span class="hidden text-sm font-bold lg:block">
@@ -304,9 +305,10 @@
             <span class="hidden text-sm lg:block">Guessed: P{race?.pxx}</span>
 
             <!-- For small screens -->
-            <span class="block rotate-90 text-xs font-bold lg:hidden">
-              {race?.name.slice(0, 9)}{(race?.name.length ?? 9) > 9 ? "." : ""}
-            </span>
+            <!-- TODO: This requires the race name to end with an emoji, but this is never enforced -->
+            <div class="mx-[2px] my-[25px] block text-lg font-bold lg:hidden">
+              {runes(race?.name ?? "Invalid").at(-1)}
+            </div>
           </div>
 
           <!-- The race result popup is triggered on click on the race -->
