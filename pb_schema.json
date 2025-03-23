@@ -115,7 +115,7 @@
         "type": "email"
       },
       {
-        "hidden": true,
+        "hidden": false,
         "id": "bool1547992806",
         "name": "emailVisibility",
         "presentable": false,
@@ -124,7 +124,7 @@
         "type": "bool"
       },
       {
-        "hidden": true,
+        "hidden": false,
         "id": "bool256245529",
         "name": "verified",
         "presentable": false,
@@ -218,12 +218,408 @@
     },
     "resetPasswordTemplate": {
       "subject": "Reset your {APP_NAME} password",
-      "body": "<p>Hello,</p>\n<p>Click on the button below to reset your password.</p>\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-password-reset/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Reset password</a>\n</p>\n<p><i>If you didn't ask to reset your password, you can ignore this email.</i></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+      "body": "<p>Hello,</p>\n\n<p>Using a password manager is <b>essential</b> for maintaining strong, unique passwords across all your accounts. Many people rely on short passwords or passwords made up of common words, but these are <b>highly</b> vulnerable to attacks like brute force and dictionary attacks. Hackers use automated tools to guess weak passwords in seconds, making it <b>crucial</b> to use long, random, and complex passwords.</p>\n\n<p>Reusing passwords is also a <b>major</b> security risk—if one account is compromised, all other accounts using the same password are at risk. A password manager helps generate and store <b>unique</b> passwords for each account, ensuring better security without the need to remember them all.</p>\n\n<p>KeePassXC is an <b>excellent</b> choice for managing passwords securely. Unlike cloud-based services like LastPass—which has suffered multiple security breaches—KeePassXC stores your passwords locally, giving you <b>full</b> control over your data and how to synchronize it to your devices. Because it does not rely on external providers, your passwords remain <b>safe</b> from large-scale hacks or data leaks. With strong encryption and open-source transparency, KeePassXC is a <b>reliable</b> tool for protecting your online accounts.</p>\n\n<p>Click on the button below to reset your password.</p>\n\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-password-reset/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Reset password</a>\n</p>\n\n<p><i>If you didn't ask to reset your password, you can ignore this email.</i></p>\n\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
     },
     "confirmEmailChangeTemplate": {
       "subject": "Confirm your {APP_NAME} new email address",
       "body": "<p>Hello,</p>\n<p>Click on the button below to confirm your new email address.</p>\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-email-change/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Confirm new email</a>\n</p>\n<p><i>If you didn't ask to change your email address, you can ignore this email.</i></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
     }
+  },
+  {
+    "id": "pbc_4275539003",
+    "listRule": "@request.auth.id != '' && recordRef = @request.auth.id && collectionRef = @request.auth.collectionId",
+    "viewRule": "@request.auth.id != '' && recordRef = @request.auth.id && collectionRef = @request.auth.collectionId",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": "@request.auth.id != '' && recordRef = @request.auth.id && collectionRef = @request.auth.collectionId",
+    "name": "_authOrigins",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text455797646",
+        "max": 0,
+        "min": 0,
+        "name": "collectionRef",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text127846527",
+        "max": 0,
+        "min": 0,
+        "name": "recordRef",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text4228609354",
+        "max": 0,
+        "min": 0,
+        "name": "fingerprint",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": true,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": true,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_authOrigins_unique_pairs` ON `_authOrigins` (collectionRef, recordRef, fingerprint)"
+    ],
+    "system": true
+  },
+  {
+    "id": "pbc_2281828961",
+    "listRule": "@request.auth.id != '' && recordRef = @request.auth.id && collectionRef = @request.auth.collectionId",
+    "viewRule": "@request.auth.id != '' && recordRef = @request.auth.id && collectionRef = @request.auth.collectionId",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": "@request.auth.id != '' && recordRef = @request.auth.id && collectionRef = @request.auth.collectionId",
+    "name": "_externalAuths",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text455797646",
+        "max": 0,
+        "min": 0,
+        "name": "collectionRef",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text127846527",
+        "max": 0,
+        "min": 0,
+        "name": "recordRef",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text2462348188",
+        "max": 0,
+        "min": 0,
+        "name": "provider",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text1044722854",
+        "max": 0,
+        "min": 0,
+        "name": "providerId",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": true,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": true,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_externalAuths_record_provider` ON `_externalAuths` (collectionRef, recordRef, provider)",
+      "CREATE UNIQUE INDEX `idx_externalAuths_collection_provider` ON `_externalAuths` (collectionRef, provider, providerId)"
+    ],
+    "system": true
+  },
+  {
+    "id": "pbc_2279338944",
+    "listRule": "@request.auth.id != '' && recordRef = @request.auth.id && collectionRef = @request.auth.collectionId",
+    "viewRule": "@request.auth.id != '' && recordRef = @request.auth.id && collectionRef = @request.auth.collectionId",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "_mfas",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text455797646",
+        "max": 0,
+        "min": 0,
+        "name": "collectionRef",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text127846527",
+        "max": 0,
+        "min": 0,
+        "name": "recordRef",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text1582905952",
+        "max": 0,
+        "min": 0,
+        "name": "method",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": true,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": true,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE INDEX `idx_mfas_collectionRef_recordRef` ON `_mfas` (collectionRef,recordRef)"
+    ],
+    "system": true
+  },
+  {
+    "id": "pbc_1638494021",
+    "listRule": "@request.auth.id != '' && recordRef = @request.auth.id && collectionRef = @request.auth.collectionId",
+    "viewRule": "@request.auth.id != '' && recordRef = @request.auth.id && collectionRef = @request.auth.collectionId",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "_otps",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text455797646",
+        "max": 0,
+        "min": 0,
+        "name": "collectionRef",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text127846527",
+        "max": 0,
+        "min": 0,
+        "name": "recordRef",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cost": 8,
+        "hidden": true,
+        "id": "password901924565",
+        "max": 0,
+        "min": 0,
+        "name": "password",
+        "pattern": "",
+        "presentable": false,
+        "required": true,
+        "system": true,
+        "type": "password"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": true,
+        "id": "text3866985172",
+        "max": 0,
+        "min": 0,
+        "name": "sentTo",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": false,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": true,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": true,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE INDEX `idx_otps_collectionRef_recordRef` ON `_otps` (collectionRef, recordRef)"
+    ],
+    "system": true
   },
   {
     "id": "pbc_1967373549",
@@ -777,11 +1173,11 @@
   },
   {
     "id": "pbc_1473742649",
-    "listRule": "@request.auth.id != \"\" &&\n@request.auth.id = user // Can only view your own picks in this collection - otherwise use \"visibleseasonpicks\" collection",
+    "listRule": "@request.auth.id != \"\" // If you know what you're doing you can easily request all picks here. But If I restrict this to the current user, the subscription events are blocked...",
     "viewRule": "@request.auth.id != \"\" &&\n@request.auth.id = user // Can only view your own picks in this collection - otherwise use \"visibleseasonpicks\" collection",
-    "createRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@now <= \"2025-03-16\"",
-    "updateRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@now <= \"2025-03-16\"",
-    "deleteRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@now <= \"2025-03-16\"",
+    "createRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@collection.visibleseasonpickslength.total <= 0 // Can only change picks when no seasonpick is visible - use this indirection because the view collection uses the first race.qualidate",
+    "updateRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@collection.visibleseasonpickslength.total <= 0 // Can only change picks when no seasonpick is visible - use this indirection because the view collection uses the first race.qualidate",
+    "deleteRule": "@request.auth.id != \"\" &&\n@request.auth.id = user &&\n@collection.visibleseasonpickslength.total <= 0 // Can only change picks when no seasonpick is visible - use this indirection because the view collection uses the first race.qualidate",
     "name": "seasonpicks",
     "type": "base",
     "fields": [
@@ -1418,6 +1814,152 @@
     "viewQuery": "SELECT sp.id, sp.user, sp.hottake\nFROM seasonpicks sp;"
   },
   {
+    "id": "pbc_2367054703",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "racepickpoints",
+    "type": "view",
+    "fields": [
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 0,
+        "min": 0,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1736455494",
+        "hidden": false,
+        "id": "_clone_KXD4",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "user",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "_clone_pUep",
+        "max": null,
+        "min": null,
+        "name": "step",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "json1659416786",
+        "maxSize": 1,
+        "name": "pxx_points",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "json4198926754",
+        "maxSize": 1,
+        "name": "dnf_points",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      }
+    ],
+    "indexes": [],
+    "system": false,
+    "viewQuery": "SELECT\n    rp.id,\n    rp.user,\n    -- rp.race,\n    r.step,\n  \n    -- rp.pxx,\n    -- rr.pxxs,\n    (CASE\n        -- Correct pxx pick\n        WHEN rp.pxx = JSON_EXTRACT(rr.pxxs, '$[3]') THEN 10\n  \n        WHEN rp.pxx = JSON_EXTRACT(rr.pxxs, '$[2]') THEN 6\n        WHEN rp.pxx = JSON_EXTRACT(rr.pxxs, '$[4]') THEN 6\n        WHEN rp.pxx = JSON_EXTRACT(rr.pxxs, '$[1]') THEN 3\n        WHEN rp.pxx = JSON_EXTRACT(rr.pxxs, '$[5]') THEN 3\n        WHEN rp.pxx = JSON_EXTRACT(rr.pxxs, '$[0]') THEN 1\n        WHEN rp.pxx = JSON_EXTRACT(rr.pxxs, '$[6]') THEN 1\n  \n        ELSE 0 \n    END) AS pxx_points,\n  \n    -- rp.dnf,\n    -- rr.dnfs,\n    (CASE\n        -- Correct dnf pick with a single DNF\n        WHEN rr.dnfs LIKE '[\"' || rp.dnf || '\"]' THEN 10\n  \n        -- Correct dnf pick with multiple DNFs\n        WHEN rr.dnfs LIKE '[%,\"' || rp.dnf || '\",%]' THEN 10\n  \n        ELSE 0 \n    END) AS dnf_points\nFROM racepicks rp\nJOIN races r ON rp.race = r.id\nJOIN raceresults rr ON rp.race = rr.race\nWHERE pxx_points > 0 OR dnf_points > 0\nORDER BY r.step ASC;"
+  },
+  {
+    "id": "pbc_3585110310",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "racepickpointsacc",
+    "type": "view",
+    "fields": [
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 0,
+        "min": 0,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cascadeDelete": false,
+        "collectionId": "pbc_1736455494",
+        "hidden": false,
+        "id": "_clone_khyC",
+        "maxSelect": 1,
+        "minSelect": 0,
+        "name": "user",
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "relation"
+      },
+      {
+        "hidden": false,
+        "id": "json2525027839",
+        "maxSize": 1,
+        "name": "total_pxx_points",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "json237954191",
+        "maxSize": 1,
+        "name": "total_dnf_points",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      },
+      {
+        "hidden": false,
+        "id": "json4021202239",
+        "maxSize": 1,
+        "name": "total_points",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "json"
+      }
+    ],
+    "indexes": [],
+    "system": false,
+    "viewQuery": "SELECT\n    p.id,\n    p.user,\n    SUM(p.pxx_points) AS total_pxx_points,\n    SUM(p.dnf_points) AS total_dnf_points,\n    SUM(p.pxx_points + p.dnf_points) AS total_points\nFROM racepickpoints p\nGROUP BY user\nORDER BY total_points DESC;"
+  },
+  {
     "id": "pbc_2823555101",
     "listRule": "",
     "viewRule": "",
@@ -1686,7 +2228,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1736455494",
         "hidden": false,
-        "id": "_clone_3f24",
+        "id": "_clone_m9pK",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "user",
@@ -1698,7 +2240,7 @@
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "_clone_1T09",
+        "id": "_clone_u2R4",
         "max": 0,
         "min": 0,
         "name": "hottake",
@@ -1713,7 +2255,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_MpwO",
+        "id": "_clone_g7n6",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "wdcwinner",
@@ -1726,7 +2268,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1568971955",
         "hidden": false,
-        "id": "_clone_RcA9",
+        "id": "_clone_i5Fn",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "wccwinner",
@@ -1739,7 +2281,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_rGiM",
+        "id": "_clone_MfxF",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "mostovertakes",
@@ -1752,7 +2294,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_kElK",
+        "id": "_clone_7Y5f",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "mostdnfs",
@@ -1763,7 +2305,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_8zYy",
+        "id": "_clone_09pS",
         "max": null,
         "min": null,
         "name": "doohanstarts",
@@ -1777,7 +2319,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_MaXG",
+        "id": "_clone_MWpR",
         "maxSelect": 10,
         "minSelect": 10,
         "name": "teamwinners",
@@ -1790,7 +2332,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_prCR",
+        "id": "_clone_OOoD",
         "maxSelect": 20,
         "minSelect": 3,
         "name": "podiums",
@@ -1802,6 +2344,47 @@
     ],
     "indexes": [],
     "system": false,
-    "viewQuery": "-- This query only returns the season picks if the first race has started\nSELECT pick.id, pick.user, pick.hottake, pick.wdcwinner, pick.wccwinner, pick.mostovertakes, pick.mostdnfs, pick.doohanstarts, pick.teamwinners, pick.podiums\nFROM seasonpicks pick\nWHERE DATE('now') > '2025-03-16';"
+    "viewQuery": "-- This query only returns the season picks if the first race has started\nSELECT pick.id, pick.user, pick.hottake, pick.wdcwinner, pick.wccwinner, pick.mostovertakes, pick.mostdnfs, pick.doohanstarts, pick.teamwinners, pick.podiums\nFROM seasonpicks pick\nWHERE DATETIME('now') >= (SELECT MIN(qualidate) FROM races);"
+  },
+  {
+    "id": "pbc_638641526",
+    "listRule": null,
+    "viewRule": null,
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "visibleseasonpickslength",
+    "type": "view",
+    "fields": [
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 0,
+        "min": 0,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "number3257917790",
+        "max": null,
+        "min": null,
+        "name": "total",
+        "onlyInt": false,
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "number"
+      }
+    ],
+    "indexes": [],
+    "system": false,
+    "viewQuery": "-- This is used inside the seasonpicks API filters\nSELECT\n  (ROW_NUMBER() OVER()) as id,\n  COUNT(\"*\") as total\nFROM visibleseasonpicks"
   }
 ]
