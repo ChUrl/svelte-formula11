@@ -7,6 +7,8 @@ import type {
   Hottake,
   Race,
   RacePick,
+  RacePickPoints,
+  RacePickPointsAcc,
   RaceResult,
   SeasonPick,
   SeasonPickedUser,
@@ -260,4 +262,30 @@ export const fetch_seasonpickedusers = async (
   });
 
   return seasonpickedusers;
+};
+
+/**
+ * Fetch all [RacePickPoints] from the database
+ */
+export const fetch_racepickpoints = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<RacePickPoints[]> => {
+  const racepickpoints: RacePickPoints[] = await pb
+    .collection("racepickpoints")
+    .getFullList({ fetch: fetch });
+
+  return racepickpoints;
+};
+
+/**
+ * Fetch all [RacePickPointsAcc] from the database, ordered descendingly by total points.
+ */
+export const fetch_racepickpointsacc = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<RacePickPointsAcc[]> => {
+  const racepickpointsacc: RacePickPointsAcc[] = await pb
+    .collection("racepickpointsacc")
+    .getFullList({ fetch: fetch });
+
+  return racepickpointsacc;
 };
