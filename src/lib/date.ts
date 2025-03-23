@@ -24,5 +24,8 @@ export const timeformat: string = "HH:mm";
  * Format a [Date] object using a [date-fns] formatstring.
  * This function uses localtime instead of UTC.
  */
-export const format_date = <T extends Date | string>(date: T, formatstring: string): string =>
-  format(new Date(date), formatstring);
+export const format_date = <T extends Date | string>(date: T, formatstring: string): string => {
+  if (!date) return "";
+
+  return format(new Date(date), formatstring);
+};
