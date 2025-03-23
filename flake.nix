@@ -81,6 +81,9 @@
         packages = with pkgs; [
           nodejs_23
           pocketbase
+
+          sqlite # For sqlite console
+          sqlitebrowser # To check low-level pocketbase data
         ];
 
         # Use $1 for positional args
@@ -88,7 +91,7 @@
           {
             name = "pb";
             help = "Serve PocketBase";
-            command = "pocketbase serve --http 192.168.86.50:8090";
+            command = "pocketbase serve --http 192.168.86.50:8090 --dev";
           }
           {
             name = "dev";
