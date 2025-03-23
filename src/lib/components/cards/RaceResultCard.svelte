@@ -236,7 +236,7 @@
         name="race"
         bind:value={race_select_value}
         options={race_dropdown_options(races).filter(
-          (option: DropdownOption) => !present_results.includes(option.value),
+          (option: DropdownOption) => result || !present_results.includes(option.value),
         )}
         {labelwidth}
         {disabled}
