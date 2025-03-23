@@ -8,7 +8,7 @@
     type ModalStore,
     type ToastStore,
   } from "@skeletonlabs/skeleton";
-  import { Button, Card, Dropdown } from "$lib/components";
+  import { Button, Card, Dropdown, type DropdownOption } from "$lib/components";
   import type { Driver, Race, RaceResult, Substitution } from "$lib/schema";
   import { get_by_value } from "$lib/database";
   import { race_dropdown_options } from "$lib/dropdown";
@@ -46,6 +46,9 @@
   let substitutions: Substitution[] | undefined = $state(undefined);
   data.substitutions.then((s: Substitution[]) => (substitutions = s));
 
+  let raceresults: RaceResult[] | undefined = $state(undefined);
+  data.raceresults.then((r: RaceResult[]) => (raceresults = r));
+
   // Constants
   const labelwidth: string = "70px";
 
@@ -57,6 +60,11 @@
   let currentrace: Race | undefined = $derived(
     get_by_value<Race>(races ?? [], "id", race_select_value) ?? undefined,
   );
+
+  let present_results: string[] = $derived.by(() => {
+    if (!raceresults || raceresults.length === 0) return [];
+    return raceresults.map((raceresult: RaceResult) => raceresult.race);
+  });
 
   let pxxs_placeholder: string = $derived(
     currentrace
@@ -227,7 +235,9 @@
       <Dropdown
         name="race"
         bind:value={race_select_value}
-        options={race_dropdown_options(races)}
+        options={race_dropdown_options(races).filter(
+          (option: DropdownOption) => !present_results.includes(option.value),
+        )}
         {labelwidth}
         {disabled}
         {required}
