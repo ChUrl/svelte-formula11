@@ -1,6 +1,8 @@
 import type { ScrapedDriverStanding, ScrapedRaceResult, ScrapedTeamStanding } from "$lib/schema";
 import * as cheerio from "cheerio";
 
+// TODO: Validate the generated stuff
+
 export const base_url: string = "https://www.formula1.com/en/results/2025";
 
 /**
