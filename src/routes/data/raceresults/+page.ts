@@ -2,7 +2,7 @@ import { fetch_drivers, fetch_raceresults, fetch_races, fetch_substitutions } fr
 import type { PageLoad } from "../../$types";
 
 export const load: PageLoad = async ({ fetch, depends }) => {
-  depends("data:drivers", "data:races", "data:raceresults");
+  depends("data:drivers", "data:races", "data:raceresults", "data:substitutions");
 
   return {
     drivers: fetch_drivers(fetch),
