@@ -145,3 +145,14 @@ export interface RacePickPointsAcc {
   total_dnf_points: number;
   total_points: number;
 }
+
+// Scraped Data
+
+export interface ScrapedRaceResult {
+  id: string;
+  race_step: number;
+  driver_code: string;
+  position: number;
+  status: string; // Either contains time to leader or DNF/DSQ...
+  points: number;
+}
