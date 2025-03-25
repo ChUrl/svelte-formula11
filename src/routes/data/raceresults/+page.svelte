@@ -54,6 +54,8 @@
       data_value_name: "pxxs",
       label: "Standing",
       valuefun: async (value: string): Promise<string> => {
+        if (value.length === 0 || value === "") return "";
+
         const pxxs_array: string[] = value.toString().split(",");
         const pxxs_codes: string[] = await Promise.all(
           pxxs_array.map(
