@@ -380,6 +380,16 @@
       <Button href="/rules" onclick={close_drawer} color="surface" width="w-full" shadow>
         Rules
       </Button>
+      <Button
+        href="https://gitea.vps.chriphost.de/christoph/svelte-formula11/projects/1"
+        onclick={close_drawer}
+        color="surface"
+        width="w-full"
+        shadow
+        newtab
+      >
+        Roadmap
+      </Button>
     </div>
   {:else if $drawerStore.id === "data_drawer"}
     <!-- Data Drawer -->
@@ -585,6 +595,14 @@
         <Button href="/leaderboard" color="primary" activate_href>Leaderboard</Button>
         <Button href="/statistics" color="primary" activate_href>Statistics</Button>
         <Button href="/rules" color="primary" activate_href>Rules</Button>
+        <Button
+          href="https://gitea.vps.chriphost.de/christoph/svelte-formula11/projects/1"
+          color="primary"
+          activate_href
+          newtab
+        >
+          Roadmap
+        </Button>
       </div>
 
       <svelte:fragment slot="trail">
