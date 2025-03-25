@@ -398,9 +398,6 @@
       >
         Season
       </Button>
-      <Button href="/data/users" onclick={close_drawer} color="surface" width="w-full" shadow>
-        Users
-      </Button>
       <Button
         href="/data/official/driverstandings"
         onclick={close_drawer}
@@ -409,6 +406,9 @@
         shadow
       >
         Official
+      </Button>
+      <Button href="/data/users" onclick={close_drawer} color="surface" width="w-full" shadow>
+        Users
       </Button>
     </div>
   {:else if $drawerStore.id === "login_drawer"}
