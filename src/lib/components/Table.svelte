@@ -8,17 +8,20 @@
     /** The columns the table should have. */
     columns: TableColumn[];
 
+    /** Optional height classes */
+    height?: string;
+
     /** An optional function handling clicking on a table row */
     handler?: (event: Event, id: string) => Promise<void>;
   }
 
-  let { data, columns, handler = undefined }: TableProps = $props();
+  let { data, columns, height = "", handler = undefined }: TableProps = $props();
 </script>
 
 {#if data.length > 0}
-  <div class="table-container bg-white shadow">
-    <table class="table table-compact bg-white">
-      <thead>
+  <div class="table-container bg-white shadow {height}">
+    <table class="table table-compact !overflow-scroll bg-white">
+      <thead class="sticky top-0">
         <tr class="bg-surface-500">
           {#each columns as col}
             <th class="!px-3">{col.label}</th>
