@@ -182,10 +182,11 @@
         toastStore.trigger(get_error_toast("Please select a race!"));
         return;
       }
-      if (!pxxs_ids || pxxs_ids.length !== 7) {
-        toastStore.trigger(get_error_toast("Please select all 7 driver placements!"));
-        return;
-      }
+      // If enough drivers DNF/DSQ, theoretically pxxs_ids could be empty
+      // if (!pxxs_ids || pxxs_ids.length !== 7) {
+      //   toastStore.trigger(get_error_toast("Please select all 7 driver placements!"));
+      //   return;
+      // }
 
       const raceresult_data = {
         race: race_select_value,
