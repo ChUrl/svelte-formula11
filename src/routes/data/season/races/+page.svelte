@@ -69,5 +69,10 @@
   </Button>
 </div>
 {#await data.races then races}
-  <Table data={races} columns={races_columns} handler={race_handler} />
+  <Table
+    data={races}
+    columns={races_columns}
+    handler={race_handler}
+    height="h-[calc(100vh-260px)] lg:h-[calc(100vh-180px)]"
+  />
 {/await}
