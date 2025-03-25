@@ -69,5 +69,10 @@
   </Button>
 </div>
 {#await data.substitutions then substitutions}
-  <Table data={substitutions} columns={substitutions_columns} handler={substitution_handler} />
+  <Table
+    data={substitutions}
+    columns={substitutions_columns}
+    handler={substitution_handler}
+    height="h-[calc(100vh-260px)] lg:h-[calc(100vh-180px)]"
+  />
 {/await}
