@@ -97,5 +97,10 @@
   </Button>
 </div>
 {#await data.raceresults then results}
-  <Table data={results} columns={results_columns} handler={result_handler} />
+  <Table
+    data={results}
+    columns={results_columns}
+    handler={result_handler}
+    height="h-[calc(100vh-210px)] lg:h-[calc(100vh-126px)]"
+  />
 {/await}
