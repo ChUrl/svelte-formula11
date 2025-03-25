@@ -150,9 +150,23 @@ export interface RacePickPointsAcc {
 
 export interface ScrapedRaceResult {
   id: string;
-  race_step: number;
-  driver_code: string;
+  race_step: number; // This maps to races
+  driver_code: string; // This maps to drivers
   position: number;
   status: string; // Either contains time to leader or DNF/DSQ...
+  points: number;
+}
+
+export interface ScrapedDriverStanding {
+  id: string;
+  driver_code: string; // This maps to drivers
+  position: number;
+  points: number;
+}
+
+export interface ScrapedTeamStanding {
+  id: string;
+  team_fullname: string; // TODO: This does NOT map to teams! Add fullname to team data!
+  position: number;
   points: number;
 }
