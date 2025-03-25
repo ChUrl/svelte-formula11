@@ -10,6 +10,9 @@ import type {
   RacePickPoints,
   RacePickPointsAcc,
   RaceResult,
+  ScrapedDriverStanding,
+  ScrapedRaceResult,
+  ScrapedTeamStanding,
   SeasonPick,
   SeasonPickedUser,
   Substitution,
@@ -288,4 +291,43 @@ export const fetch_racepickpointsacc = async (
     .getFullList({ fetch: fetch });
 
   return racepickpointsacc;
+};
+
+/**
+ * Fetch all [ScrapedDriverStandings] from the database, ordered ascendingly by position.
+ */
+export const fetch_scraped_driverstandings = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<ScrapedDriverStanding[]> => {
+  const scraped_driverstandings: ScrapedDriverStanding[] = await pb
+    .collection("scraped_driverstandings")
+    .getFullList({ fetch: fetch, sort: "+position" });
+
+  return scraped_driverstandings;
+};
+
+/**
+ * Fetch all [ScrapedTeamStandings] from the database, ordered ascendingly by position.
+ */
+export const fetch_scraped_teamstandings = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<ScrapedTeamStanding[]> => {
+  const scraped_teamstandings: ScrapedTeamStanding[] = await pb
+    .collection("scraped_teamstandings")
+    .getFullList({ fetch: fetch, sort: "+position" });
+
+  return scraped_teamstandings;
+};
+
+/**
+ * Fetch all [ScrapedRaceResults] from the database, ordered descendingly by race step.
+ */
+export const fetch_scraped_raceresults = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<ScrapedRaceResult[]> => {
+  const scraped_raceresults: ScrapedRaceResult[] = await pb
+    .collection("scraped_raceresults")
+    .getFullList({ fetch: fetch, sort: "-race_step,+position" });
+
+  return scraped_raceresults;
 };
