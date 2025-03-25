@@ -43,4 +43,9 @@
   <title>Formula 11 - Users</title>
 </svelte:head>
 
-<Table data={data.users} columns={users_columns} handler={users_handler} />
+<Table
+  data={data.users}
+  columns={users_columns}
+  handler={users_handler}
+  height="h-[calc(100vh-160px)] lg:h-[calc(100vh-76px)]"
+/>
