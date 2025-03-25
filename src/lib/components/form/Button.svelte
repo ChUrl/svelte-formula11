@@ -21,6 +21,9 @@
     /** Make the button act as a link. */
     href?: string;
 
+    /** Open the link inside a new tab. */
+    newtab?: boolean;
+
     /** Add a width class to the button. */
     width?: string;
 
@@ -54,6 +57,7 @@
     color = undefined,
     submit = false,
     href = undefined,
+    newtab = false,
     width = "w-auto",
     activate = false,
     activate_href = false,
@@ -70,6 +74,8 @@
 {#if href}
   <a
     {href}
+    target={newtab ? "_blank" : undefined}
+    rel={newtab ? "noopener noreferrer" : undefined}
     class="btn m-0 select-none px-2 py-2 {color ? `variant-filled-${color}` : ''} {width} {activate
       ? 'btn-hover'
       : ''} {activate_href && is_at_path(href) ? 'btn-hover' : ''} {shadow
