@@ -61,5 +61,10 @@
   </Button>
 </div>
 {#await data.drivers then drivers}
-  <Table data={drivers} columns={drivers_columns} handler={driver_handler} />
+  <Table
+    data={drivers}
+    columns={drivers_columns}
+    handler={driver_handler}
+    height="h-[calc(100vh-260px)] lg:h-[calc(100vh-180px)]"
+  />
 {/await}
