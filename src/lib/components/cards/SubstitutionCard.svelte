@@ -113,10 +113,10 @@
   };
 </script>
 
-{#await Promise.all([data.graphics, data.drivers]) then [graphics, drivers]}
+{#await data.drivers then drivers}
   <Card
-    imgsrc={get_by_value<Driver>(drivers, "id", substitution?.substitute ?? "")?.headshot_url ??
-      get_driver_headshot_template(graphics)}
+    imgsrc={get_by_value(drivers, "id", substitution?.substitute ?? "")?.headshot_url ??
+      get_driver_headshot_template(data.graphics)}
     imgid="headshot_preview"
     width="w-full sm:w-auto"
     imgwidth={DRIVER_HEADSHOT_WIDTH}
