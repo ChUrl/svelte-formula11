@@ -50,7 +50,7 @@
       label: "Team",
       valuefun: async (value: string): Promise<string> => {
         const team: Team | undefined = get_by_value(await data.teams, "id", value);
-        return `<span class='badge border mr-2' style='color: ${team?.color ?? "#FFFFFF"}; background: ${team?.color ?? "#FFFFFF"};'>C</span>${team?.name ?? "Invalid"}`;
+        return `<span class='badge mr-2' style='color: ${team?.color ?? "#FFFFFF"}; background: ${team?.color ?? "#FFFFFF"};'>C</span>${team?.name ?? "Invalid"}`;
       },
     },
     {
