@@ -19,6 +19,7 @@
     RaceResultCard,
     SeasonPickCard,
     EMailIcon,
+    TeamSwitchCard,
   } from "$lib/components";
   import { get_avatar_preview_event_handler } from "$lib/image";
   import {
@@ -58,13 +59,14 @@
   const modalStore: ModalStore = getModalStore();
   const modalRegistry: Record<string, ModalComponent> = {
     // Card data (e.g. team, driver etc.) is passed using $modalStore[0].meta
-    teamCard: { ref: TeamCard },
     driverCard: { ref: DriverCard },
     raceCard: { ref: RaceCard },
     racePickCard: { ref: RacePickCard },
     raceResultCard: { ref: RaceResultCard },
     seasonPickCard: { ref: SeasonPickCard },
     substitutionCard: { ref: SubstitutionCard },
+    teamCard: { ref: TeamCard },
+    teamSwitchCard: { ref: TeamSwitchCard },
   };
 
   // Toast config
