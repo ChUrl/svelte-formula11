@@ -24,6 +24,17 @@
 
     modalStore.trigger(modalSettings);
   };
+  const teamswitch_handler = async (event: Event, id?: string) => {
+    const modalSettings: ModalSettings = {
+      type: "component",
+      component: "teamSwitchCard",
+      meta: {
+        data,
+      },
+    };
+
+    modalStore.trigger(modalSettings);
+  };
 
   const drivers_columns: TableColumn[] = $derived([
     {
@@ -55,9 +66,12 @@
   <title>Formula 11 - Drivers</title>
 </svelte:head>
 
-<div class="pb-2">
+<div class="flex gap-2 pb-2">
   <Button width="w-full" color="tertiary" onclick={driver_handler} shadow>
     <span class="font-bold">Create New Driver</span>
+  </Button>
+  <Button width="w-full" color="secondary" onclick={teamswitch_handler} shadow>
+    <span class="font-bold">Switch Driver Team</span>
   </Button>
 </div>
 {#await data.drivers then drivers}
