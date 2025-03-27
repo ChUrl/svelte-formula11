@@ -121,6 +121,14 @@
             toastStore.trigger(get_error_toast("Invalid driver id!"));
             return;
           }
+          // TODO: Not sure if we want to switch teams without creating a new driver
+          if (team_select_value !== driver.team) {
+            toastStore.trigger(
+              get_error_toast("Please use the team switch button to change teams!"),
+            );
+            return;
+          }
+
           await pb.collection("drivers").update(driver.id, driver_data);
         }
         modalStore.close();
