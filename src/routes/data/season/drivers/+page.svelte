@@ -59,6 +59,12 @@
       valuefun: async (value: boolean): Promise<string> =>
         `<span class='badge variant-filled-${value ? "tertiary" : "primary"} text-center' style='width: 36px;'>${value ? "Yes" : "No"}</span>`,
     },
+    {
+      data_value_name: "started_active",
+      label: "Started Active",
+      valuefun: async (value: boolean): Promise<string> =>
+        `<span class='badge variant-filled-${value ? "tertiary" : "primary"} text-center' style='width: 36px;'>${value ? "Yes" : "No"}</span>`,
+    },
   ]);
 </script>
 
