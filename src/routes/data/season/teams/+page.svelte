@@ -37,7 +37,7 @@
       data_value_name: "color",
       label: "Color",
       valuefun: async (value: string): Promise<string> =>
-        `<span class='badge border mr-2' style='color: ${value}; background: ${value};'>C</span>`,
+        `<span class='badge mr-2' style='color: ${value}; background: ${value};'>C</span>`,
     },
   ]);
 </script>
