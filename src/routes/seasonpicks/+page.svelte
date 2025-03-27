@@ -366,8 +366,8 @@
             ? get_by_value(drivers, "id", pick.mostovertakes)
             : undefined}
           {@const mostdnfs = pick ? get_by_value(drivers, "id", pick.mostdnfs) : undefined}
-          {@const drivers_sorted = drivers
-            .filter((driver: Driver) => driver.active)
+          {@const drivers_startedactive = drivers
+            .filter((driver: Driver) => driver.started_active)
             .sort((a: Driver, b: Driver) => a.code.localeCompare(b.code))
             .sort((a: Driver, b: Driver) => a.team.localeCompare(b.team))}
 
@@ -464,7 +464,7 @@
               >
                 {#if pick && pick.teamwinners}
                   <div class="grid grid-cols-2 gap-1">
-                    {#each drivers_sorted as driver}
+                    {#each drivers_startedactive as driver}
                       {@const color: string = get_by_value(teams, "id", driver?.team ?? "")?.color ?? ""}
                       <div class="mx-auto w-fit text-xs lg:text-sm">
                         <div
@@ -493,7 +493,7 @@
               >
                 {#if pick && pick.podiums}
                   <div class="grid grid-cols-2 gap-1">
-                    {#each drivers_sorted as driver}
+                    {#each drivers_startedactive as driver}
                       {@const color: string = get_by_value(teams, "id", driver?.team ?? "")?.color ?? ""}
                       <div class="mx-auto w-fit text-xs lg:text-sm">
                         <div
