@@ -41,6 +41,7 @@ export interface Driver {
   headshot_url?: string;
   team: string;
   active: boolean;
+  started_active: boolean;
 }
 
 export interface Race {
