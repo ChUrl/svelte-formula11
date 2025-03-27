@@ -1,5 +1,177 @@
 [
   {
+    "id": "pbc_3142635823",
+    "listRule": null,
+    "viewRule": null,
+    "createRule": null,
+    "updateRule": null,
+    "deleteRule": null,
+    "name": "_superusers",
+    "type": "auth",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "cost": 0,
+        "hidden": true,
+        "id": "password901924565",
+        "max": 0,
+        "min": 8,
+        "name": "password",
+        "pattern": "",
+        "presentable": false,
+        "required": true,
+        "system": true,
+        "type": "password"
+      },
+      {
+        "autogeneratePattern": "[a-zA-Z0-9]{50}",
+        "hidden": true,
+        "id": "text2504183744",
+        "max": 60,
+        "min": 30,
+        "name": "tokenKey",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "exceptDomains": null,
+        "hidden": false,
+        "id": "email3885137012",
+        "name": "email",
+        "onlyDomains": null,
+        "presentable": false,
+        "required": true,
+        "system": true,
+        "type": "email"
+      },
+      {
+        "hidden": false,
+        "id": "bool1547992806",
+        "name": "emailVisibility",
+        "presentable": false,
+        "required": false,
+        "system": true,
+        "type": "bool"
+      },
+      {
+        "hidden": false,
+        "id": "bool256245529",
+        "name": "verified",
+        "presentable": false,
+        "required": false,
+        "system": true,
+        "type": "bool"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": true,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": true,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_tokenKey_pbc_3142635823` ON `_superusers` (`tokenKey`)",
+      "CREATE UNIQUE INDEX `idx_email_pbc_3142635823` ON `_superusers` (`email`) WHERE `email` != ''"
+    ],
+    "system": true,
+    "authRule": "",
+    "manageRule": null,
+    "authAlert": {
+      "enabled": true,
+      "emailTemplate": {
+        "subject": "Login from a new location",
+        "body": "<p>Hello,</p>\n<p>We noticed a login to your {APP_NAME} account from a new location.</p>\n<p>If this was you, you may disregard this email.</p>\n<p><strong>If this wasn't you, you should immediately change your {APP_NAME} account password to revoke access from all other locations.</strong></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+      }
+    },
+    "oauth2": {
+      "mappedFields": {
+        "id": "",
+        "name": "",
+        "username": "",
+        "avatarURL": ""
+      },
+      "enabled": false
+    },
+    "passwordAuth": {
+      "enabled": true,
+      "identityFields": [
+        "email"
+      ]
+    },
+    "mfa": {
+      "enabled": false,
+      "duration": 1800,
+      "rule": ""
+    },
+    "otp": {
+      "enabled": false,
+      "duration": 180,
+      "length": 8,
+      "emailTemplate": {
+        "subject": "OTP for {APP_NAME}",
+        "body": "<p>Hello,</p>\n<p>Your one-time password is: <strong>{OTP}</strong></p>\n<p><i>If you didn't ask for the one-time password, you can ignore this email.</i></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+      }
+    },
+    "authToken": {
+      "duration": 86400
+    },
+    "passwordResetToken": {
+      "duration": 1800
+    },
+    "emailChangeToken": {
+      "duration": 1800
+    },
+    "verificationToken": {
+      "duration": 259200
+    },
+    "fileToken": {
+      "duration": 180
+    },
+    "verificationTemplate": {
+      "subject": "Verify your {APP_NAME} email",
+      "body": "<p>Hello,</p>\n<p>Thank you for joining us at {APP_NAME}.</p>\n<p>Click on the button below to verify your email address.</p>\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-verification/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Verify</a>\n</p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+    },
+    "resetPasswordTemplate": {
+      "subject": "Reset your {APP_NAME} password",
+      "body": "<p>Hello,</p>\n<p>Click on the button below to reset your password.</p>\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-password-reset/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Reset password</a>\n</p>\n<p><i>If you didn't ask to reset your password, you can ignore this email.</i></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+    },
+    "confirmEmailChangeTemplate": {
+      "subject": "Confirm your {APP_NAME} new email address",
+      "body": "<p>Hello,</p>\n<p>Click on the button below to confirm your new email address.</p>\n<p>\n  <a class=\"btn\" href=\"{APP_URL}/_/#/auth/confirm-email-change/{TOKEN}\" target=\"_blank\" rel=\"noopener\">Confirm new email</a>\n</p>\n<p><i>If you didn't ask to change your email address, you can ignore this email.</i></p>\n<p>\n  Thanks,<br/>\n  {APP_NAME} team\n</p>"
+    }
+  },
+  {
     "id": "pbc_1736455494",
     "listRule": "",
     "viewRule": "",
@@ -726,6 +898,15 @@
         "type": "bool"
       },
       {
+        "hidden": false,
+        "id": "bool3136797097",
+        "name": "started_active",
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "bool"
+      },
+      {
         "hidden": true,
         "id": "autodate2990389176",
         "name": "created",
@@ -747,7 +928,7 @@
       }
     ],
     "indexes": [
-      "CREATE UNIQUE INDEX `idx_AK9arhApMx` ON `drivers` (`code`)"
+      "CREATE UNIQUE INDEX `idx_ChY3iWmGqf` ON `drivers` (\n  `code`,\n  `team`\n)"
     ],
     "system": false
   },
@@ -976,10 +1157,10 @@
         "hidden": false,
         "id": "relation1047762192",
         "maxSelect": 7,
-        "minSelect": 7,
+        "minSelect": 0,
         "name": "pxxs",
         "presentable": false,
-        "required": true,
+        "required": false,
         "system": false,
         "type": "relation"
       },
@@ -1169,6 +1350,293 @@
       "CREATE UNIQUE INDEX `idx_MOzS2Ww4Sk` ON `races` (`name`)",
       "CREATE UNIQUE INDEX `idx_Uiw6vPV2wy` ON `races` (`step`)"
     ],
+    "system": false
+  },
+  {
+    "id": "pbc_3023263128",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
+    "name": "scraped_driverstandings",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text2428491277",
+        "max": 3,
+        "min": 3,
+        "name": "driver_code",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "number1177347317",
+        "max": null,
+        "min": 1,
+        "name": "position",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "number666537513",
+        "max": null,
+        "min": 0,
+        "name": "points",
+        "onlyInt": false,
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [],
+    "system": false
+  },
+  {
+    "id": "pbc_2182053151",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
+    "name": "scraped_raceresults",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "number516222579",
+        "max": 24,
+        "min": 1,
+        "name": "race_step",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text3112802451",
+        "max": 3,
+        "min": 3,
+        "name": "driver_code",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "number1177347317",
+        "max": null,
+        "min": 1,
+        "name": "position",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text2063623452",
+        "max": 0,
+        "min": 0,
+        "name": "status",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "number666537513",
+        "max": null,
+        "min": 0,
+        "name": "points",
+        "onlyInt": false,
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [
+      "CREATE UNIQUE INDEX `idx_JT8bhbV2YG` ON `scraped_raceresults` (\n  `race_step`,\n  `driver_code`\n)",
+      "CREATE UNIQUE INDEX `idx_hFngwBjU8j` ON `scraped_raceresults` (\n  `race_step`,\n  `position`\n)"
+    ],
+    "system": false
+  },
+  {
+    "id": "pbc_286850423",
+    "listRule": "",
+    "viewRule": "",
+    "createRule": "",
+    "updateRule": "",
+    "deleteRule": "",
+    "name": "scraped_teamstandings",
+    "type": "base",
+    "fields": [
+      {
+        "autogeneratePattern": "[a-z0-9]{15}",
+        "hidden": false,
+        "id": "text3208210256",
+        "max": 15,
+        "min": 15,
+        "name": "id",
+        "pattern": "^[a-z0-9]+$",
+        "presentable": false,
+        "primaryKey": true,
+        "required": true,
+        "system": true,
+        "type": "text"
+      },
+      {
+        "autogeneratePattern": "",
+        "hidden": false,
+        "id": "text690463184",
+        "max": 0,
+        "min": 0,
+        "name": "team_fullname",
+        "pattern": "",
+        "presentable": false,
+        "primaryKey": false,
+        "required": true,
+        "system": false,
+        "type": "text"
+      },
+      {
+        "hidden": false,
+        "id": "number1177347317",
+        "max": 10,
+        "min": 1,
+        "name": "position",
+        "onlyInt": true,
+        "presentable": false,
+        "required": true,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "number666537513",
+        "max": null,
+        "min": 0,
+        "name": "points",
+        "onlyInt": false,
+        "presentable": false,
+        "required": false,
+        "system": false,
+        "type": "number"
+      },
+      {
+        "hidden": false,
+        "id": "autodate2990389176",
+        "name": "created",
+        "onCreate": true,
+        "onUpdate": false,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      },
+      {
+        "hidden": false,
+        "id": "autodate3332085495",
+        "name": "updated",
+        "onCreate": true,
+        "onUpdate": true,
+        "presentable": false,
+        "system": false,
+        "type": "autodate"
+      }
+    ],
+    "indexes": [],
     "system": false
   },
   {
@@ -1565,7 +2033,7 @@
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "_clone_E3yC",
+        "id": "_clone_fPMW",
         "max": 10,
         "min": 3,
         "name": "username",
@@ -1579,7 +2047,7 @@
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "_clone_wfxT",
+        "id": "_clone_Wusg",
         "max": 0,
         "min": 0,
         "name": "firstname",
@@ -1592,7 +2060,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_bgsF",
+        "id": "_clone_NeO9",
         "maxSelect": 1,
         "maxSize": 0,
         "mimeTypes": [
@@ -1608,7 +2076,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_r1JL",
+        "id": "_clone_hY91",
         "name": "admin",
         "presentable": false,
         "required": false,
@@ -1657,7 +2125,7 @@
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "_clone_wBWE",
+        "id": "_clone_DK1r",
         "max": 0,
         "min": 0,
         "name": "name",
@@ -1670,7 +2138,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_GAG5",
+        "id": "_clone_vhUL",
         "max": null,
         "min": null,
         "name": "step",
@@ -1682,7 +2150,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_jqcN",
+        "id": "_clone_3jG4",
         "maxSelect": 1,
         "maxSize": 0,
         "mimeTypes": [
@@ -1698,7 +2166,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_BRqQ",
+        "id": "_clone_kazm",
         "max": null,
         "min": null,
         "name": "pxx",
@@ -1710,7 +2178,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_PftQ",
+        "id": "_clone_KPr7",
         "max": "",
         "min": "",
         "name": "sprintqualidate",
@@ -1721,7 +2189,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_wSrB",
+        "id": "_clone_a1zU",
         "max": "",
         "min": "",
         "name": "sprintdate",
@@ -1732,7 +2200,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_NFx9",
+        "id": "_clone_TUqn",
         "max": "",
         "min": "",
         "name": "qualidate",
@@ -1743,7 +2211,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_YYyB",
+        "id": "_clone_YboV",
         "max": "",
         "min": "",
         "name": "racedate",
@@ -1785,7 +2253,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1736455494",
         "hidden": false,
-        "id": "_clone_US3n",
+        "id": "_clone_pIDk",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "user",
@@ -1797,7 +2265,7 @@
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "_clone_5Ma5",
+        "id": "_clone_ysK2",
         "max": 0,
         "min": 0,
         "name": "hottake",
@@ -1841,7 +2309,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1736455494",
         "hidden": false,
-        "id": "_clone_KXD4",
+        "id": "_clone_4RjP",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "user",
@@ -1852,7 +2320,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_pUep",
+        "id": "_clone_OwkZ",
         "max": null,
         "min": null,
         "name": "step",
@@ -1915,7 +2383,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1736455494",
         "hidden": false,
-        "id": "_clone_khyC",
+        "id": "_clone_oTTu",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "user",
@@ -1987,7 +2455,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_2533072930",
         "hidden": false,
-        "id": "_clone_NX00",
+        "id": "_clone_XoxW",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "race",
@@ -2000,12 +2468,12 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_RMyl",
+        "id": "_clone_lN2E",
         "maxSelect": 7,
-        "minSelect": 7,
+        "minSelect": 0,
         "name": "pxxs",
         "presentable": false,
-        "required": true,
+        "required": false,
         "system": false,
         "type": "relation"
       },
@@ -2013,7 +2481,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_tWkO",
+        "id": "_clone_aCgW",
         "maxSelect": 20,
         "minSelect": 0,
         "name": "dnfs",
@@ -2054,7 +2522,7 @@
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "_clone_ds2o",
+        "id": "_clone_ASwf",
         "max": 10,
         "min": 3,
         "name": "username",
@@ -2068,7 +2536,7 @@
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "_clone_r41d",
+        "id": "_clone_feSn",
         "max": 0,
         "min": 0,
         "name": "firstname",
@@ -2081,7 +2549,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_lfEH",
+        "id": "_clone_AuI7",
         "maxSelect": 1,
         "maxSize": 0,
         "mimeTypes": [
@@ -2097,7 +2565,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_2VGz",
+        "id": "_clone_kxwg",
         "name": "admin",
         "presentable": false,
         "required": false,
@@ -2147,7 +2615,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1736455494",
         "hidden": false,
-        "id": "_clone_7f09",
+        "id": "_clone_gNum",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "user",
@@ -2160,7 +2628,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_2533072930",
         "hidden": false,
-        "id": "_clone_3gFx",
+        "id": "_clone_JngA",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "race",
@@ -2173,7 +2641,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_6rnW",
+        "id": "_clone_lSLH",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "pxx",
@@ -2186,7 +2654,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_SlAh",
+        "id": "_clone_fr0S",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "dnf",
@@ -2228,7 +2696,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1736455494",
         "hidden": false,
-        "id": "_clone_m9pK",
+        "id": "_clone_G7K2",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "user",
@@ -2240,7 +2708,7 @@
       {
         "autogeneratePattern": "",
         "hidden": false,
-        "id": "_clone_u2R4",
+        "id": "_clone_oLff",
         "max": 0,
         "min": 0,
         "name": "hottake",
@@ -2255,7 +2723,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_g7n6",
+        "id": "_clone_1le8",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "wdcwinner",
@@ -2268,7 +2736,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1568971955",
         "hidden": false,
-        "id": "_clone_i5Fn",
+        "id": "_clone_HQds",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "wccwinner",
@@ -2281,7 +2749,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_MfxF",
+        "id": "_clone_k21B",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "mostovertakes",
@@ -2294,7 +2762,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_7Y5f",
+        "id": "_clone_pgZL",
         "maxSelect": 1,
         "minSelect": 0,
         "name": "mostdnfs",
@@ -2305,7 +2773,7 @@
       },
       {
         "hidden": false,
-        "id": "_clone_09pS",
+        "id": "_clone_u3OO",
         "max": null,
         "min": null,
         "name": "doohanstarts",
@@ -2319,7 +2787,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_MWpR",
+        "id": "_clone_8Z5h",
         "maxSelect": 10,
         "minSelect": 10,
         "name": "teamwinners",
@@ -2332,7 +2800,7 @@
         "cascadeDelete": false,
         "collectionId": "pbc_1967373549",
         "hidden": false,
-        "id": "_clone_OOoD",
+        "id": "_clone_ahZg",
         "maxSelect": 20,
         "minSelect": 3,
         "name": "podiums",
