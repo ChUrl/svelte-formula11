@@ -15,6 +15,7 @@ import RaceResultCard from "./cards/RaceResultCard.svelte";
 import SeasonPickCard from "./cards/SeasonPickCard.svelte";
 import SubstitutionCard from "./cards/SubstitutionCard.svelte";
 import TeamCard from "./cards/TeamCard.svelte";
+import TeamSwitchCard from "./cards/TeamSwitchCard.svelte";
 
 import type { DropdownOption } from "./form/Dropdown";
 import type { TableColumn } from "./Table";
@@ -48,6 +49,7 @@ export {
   SeasonPickCard,
   SubstitutionCard,
   TeamCard,
+  TeamSwitchCard,
 
   // Types
   type DropdownOption,
