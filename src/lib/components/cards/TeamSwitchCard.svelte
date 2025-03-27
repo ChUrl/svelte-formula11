@@ -82,6 +82,7 @@
         headshot: headshot_blob, // NOTE: Duplicates the image, but no issue for low volume
         team: team_value,
         active: true,
+        started_active: false,
       };
       try {
         await pb.collection("drivers").create(new_driver_data);
