@@ -144,7 +144,7 @@
     pxxs_input = "";
 
     // Manage ids that are submitted via form
-    const id: string = get_by_value(drivers, "code", event.detail.value)?.id ?? "Invalid";
+    const id: string = get_by_value(drivers.filter((driver: Driver) => driver.active), "code", event.detail.value)?.id ?? "Invalid";
     if (!pxxs_ids.includes(id)) {
       pxxs_ids.push(id);
     }
@@ -165,7 +165,7 @@
     dnfs_input = "";
 
     // Manage ids that are submitted via form
-    const id: string = get_by_value(drivers, "code", event.detail.value)?.id ?? "Invalid";
+    const id: string = get_by_value(drivers.filter((driver: Driver) => driver.active), "code", event.detail.value)?.id ?? "Invalid";
     if (!dnfs_ids.includes(id)) {
       dnfs_ids.push(id);
     }
