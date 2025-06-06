@@ -256,7 +256,7 @@
       {#await data.currentpickedusers then currentpicked}
         {#each currentpicked as user}
           <div
-            class="card ml-1 mt-2 w-full min-w-14 rounded-b-none py-2 lg:ml-2
+            class="card ml-1 mt-2 w-full min-w-14 rounded-b-none py-2
             {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
           >
             <!-- Avatar + name display at the top -->
@@ -293,7 +293,7 @@
 
           <div
             use:popup={race_popupsettings(race?.id ?? "Invalid")}
-            class="card mt-1 flex h-20 w-7 cursor-pointer flex-col !rounded-r-none lg:mt-2 lg:w-36 lg:p-2"
+            class="card mt-1 flex h-20 w-7 cursor-pointer flex-col !rounded-r-none lg:w-36 lg:p-2"
           >
             <!-- For large screens -->
             <span class="hidden text-sm font-bold lg:block">
@@ -351,7 +351,7 @@
         {#each currentpicked as user}
           {@const picks = racepicks.filter((pick: RacePick) => pick.user === user.id)}
 
-          <div class="ml-1 w-full min-w-14 lg:ml-2">
+          <div class="ml-1 w-full min-w-14">
             {#each raceresults as result}
               {@const race = get_by_value(races, "id", result.race)}
               {@const pick = picks.filter((pick: RacePick) => pick.race === race?.id)[0]}
@@ -360,7 +360,7 @@
                 result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? PXX_COLORS[3] : PXX_COLORS[-1]}
 
               {#if pick}
-                <div class="mt-1 h-20 w-full border bg-surface-300 px-1 py-2 lg:mt-2 lg:px-2">
+                <div class="mt-1 h-20 w-full border bg-surface-300 px-1 py-2 lg:px-2">
                   <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
                     <span
                       class="w-10 p-1 text-center text-xs rounded-container-token lg:text-sm"
@@ -377,7 +377,7 @@
                   </div>
                 </div>
               {:else}
-                <div class="mt-1 h-20 w-full px-1 py-2 lg:mt-2 lg:px-2"></div>
+                <div class="mt-1 h-20 w-full px-1 py-2 lg:px-2"></div>
               {/if}
             {/each}
           </div>
