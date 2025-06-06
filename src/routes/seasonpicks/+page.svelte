@@ -264,8 +264,8 @@
       {#await data.seasonpickedusers then seasonpicked}
         {#each seasonpicked as user}
           <div
-            class="card ml-1 mt-2 w-full min-w-36 rounded-b-none py-2
-            {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
+            class="card ml-1 mt-2 w-full min-w-36 rounded-b-none bg-surface-400 py-2
+            {$pbUser && $pbUser.username === user.username ? '!bg-primary-400' : ''}"
           >
             <!-- Avatar + name display at the top -->
             <div class="m-auto flex h-10 w-fit">
@@ -296,7 +296,7 @@
       class="sticky left-0 z-10 w-7 min-w-7 max-w-7 bg-surface-50 lg:w-36 lg:min-w-36 lg:max-w-36"
     >
       <!-- Hottake -->
-      <div class="card mt-1 flex h-32 w-7 flex-col !rounded-r-none p-2 lg:w-36">
+      <div class="card mt-1 flex h-32 w-7 flex-col !rounded-r-none bg-surface-400 p-2 lg:w-36">
         <span class="hidden text-nowrap text-sm font-bold lg:block">Hottake</span>
         <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Hottake</span>
       </div>
@@ -304,13 +304,13 @@
       {#await data.seasonpicks then seasonpicks}
         {#if seasonpicks.length > 0}
           <!-- Drivers Champion -->
-          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none p-2 lg:w-36">
+          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none bg-surface-400 p-2 lg:w-36">
             <span class="hidden text-nowrap text-sm font-bold lg:block">Drivers<br />Champion</span>
             <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">WDC</span>
           </div>
 
           <!-- Constructors Champion -->
-          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none p-2 lg:w-36">
+          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none bg-surface-400 p-2 lg:w-36">
             <span class="hidden text-nowrap text-sm font-bold lg:block">
               Constructors<br />Champion
             </span>
@@ -318,25 +318,25 @@
           </div>
 
           <!-- Overtakes -->
-          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none p-2 lg:w-36">
+          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none bg-surface-400 p-2 lg:w-36">
             <span class="hidden text-nowrap text-sm font-bold lg:block">Most Overtakes</span>
             <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Overtakes</span>
           </div>
 
           <!-- DNFs -->
-          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none p-2 lg:w-36">
+          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none bg-surface-400 p-2 lg:w-36">
             <span class="hidden text-nowrap text-sm font-bold lg:block">Most DNFs</span>
             <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">DNFs</span>
           </div>
 
           <!-- Doohan Starts -->
-          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none p-2 lg:w-36">
+          <div class="card mt-1 flex h-20 w-7 flex-col !rounded-r-none bg-surface-400 p-2 lg:w-36">
             <span class="hidden text-nowrap text-sm font-bold lg:block">Doohan Starts</span>
             <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Doohan</span>
           </div>
 
           <!-- Teamwinners -->
-          <div class="card mt-1 flex h-64 w-7 flex-col !rounded-r-none p-2 lg:w-36">
+          <div class="card mt-1 flex h-64 w-7 flex-col !rounded-r-none bg-surface-400 p-2 lg:w-36">
             <span class="hidden text-nowrap text-sm font-bold lg:block"
               >Team-Battle<br />Winners</span
             >
@@ -344,7 +344,7 @@
           </div>
 
           <!-- Podiums -->
-          <div class="card mt-1 flex h-64 w-7 flex-col !rounded-r-none p-2 lg:w-36">
+          <div class="card mt-1 flex h-64 w-7 flex-col !rounded-r-none bg-surface-400 p-2 lg:w-36">
             <span class="hidden text-nowrap text-sm font-bold lg:block">Podiums</span>
             <span class="block rotate-90 text-nowrap text-xs font-bold lg:hidden">Podiums</span>
           </div>
@@ -374,7 +374,7 @@
           <div class="ml-1 w-full min-w-36">
             <!-- Hottake -->
             <div
-              class="mt-1 h-32 w-full overflow-y-scroll border bg-surface-300 px-1 py-2 leading-3 lg:px-2"
+              class="mt-1 h-32 w-full overflow-y-scroll border bg-surface-200 px-1 py-2 leading-3 lg:px-2"
             >
               <div class="mx-auto w-fit text-xs font-bold lg:text-sm">
                 {hottake?.hottake ?? "?"}
@@ -383,7 +383,7 @@
 
             {#if seasonpicks.length > 0}
               <!-- Drivers Champion -->
-              <div class="mt-1 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
+              <div class="mt-1 h-20 w-full border bg-surface-200 px-1 py-2 leading-3 lg:px-2">
                 <div class="mx-auto w-fit">
                   <!-- NOTE: The containerstyle should be 64x64, don't know why that doesn't fit... (also below) -->
                   <LazyImage
@@ -398,7 +398,7 @@
               </div>
 
               <!-- Constructors Champion -->
-              <div class="mt-1 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2">
+              <div class="mt-1 h-20 w-full border bg-surface-200 p-1 px-1 py-2 leading-3 lg:px-2">
                 <div class="mx-auto w-fit">
                   <LazyImage
                     src={wccwinner?.banner_url ?? get_team_banner_template(data.graphics)}
@@ -412,7 +412,7 @@
               </div>
 
               <!-- Most Overtakes -->
-              <div class="mt-1 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
+              <div class="mt-1 h-20 w-full border bg-surface-200 px-1 py-2 leading-3 lg:px-2">
                 <div class="mx-auto w-fit">
                   <LazyImage
                     src={mostovertakes?.headshot_url ?? get_driver_headshot_template(data.graphics)}
@@ -428,7 +428,7 @@
               </div>
 
               <!-- Most DNFs -->
-              <div class="mt-1 h-20 w-full border bg-surface-300 px-1 py-2 leading-3 lg:px-2">
+              <div class="mt-1 h-20 w-full border bg-surface-200 px-1 py-2 leading-3 lg:px-2">
                 <div class="mx-auto w-fit">
                   <LazyImage
                     src={mostdnfs?.headshot_url ?? get_driver_headshot_template(data.graphics)}
@@ -442,7 +442,7 @@
               </div>
 
               <!-- Doohan Starts -->
-              <div class="mt-1 h-20 w-full border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2">
+              <div class="mt-1 h-20 w-full border bg-surface-200 p-1 px-1 py-2 leading-3 lg:px-2">
                 <div class="mx-auto w-fit text-xs lg:text-sm">
                   Jack Doohan startet <span class="font-bold">{pick?.doohanstarts ?? "?"}</span> mal.
                 </div>
@@ -450,7 +450,7 @@
 
               <!-- Teamwinners -->
               <div
-                class="mt-1 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 lg:px-2"
+                class="mt-1 h-64 w-full overflow-y-scroll border bg-surface-200 p-1 px-1 py-2 leading-3 lg:px-2"
               >
                 {#if pick && pick.teamwinners}
                   <div class="grid grid-cols-2 gap-1">
@@ -479,7 +479,7 @@
               <!-- Podiums -->
               <!-- TODO: Replace all style tags throughout the page with custom classes like height here -->
               <div
-                class="mt-1 h-64 w-full overflow-y-scroll border bg-surface-300 p-1 px-1 py-2 leading-3 shadow lg:px-2"
+                class="mt-1 h-64 w-full overflow-y-scroll border bg-surface-200 p-1 px-1 py-2 leading-3 shadow lg:px-2"
               >
                 {#if pick && pick.podiums}
                   <div class="grid grid-cols-2 gap-1">
