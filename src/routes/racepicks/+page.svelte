@@ -256,8 +256,8 @@
       {#await data.currentpickedusers then currentpicked}
         {#each currentpicked as user}
           <div
-            class="card ml-1 mt-2 w-full min-w-14 rounded-b-none py-2
-            {$pbUser && $pbUser.username === user.username ? 'bg-primary-300' : ''}"
+            class="card ml-1 mt-2 w-full min-w-14 rounded-b-none bg-surface-400 py-2
+            {$pbUser && $pbUser.username === user.username ? '!bg-primary-400' : ''}"
           >
             <!-- Avatar + name display at the top -->
             <div class="m-auto flex h-10 w-fit">
@@ -293,7 +293,7 @@
 
           <div
             use:popup={race_popupsettings(race?.id ?? "Invalid")}
-            class="card mt-1 flex h-20 w-7 cursor-pointer flex-col !rounded-r-none lg:w-36 lg:p-2"
+            class="card mt-1 flex h-16 w-7 cursor-pointer flex-col !rounded-r-none bg-surface-400 lg:h-20 lg:w-36 lg:p-2"
           >
             <!-- For large screens -->
             <span class="hidden text-sm font-bold lg:block">
@@ -306,13 +306,13 @@
 
             <!-- For small screens -->
             <!-- TODO: This requires the race name to end with an emoji, but this is never enforced -->
-            <div class="mx-[2px] my-[25px] block text-lg font-bold lg:hidden">
+            <div class="mx-[2px] my-[18px] block text-lg font-bold lg:hidden">
               {runes(race?.name ?? "Invalid").at(-1)}
             </div>
           </div>
 
           <!-- The race result popup is triggered on click on the race -->
-          <div data-popup={race?.id ?? "Invalid"} class="card z-50 p-2 shadow">
+          <div data-popup={race?.id ?? "Invalid"} class="card z-50 bg-surface-400 p-2 shadow">
             <span class="font-bold">Result:</span>
             <div class="mt-2 flex flex-col gap-1">
               {#each result.pxxs as pxx, index}
@@ -360,7 +360,7 @@
                 result.dnfs.indexOf(pick?.dnf ?? "Invalid") >= 0 ? PXX_COLORS[3] : PXX_COLORS[-1]}
 
               {#if pick}
-                <div class="mt-1 h-20 w-full border bg-surface-300 px-1 py-2 lg:px-2">
+                <div class="mt-1 h-16 w-full border bg-surface-200 px-1 py-2 lg:h-20 lg:px-2">
                   <div class="mx-auto flex h-full w-fit flex-col justify-evenly">
                     <span
                       class="w-10 p-1 text-center text-xs rounded-container-token lg:text-sm"
@@ -377,7 +377,7 @@
                   </div>
                 </div>
               {:else}
-                <div class="mt-1 h-20 w-full px-1 py-2 lg:px-2"></div>
+                <div class="mt-1 h-16 w-full px-1 py-2 lg:h-20 lg:px-2"></div>
               {/if}
             {/each}
           </div>
