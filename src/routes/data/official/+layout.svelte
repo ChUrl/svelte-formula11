@@ -16,6 +16,7 @@
   >
     <Button href="driverstandings" color="primary" activate_href>Drivers</Button>
     <Button href="teamstandings" color="primary" activate_href>Teams</Button>
+    <Button href="startinggrids" color="primary" activate_href>Grids</Button>
     <Button href="raceresults" color="primary" activate_href>Race Results</Button>
   </div>
 </div>
