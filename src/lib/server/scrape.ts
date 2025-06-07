@@ -1,4 +1,9 @@
-import type { ScrapedDriverStanding, ScrapedRaceResult, ScrapedTeamStanding } from "$lib/schema";
+import type {
+  ScrapedDriverStanding,
+  ScrapedStartingGrid,
+  ScrapedRaceResult,
+  ScrapedTeamStanding,
+} from "$lib/schema";
 import * as cheerio from "cheerio";
 
 // TODO: Validate the generated stuff
@@ -24,6 +29,48 @@ export const scrape_race_links = async (): Promise<string[]> => {
   console.log(`Found ${race_links.length} races...`);
 
   return race_links;
+};
+
+/**
+ * Returns a list of [ScrapedStartingGrids] for all races contained in [race_links],
+ * based on official f1.com data.
+ */
+export const scrape_starting_grids = async (
+  race_links: string[],
+): Promise<ScrapedStartingGrid[]> => {
+  // Update the race_links to point to the qualifications
+  const starting_grid_links: string[] = race_links.map((link: string) =>
+    link.replace("/race-result", "/starting-grid"),
+  );
+
+  const starting_grids: ScrapedStartingGrid[] = [];
+  await Promise.all(
+    starting_grid_links.map(async (link: string, index: number) => {
+      console.log(`Fetching qualifying results from ${base_url}/${link}...`);
+      const starting_grids_response = await fetch(`${base_url}/${link}`);
+      const starting_grids_text = await starting_grids_response.text();
+
+      const $ = cheerio.load(starting_grids_text);
+
+      // Obtain the positions for this starting grid for each driver
+      $("tbody > tr", "div.f1-inner-wrapper table.f1-table").each((driver_index, element) => {
+        const $$ = cheerio.load(element);
+
+        let result: ScrapedStartingGrid = {
+          id: "",
+          race_step: index + 1,
+          driver_code: $$("td:nth-child(3) > p > span:last-child").text(),
+          position: driver_index + 1, // parseInt($$("td:nth-child(1) > p").text()),
+          time: $$("td:nth-child(5) > p").text(),
+        };
+
+        starting_grids.push(result);
+      });
+    }),
+  );
+  console.log(`Scraped ${starting_grids.length} starting grids...`);
+
+  return starting_grids;
 };
 
 /**

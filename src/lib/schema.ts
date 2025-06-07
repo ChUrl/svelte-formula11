@@ -159,6 +159,14 @@ export interface RacePickPointsTotal {
 
 // Scraped Data
 
+export interface ScrapedStartingGrid {
+  id: string;
+  race_step: number; // This maps to races
+  driver_code: string; // This maps to drivers
+  position: number;
+  time: string;
+}
+
 export interface ScrapedRaceResult {
   id: string;
   race_step: number; // This maps to races
