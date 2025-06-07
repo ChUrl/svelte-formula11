@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { make_chart_options } from "$lib/chart";
   import { Table, type TableColumn } from "$lib/components";
   import { get_by_value } from "$lib/database";
   import type { RacePickPoints, RacePickPointsAcc, User } from "$lib/schema";
@@ -28,11 +29,13 @@
       data_value_name: "user",
       label: "User",
       valuefun: async (value: string): Promise<string> =>
-        get_by_value(await data.users, "id", value)?.firstname ?? "Invalid",
+        `<span class='badge variant-filled-surface'>${get_by_value(await data.users, "id", value)?.firstname ?? "Invalid"}</span>`,
     },
     {
       data_value_name: "total_points",
       label: "Total",
+      valuefun: async (value: string): Promise<string> =>
+        `<span class='badge variant-filled-surface'>${value}</span>`,
     },
     {
       data_value_name: "total_pxx_points",
@@ -71,85 +74,23 @@
       );
   });
 
-  const points_chart_options: LineChartOptions = {
-    title: "I ❤️ CumSum",
-    axes: {
-      bottom: {
-        mapsTo: "step",
-        scaleType: ScaleTypes.LABELS,
-      },
-      left: {
-        mapsTo: "points",
-        scaleType: ScaleTypes.LINEAR,
-      },
-    },
-    curve: "curveMonotoneX",
-    // toolbar: {
-    //   enabled: false,
-    // },
-    animations: true,
-    // canvasZoom: {
-    //   enabled: false,
-    // },
-    grid: {
-      x: {
-        enabled: true,
-        alignWithAxisTicks: true,
-      },
-      y: {
-        enabled: true,
-        alignWithAxisTicks: true,
-      },
-    },
-    legend: {
-      enabled: true,
-      clickable: true,
-      position: "top",
-    },
-    points: {
-      enabled: true,
-      radius: 5,
-    },
-    tooltip: {
-      showTotal: false,
-    },
-    resizable: true,
-    width: "100%",
-    height: "400px",
-  };
+  const points_chart_options: LineChartOptions = make_chart_options(
+    "I ❤️ CumSum",
+    "step",
+    "points",
+  );
 </script>
 
 <svelte:head>
   <title>Formula 11 - Leaderboard</title>
 </svelte:head>
 
-{#await Promise.all( [data.users, data.racepickpoints, data.racepickpointsacc, data.racepickpointstotal], ) then [users, racepickpoints, racepickpointsacc, racepickpointstotal]}
-  <div class="flex gap-2">
-    <!-- Podium -->
-    <!-- <div class="card w-60 bg-surface-100 p-2 shadow"> -->
-    <!--   <div class="flex h-20 w-full gap-1"></div> -->
-    <!--   <div class="flex h-20 w-full gap-1"> -->
-    <!--     <div class="w-20"> -->
-    <!--       <div class="h-[30%] w-full"></div> -->
-    <!--       <div class="h-[70%] w-full bg-surface-500"></div> -->
-    <!--     </div> -->
-    <!--     <div class="w-20"> -->
-    <!--       <div class="h-[100%] w-full bg-surface-500"></div> -->
-    <!--     </div> -->
-    <!--     <div class="w-20"> -->
-    <!--       <div class="h-[60%] w-full"></div> -->
-    <!--       <div class="h-[40%] w-full bg-surface-600"></div> -->
-    <!--     </div> -->
-    <!--   </div> -->
-    <!-- </div> -->
+<div class="card w-full bg-surface-100 p-2 shadow">
+  <LineChart data={points_chart_data} options={points_chart_options} />
+</div>
 
-    <!-- Points chart -->
-    <div class="card w-full bg-surface-100 p-2 shadow">
-      <LineChart data={points_chart_data} options={points_chart_options} />
-    </div>
-  </div>
-
-  <div class="mt-2">
+<div class="mt-2">
+  {#await data.racepickpointstotal then racepickpointstotal}
     <Table data={racepickpointstotal} columns={leaderboard_columns} />
-  </div>
-{/await}
+  {/await}
+</div>
