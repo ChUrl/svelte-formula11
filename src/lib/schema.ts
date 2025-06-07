@@ -176,6 +176,13 @@ export interface ScrapedRaceResult {
   points: number;
 }
 
+export interface ScrapedRaceResultAcc {
+  id: string;
+  race_step: number; // This maps to races
+  driver_code: string; // This maps to drivers
+  acc_points: number;
+}
+
 export interface ScrapedDriverStanding {
   id: string;
   driver_code: string; // This maps to drivers

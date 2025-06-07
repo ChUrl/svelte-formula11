@@ -13,6 +13,7 @@ import type {
   RaceResult,
   ScrapedDriverStanding,
   ScrapedRaceResult,
+  ScrapedRaceResultAcc,
   ScrapedStartingGrid,
   ScrapedTeamStanding,
   SeasonPick,
@@ -358,4 +359,17 @@ export const fetch_scraped_raceresults = async (
     .getFullList({ fetch: fetch, sort: "-race_step,+position" });
 
   return scraped_raceresults;
+};
+
+/**
+ * Fetch all [ScrapedRaceResultsAcc] from the database, ordered ascendingly by race step.
+ */
+export const fetch_scraped_raceresultsacc = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<ScrapedRaceResultAcc[]> => {
+  const scraped_raceresultsacc: ScrapedRaceResultAcc[] = await pb
+    .collection("scraped_raceresultsacc")
+    .getFullList({ fetch: fetch, sort: "+race_step" });
+
+  return scraped_raceresultsacc;
 };
