@@ -64,7 +64,8 @@
 
     const active_drivers: Driver[] = drivers.filter((driver: Driver) => driver.active);
     const active_results: ScrapedRaceResultAcc[] = scraped_raceresultsacc.filter(
-      (result: ScrapedRaceResultAcc) => get_by_value(drivers, "code", result.driver_code)?.active,
+      (result: ScrapedRaceResultAcc) =>
+        get_by_value(drivers ?? [], "code", result.driver_code)?.active,
     );
 
     return active_drivers
