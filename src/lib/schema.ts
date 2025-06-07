@@ -142,9 +142,19 @@ export interface RacePickPoints {
 export interface RacePickPointsAcc {
   id: string;
   user: string;
+  step: number;
+  acc_pxx_points: number;
+  acc_dnf_points: number;
+  acc_points: number;
+}
+
+export interface RacePickPointsTotal {
+  id: string;
+  user: string;
   total_pxx_points: number;
   total_dnf_points: number;
   total_points: number;
+  total_points_per_pick: number;
 }
 
 // Scraped Data

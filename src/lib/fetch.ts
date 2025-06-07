@@ -9,6 +9,7 @@ import type {
   RacePick,
   RacePickPoints,
   RacePickPointsAcc,
+  RacePickPointsTotal,
   RaceResult,
   ScrapedDriverStanding,
   ScrapedRaceResult,
@@ -281,7 +282,7 @@ export const fetch_racepickpoints = async (
 };
 
 /**
- * Fetch all [RacePickPointsAcc] from the database, ordered descendingly by total points.
+ * Fetch all [RacePickPointsAcc] from the database, ordered ascendingly by step.
  */
 export const fetch_racepickpointsacc = async (
   fetch: (_: any) => Promise<Response>,
@@ -291,6 +292,19 @@ export const fetch_racepickpointsacc = async (
     .getFullList({ fetch: fetch });
 
   return racepickpointsacc;
+};
+
+/**
+ * Fetch all [RacePickPointsTotal] from the database, ordered descendingly by total points.
+ */
+export const fetch_racepickpointstotal = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<RacePickPointsTotal[]> => {
+  const racepickpointstotal: RacePickPointsTotal[] = await pb
+    .collection("racepickpointstotal")
+    .getFullList({ fetch: fetch });
+
+  return racepickpointstotal;
 };
 
 /**
