@@ -1,10 +1,14 @@
 <script lang="ts">
   import { Button } from "$lib/components";
+  import { pbUser } from "$lib/pocketbase";
   import type { Snippet } from "svelte";
 
   let { children }: { children: Snippet } = $props();
 
   const scrape_official_data = async () => {
+    // TODO: Unauthorized toast
+    if (!$pbUser || !$pbUser.admin) return;
+
     // TODO: Success/error toast
     const response: Response = await fetch("/api/scrape", { method: "POST" });
   };
@@ -24,7 +28,13 @@
 <!-- Each child's contents will be inserted here -->
 <div style="margin-top: 56px;">
   <div class="pb-2">
-    <Button width="w-full" color="tertiary" onclick={scrape_official_data} shadow>
+    <Button
+      width="w-full"
+      color="tertiary"
+      onclick={scrape_official_data}
+      shadow
+      disabled={!$pbUser?.admin}
+    >
       <span class="font-bold">Refresh All Data</span>
     </Button>
   </div>
