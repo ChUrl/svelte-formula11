@@ -21,12 +21,16 @@ export const scrape_race_links = async (): Promise<string[]> => {
   const $ = cheerio.load(races_text);
 
   const race_links: string[] = [];
-  $("tbody > tr > td:first-child > p > a[href]", "div.f1-inner-wrapper table.f1-table").each(
-    (_, element) => {
-      race_links.push(element.attribs["href"]);
-    },
-  );
+  $("tbody > tr > td:first-child > p > a[href]", "table.f1-table").each((_, element) => {
+    const href: string = element.attribs["href"];
+
+    // Keks changed the link format, cut off the start
+    const substring: string = href.replace("/../../en/results/2025/", "");
+
+    race_links.push(substring);
+  });
   console.log(`Found ${race_links.length} races...`);
+  console.log(race_links);
 
   return race_links;
 };
@@ -53,13 +57,15 @@ export const scrape_starting_grids = async (
       const $ = cheerio.load(starting_grids_text);
 
       // Obtain the positions for this starting grid for each driver
-      $("tbody > tr", "div.f1-inner-wrapper table.f1-table").each((driver_index, element) => {
+      $("tbody > tr", "table.f1-table").each((driver_index, element) => {
         const $$ = cheerio.load(element);
 
         let result: ScrapedStartingGrid = {
           id: "",
           race_step: index + 1,
-          driver_code: $$("td:nth-child(3) > p > span:last-child").text(),
+          driver_code: $$(
+            "td:nth-child(3) > p > span:first-child > span:last-child > span:last-child",
+          ).text(),
           position: driver_index + 1, // parseInt($$("td:nth-child(1) > p").text()),
           time: $$("td:nth-child(5) > p").text(),
         };
@@ -69,6 +75,7 @@ export const scrape_starting_grids = async (
     }),
   );
   console.log(`Scraped ${starting_grids.length} starting grids...`);
+  // console.log(starting_grids);
 
   return starting_grids;
 };
@@ -88,13 +95,15 @@ export const scrape_race_results = async (race_links: string[]): Promise<Scraped
       const $ = cheerio.load(race_text);
 
       // Obtain the results for this race for each driver
-      $("tbody > tr", "div.f1-inner-wrapper table.f1-table").each((driver_index, element) => {
+      $("tbody > tr", "table.f1-table").each((driver_index, element) => {
         const $$ = cheerio.load(element);
 
         let result: ScrapedRaceResult = {
           id: "",
           race_step: index + 1,
-          driver_code: $$("td:nth-child(3) > p > span:last-child").text(),
+          driver_code: $$(
+            "td:nth-child(3) > p > span:first-child > span:last-child > span:last-child",
+          ).text(),
           position: driver_index + 1, // parseInt($$("td:nth-child(1) > p").text()),
           status: $$("td:nth-child(6) > p").text(),
           points: parseInt($$("td:nth-child(7) > p").text()),
@@ -110,6 +119,7 @@ export const scrape_race_results = async (race_links: string[]): Promise<Scraped
     }),
   );
   console.log(`Scraped ${race_results.length} race results...`);
+  // console.log(race_results);
 
   return race_results;
 };
@@ -124,12 +134,12 @@ export const scrape_driver_standings = async (): Promise<ScrapedDriverStanding[]
   const $ = cheerio.load(standings_text);
 
   const driver_standings: ScrapedDriverStanding[] = [];
-  $("tbody > tr", "div.f1-inner-wrapper table.f1-table").each((driver_index, element) => {
+  $("tbody > tr", "table.f1-table").each((driver_index, element) => {
     const $$ = cheerio.load(element);
 
     let standing: ScrapedDriverStanding = {
       id: "",
-      driver_code: $$("td:nth-child(2) > p > a > span:last-child").text(),
+      driver_code: $$("td:nth-child(2) > p > a > span:last-child > span:last-child").text(),
       position: driver_index + 1,
       points: parseInt($$("td:nth-child(5) > p").text()),
     };
@@ -137,6 +147,7 @@ export const scrape_driver_standings = async (): Promise<ScrapedDriverStanding[]
     driver_standings.push(standing);
   });
   console.log(`Scraped ${driver_standings.length} driver standings...`);
+  // console.log(driver_standings);
 
   return driver_standings;
 };
@@ -151,7 +162,7 @@ export const scrape_team_standings = async (): Promise<ScrapedTeamStanding[]> =>
   const $ = cheerio.load(standings_text);
 
   const team_standings: ScrapedTeamStanding[] = [];
-  $("tbody > tr", "div.f1-inner-wrapper table.f1-table").each((team_index, element) => {
+  $("tbody > tr", "table.f1-table").each((team_index, element) => {
     const $$ = cheerio.load(element);
 
     let standing: ScrapedTeamStanding = {
@@ -164,6 +175,7 @@ export const scrape_team_standings = async (): Promise<ScrapedTeamStanding[]> =>
     team_standings.push(standing);
   });
   console.log(`Scraped ${team_standings.length} team standings...`);
+  // console.log(team_standings);
 
   return team_standings;
 };
