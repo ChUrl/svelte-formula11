@@ -1,16 +1,32 @@
 <script lang="ts">
+  import { invalidate } from "$app/navigation";
   import { Button } from "$lib/components";
   import { pbUser } from "$lib/pocketbase";
+  import { get_error_toast, get_warning_toast } from "$lib/toast";
+  import { getToastStore, type ToastStore } from "@skeletonlabs/skeleton";
   import type { Snippet } from "svelte";
 
   let { children }: { children: Snippet } = $props();
 
-  const scrape_official_data = async () => {
-    // TODO: Unauthorized toast
-    if (!$pbUser || !$pbUser.admin) return;
+  const toastStore: ToastStore = getToastStore();
 
-    // TODO: Success/error toast
+  const scrape_message: string =
+    "This will clear and redownload all data from f1.com. Please don't refresh the page during the process.";
+
+  // This callback will be executed once the admin presses the "Proceed"-button in the warning toast
+  const scrape_callback = async () => {
     const response: Response = await fetch("/api/scrape", { method: "POST" });
+    invalidate("data:official");
+  };
+
+  const scrape_official_data = async () => {
+    if (!$pbUser || !$pbUser.admin) {
+      toastStore.trigger(get_error_toast("Only admins may perform this action!"));
+      return;
+    }
+
+    // No timeout + action toast
+    toastStore.trigger(get_warning_toast(scrape_message, null, "Proceed", scrape_callback));
   };
 </script>
 
