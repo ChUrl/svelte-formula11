@@ -2,7 +2,7 @@
 # because fucking Docker thinks "toomanyrequests". Fuckers
 FROM docker.io/library/alpine:3.21.2
 
-ARG PB_VERSION=0.25.0
+ARG PB_VERSION=0.33.0
 
 RUN apk add --no-cache \
     unzip \
