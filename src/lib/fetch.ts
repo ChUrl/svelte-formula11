@@ -18,6 +18,7 @@ import type {
   ScrapedTeamStanding,
   SeasonPick,
   SeasonPickedUser,
+  SeasonPickResult,
   Substitution,
   Team,
   User,
@@ -113,6 +114,19 @@ export const fetch_raceresults = async (
     .getFullList({ fetch: fetch });
 
   return raceresults;
+};
+
+/**
+ * Fetch all [SeasonPickResults] from the database. Should either contain 0 or 1 element.
+ */
+export const fetch_seasonpickresults = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<SeasonPickResult[]> => {
+  const seasonpickresults: SeasonPickResult[] = await pb
+    .collection("seasonpickresults")
+    .getFullList({ fetch: fetch });
+
+  return seasonpickresults;
 };
 
 /**

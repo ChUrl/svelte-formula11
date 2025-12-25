@@ -109,6 +109,18 @@ export interface RaceResult {
   dnfs: string[];
 }
 
+export interface SeasonPickResult {
+  id: string;
+  correcthottake: string[];
+  wdcwinner: string;
+  wccwinner: string;
+  mostovertakes: string[];
+  mostdnfs: string[];
+  doohanstarts: number;
+  teamwinners: string[];
+  podiums: string[];
+}
+
 export interface CurrentPickedUser {
   id: string;
   username: string;
