@@ -307,7 +307,8 @@ rec {
             abbr -a pb "pocketbase serve --http 192.168.86.50:8090 --dev"
             abbr -a dev "npm run dev -- --host --port 5173"
             abbr -a prod "npm run build && npm run preview -- --host --port 5173"
-            abbr -a check "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+            # abbr -a check "svelte-kit sync && svelte-check --tsconfig ./tsconfig.json --watch"
+            abbr -a check "npm run check:watch"
           '';
         in
           builtins.concatStringsSep "\n" [
