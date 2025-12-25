@@ -5,8 +5,11 @@
   import { get_by_value } from "$lib/database";
   import { PXX_COLORS } from "$lib/config";
   import type { RaceResult } from "$lib/schema";
+  import { pbUser } from "$lib/pocketbase";
 
   let { data }: { data: PageData } = $props();
+
+  let disabled: boolean = $derived(!$pbUser?.admin);
 
   const modalStore: ModalStore = getModalStore();
 
@@ -92,7 +95,7 @@
 </svelte:head>
 
 <div class="pb-2">
-  <Button width="w-full" color="tertiary" onclick={result_handler} shadow>
+  <Button width="w-full" color="tertiary" onclick={result_handler} shadow {disabled}>
     <span class="font-bold">Create Race Result</span>
   </Button>
 </div>

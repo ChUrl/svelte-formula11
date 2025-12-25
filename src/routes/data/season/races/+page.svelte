@@ -5,8 +5,11 @@
   import { get_by_value } from "$lib/database";
   import type { Race } from "$lib/schema";
   import { format_date, shortdatetimeformat } from "$lib/date";
+  import { pbUser } from "$lib/pocketbase";
 
   let { data }: { data: PageData } = $props();
+
+  let disabled: boolean = $derived(!$pbUser?.admin);
 
   const modalStore: ModalStore = getModalStore();
 
@@ -64,7 +67,7 @@
 </svelte:head>
 
 <div class="pb-2">
-  <Button width="w-full" color="tertiary" onclick={race_handler} shadow>
+  <Button width="w-full" color="tertiary" onclick={race_handler} shadow {disabled}>
     <span class="font-bold">Create New Race</span>
   </Button>
 </div>

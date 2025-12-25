@@ -4,8 +4,11 @@
   import type { Driver, Team } from "$lib/schema";
   import { getModalStore, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
+  import { pbUser } from "$lib/pocketbase";
 
   let { data }: { data: PageData } = $props();
+
+  let disabled: boolean = $derived(!$pbUser?.admin);
 
   const modalStore: ModalStore = getModalStore();
   const driver_handler = async (event: Event, id?: string) => {
@@ -73,10 +76,10 @@
 </svelte:head>
 
 <div class="flex gap-2 pb-2">
-  <Button width="w-full" color="tertiary" onclick={driver_handler} shadow>
+  <Button width="w-full" color="tertiary" onclick={driver_handler} shadow {disabled}>
     <span class="font-bold">Create New Driver</span>
   </Button>
-  <Button width="w-full" color="secondary" onclick={teamswitch_handler} shadow>
+  <Button width="w-full" color="secondary" onclick={teamswitch_handler} shadow {disabled}>
     <span class="font-bold">Switch Driver Team</span>
   </Button>
 </div>

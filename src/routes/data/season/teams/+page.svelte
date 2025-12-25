@@ -4,8 +4,11 @@
   import { getModalStore, type ModalSettings, type ModalStore } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
   import { get_by_value } from "$lib/database";
+  import { pbUser } from "$lib/pocketbase";
 
   let { data }: { data: PageData } = $props();
+
+  let disabled: boolean = $derived(!$pbUser?.admin);
 
   const modalStore: ModalStore = getModalStore();
   const team_handler = async (event: Event, id?: string) => {
@@ -47,7 +50,7 @@
 </svelte:head>
 
 <div class="pb-2">
-  <Button width="w-full" color="tertiary" onclick={team_handler} shadow>
+  <Button width="w-full" color="tertiary" onclick={team_handler} shadow {disabled}>
     <span class="font-bold">Create New Team</span>
   </Button>
 </div>

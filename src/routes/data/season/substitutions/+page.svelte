@@ -4,8 +4,11 @@
   import type { PageData } from "./$types";
   import type { Race, Substitution } from "$lib/schema";
   import { Button, Table, type TableColumn } from "$lib/components";
+  import { pbUser } from "$lib/pocketbase";
 
   let { data }: { data: PageData } = $props();
+
+  let disabled: boolean = $derived(!$pbUser?.admin);
 
   const modalStore: ModalStore = getModalStore();
   const substitution_handler = async (event: Event, id?: string) => {
@@ -64,7 +67,7 @@
 </svelte:head>
 
 <div class="pb-2">
-  <Button width="w-full" color="tertiary" onclick={substitution_handler} shadow>
+  <Button width="w-full" color="tertiary" onclick={substitution_handler} shadow {disabled}>
     <span class="font-bold">Create New Substitution</span>
   </Button>
 </div>
