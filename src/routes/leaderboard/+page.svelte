@@ -2,7 +2,13 @@
   import { make_chart_options } from "$lib/chart";
   import { Table, type TableColumn } from "$lib/components";
   import { get_by_value } from "$lib/database";
-  import type { RacePickPoints, RacePickPointsAcc, SeasonPickPoints, User } from "$lib/schema";
+  import type {
+    RacePickPoints,
+    RacePickPointsAcc,
+    RacePickPointsTotal,
+    SeasonPickPoints,
+    User,
+  } from "$lib/schema";
   import type { PageData } from "./$types";
   import {
     LineChart,
@@ -24,8 +30,28 @@
   let racepickpointsacc: RacePickPointsAcc[] | undefined = $state(undefined);
   data.racepickpointsacc.then((r: RacePickPointsAcc[]) => (racepickpointsacc = r));
 
+  let racepickpointstotal: RacePickPointsTotal[] | undefined = $state(undefined);
   let seasonpickpoints: SeasonPickPoints[] | undefined = $state(undefined);
-  data.seasonpickpoints.then((p: SeasonPickPoints[]) => (seasonpickpoints = p));
+  Promise.all([data.racepickpointstotal, data.seasonpickpoints]).then(
+    ([rpp, spp]: [RacePickPointsTotal[], SeasonPickPoints[]]) => {
+      if (spp.length === 0 || !spp) {
+        racepickpointstotal = rpp;
+        seasonpickpoints = undefined;
+        return;
+      }
+
+      racepickpointstotal = rpp.sort((a: RacePickPointsTotal, b: RacePickPointsTotal) => {
+        let apoints = spp.filter((p: SeasonPickPoints) => p.user === a.user)[0];
+        let bpoints = spp.filter((p: SeasonPickPoints) => p.user === b.user)[0];
+        return (
+          b.total_points +
+          calc_season_points(bpoints) -
+          (a.total_points + calc_season_points(apoints))
+        );
+      });
+      seasonpickpoints = spp;
+    },
+  );
 
   const calc_season_points = (p: SeasonPickPoints): number => {
     return (
@@ -51,13 +77,17 @@
       data_value_name: "user",
       label: "Total",
       valuefun: async (value: string): Promise<string> => {
-        let seasonpoints = await data.seasonpickpoints;
-        let points = get_by_value(await data.racepickpointstotal, "user", value)?.total_points ?? 0;
-        if (!seasonpoints) {
+        if (!racepickpointstotal) {
+          return "ERR";
+        }
+
+        // let seasonpoints = await data.seasonpickpoints;
+        let points = get_by_value(racepickpointstotal, "user", value)?.total_points ?? 0;
+        if (!seasonpickpoints) {
           return `<span class='badge variant-filled-surface'>${points}</span>`;
         }
 
-        points += calc_season_points(get_by_value(seasonpoints, "user", value)!);
+        points += calc_season_points(get_by_value(seasonpickpoints, "user", value)!);
         return `<span class='badge variant-filled-surface'>${points}</span>`;
       },
     },
@@ -74,7 +104,7 @@
       label: "Season",
       valuefun: async (value: string): Promise<string> => {
         if (!seasonpickpoints) {
-          return "";
+          return "🍆";
         }
 
         let p = seasonpickpoints.filter((p: SeasonPickPoints) => p.user === value)[0];
@@ -126,7 +156,7 @@
 </div>
 
 <div class="mt-2">
-  {#await data.racepickpointstotal then racepickpointstotal}
+  {#if racepickpointstotal}
     <Table data={racepickpointstotal} columns={leaderboard_columns} />
-  {/await}
+  {/if}
 </div>
