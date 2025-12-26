@@ -389,6 +389,7 @@
     </Button>
   {/if}
 </div>
+
 {#await Promise.all( [data.graphics, data.seasonpicks, data.users, data.seasonpickresults, data.drivers, data.teams], ) then [graphics, seasonpicks, users, seasonpickresults, drivers, teams]}
   <div class="grid grid-cols-1 gap-2 xl:grid-cols-2">
     <!-- WDC -->
@@ -396,12 +397,12 @@
       imgsrc={get_by_value<Driver>(drivers, "id", wdcwinner_select_value)?.headshot_url ??
         get_driver_headshot_template(graphics)}
       imgid="wdcwinner_headshot"
-      width="w-full h-24"
+      width="w-full h-32"
       imgwidth={DRIVER_HEADSHOT_WIDTH}
       imgheight={DRIVER_HEADSHOT_HEIGHT}
       imgleft={true}
       imgshadow={false}
-      extraimgclass="mt-[11px]"
+      extraimgclass="mt-[20px]"
       extraclass="w-full"
     >
       <h1 class="mb-2 text-lg font-bold">Which driver fucking obliterated this season?</h1>
@@ -422,15 +423,15 @@
       imgsrc={get_by_value<Team>(teams, "id", wccwinner_select_value)?.banner_url ??
         get_team_banner_template(graphics)}
       imgid="wccwinner_banner"
-      width="w-full h-24"
+      width="w-full h-32"
       imgwidth={TEAM_BANNER_WIDTH}
       imgheight={TEAM_BANNER_HEIGHT}
       imgleft={true}
       imgshadow={false}
-      extraimgclass="mt-[10px] rounded-r-md"
+      extraimgclass="mt-[16px] rounded-r-md"
       extraclass="w-full"
     >
-      <h1 class="mb-2 text-lg font-bold">Which constructor constructed the best this season?</h1>
+      <h1 class="mb-2 text-lg font-bold">Which constructor won this season?</h1>
       <Dropdown
         bind:value={wccwinner_select_value}
         options={team_dropdown_options(teams)}
@@ -450,12 +451,12 @@
       imgsrc={get_by_value<Driver>(drivers, "code", "DOO")?.headshot_url ??
         get_driver_headshot_template(graphics)}
       imgid="doohan_headshot"
-      width="w-full h-24"
+      width="w-full h-32"
       imgwidth={DRIVER_HEADSHOT_WIDTH}
       imgheight={DRIVER_HEADSHOT_HEIGHT}
       imgleft={true}
       imgshadow={false}
-      extraimgclass="mt-[11px]"
+      extraimgclass="mt-[20px]"
       extraclass="w-full"
     >
       <h1 class="mb-2 text-lg font-bold">How often did JACK DOOHAN start?</h1>
@@ -478,7 +479,7 @@
     {#each seasonpicks as seasonpick}
       {@const user = get_by_value(users, "id", seasonpick.user)}
       <Card>
-        <div class="flex h-20 gap-2">
+        <div class="flex h-32 gap-2">
           <div class="mt-2">
             <Avatar
               id="{user?.id ?? 'INVALID'}_avatar"
