@@ -7,7 +7,14 @@
     type ModalStore,
   } from "@skeletonlabs/skeleton";
   import type { PageData } from "./$types";
-  import type { Driver, Hottake, SeasonPick, SeasonPickedUser, User } from "$lib/schema";
+  import type {
+    Driver,
+    Hottake,
+    SeasonPick,
+    SeasonPickedUser,
+    SeasonPickResult,
+    User,
+  } from "$lib/schema";
   import { ChequeredFlagIcon, LazyImage } from "$lib/components";
   import {
     get_by_value,
@@ -41,6 +48,29 @@
     modalStore.trigger(modalSettings);
   };
 
+  // Await promises
+  let seasonpickresult: SeasonPickResult | undefined = $state(undefined);
+  data.seasonpickresults.then((r: SeasonPickResult[]) => {
+    if (r.length === 1) {
+      seasonpickresult = r[0];
+    }
+  });
+
+  let correct_doohanstarts: number | undefined = $state(undefined);
+  Promise.all([data.seasonpickresults, data.seasonpicks]).then(
+    ([results, picks]: [SeasonPickResult[], SeasonPick[]]) => {
+      if (results.length === 1) {
+        let result = results[0];
+
+        correct_doohanstarts = Math.min(
+          ...picks.map((pick: SeasonPick) => {
+            return Math.abs(pick.doohanstarts - result.doohanstarts);
+          }),
+        );
+      }
+    },
+  );
+
   // Users that have already picked the season
   let pickedusers: Promise<SeasonPickedUser[]> = $derived.by(async () =>
     (await data.seasonpickedusers).filter(
@@ -63,7 +93,7 @@
 <!-- Await this here so the accordion doesn't lag when opening -->
 <!-- Only show the stuff if signed in -->
 {#if $pbUser}
-  {#await Promise.all( [data.drivers, data.teams, data.seasonpickedusers, pickedusers, outstandingusers], ) then [drivers, teams, currentpicked, picked, outstanding]}
+  {#await Promise.all( [data.drivers, data.teams, data.seasonpickedusers, data.seasonpickresults, pickedusers, outstandingusers], ) then [drivers, teams, currentpicked, results, picked, outstanding]}
     {@const teamwinners = data.seasonpick
       ? data.seasonpick.teamwinners
           .map((id: string) => get_by_value(drivers, "id", id) as Driver)
@@ -374,16 +404,29 @@
           <div class="ml-1 w-full min-w-36">
             <!-- Hottake -->
             <div
-              class="mt-1 h-32 w-full overflow-y-scroll border bg-surface-200 px-1 py-2 leading-3 lg:px-2"
+              class="mt-1 h-32 w-full overflow-y-scroll border bg-surface-200 px-1 py-2 leading-3 lg:px-2 {seasonpickresult?.correcthottake.includes(
+                user.id,
+              )
+                ? '!bg-tertiary-500'
+                : seasonpickresult
+                  ? '!bg-primary-500'
+                  : ''}"
             >
-              <div class="mx-auto w-fit text-xs font-bold lg:text-sm">
+              <div class="mx-auto w-fit rounded-md p-1 text-xs font-bold lg:text-sm">
                 {hottake?.hottake ?? "?"}
               </div>
             </div>
 
             {#if seasonpicks.length > 0}
               <!-- Drivers Champion -->
-              <div class="mt-1 h-20 w-full border bg-surface-200 px-1 py-2 leading-3 lg:px-2">
+              <div
+                class="mt-1 h-20 w-full border bg-surface-200 px-1 py-2 leading-3 lg:px-2 {seasonpickresult?.wdcwinner ===
+                wdcwinner?.id
+                  ? '!bg-tertiary-500'
+                  : seasonpickresult
+                    ? '!bg-primary-500'
+                    : ''}"
+              >
                 <div class="mx-auto w-fit">
                   <!-- NOTE: The containerstyle should be 64x64, don't know why that doesn't fit... (also below) -->
                   <LazyImage
@@ -398,7 +441,14 @@
               </div>
 
               <!-- Constructors Champion -->
-              <div class="mt-1 h-20 w-full border bg-surface-200 p-1 px-1 py-2 leading-3 lg:px-2">
+              <div
+                class="mt-1 h-20 w-full border bg-surface-200 p-1 px-1 py-2 leading-3 lg:px-2 {seasonpickresult?.wccwinner ===
+                wccwinner?.id
+                  ? '!bg-tertiary-500'
+                  : seasonpickresult
+                    ? '!bg-primary-500'
+                    : ''}"
+              >
                 <div class="mx-auto w-fit">
                   <LazyImage
                     src={wccwinner?.banner_url ?? get_team_banner_template(data.graphics)}
@@ -412,7 +462,15 @@
               </div>
 
               <!-- Most Overtakes -->
-              <div class="mt-1 h-20 w-full border bg-surface-200 px-1 py-2 leading-3 lg:px-2">
+              <div
+                class="mt-1 h-20 w-full border bg-surface-200 px-1 py-2 leading-3 lg:px-2 {seasonpickresult?.mostovertakes.includes(
+                  mostovertakes?.id ?? 'INVALID',
+                )
+                  ? '!bg-tertiary-500'
+                  : seasonpickresult
+                    ? '!bg-primary-500'
+                    : ''}"
+              >
                 <div class="mx-auto w-fit">
                   <LazyImage
                     src={mostovertakes?.headshot_url ?? get_driver_headshot_template(data.graphics)}
@@ -428,7 +486,15 @@
               </div>
 
               <!-- Most DNFs -->
-              <div class="mt-1 h-20 w-full border bg-surface-200 px-1 py-2 leading-3 lg:px-2">
+              <div
+                class="mt-1 h-20 w-full border bg-surface-200 px-1 py-2 leading-3 lg:px-2 {seasonpickresult?.mostdnfs.includes(
+                  mostdnfs?.id ?? 'INVALID',
+                )
+                  ? '!bg-tertiary-500'
+                  : seasonpickresult
+                    ? '!bg-primary-500'
+                    : ''}"
+              >
                 <div class="mx-auto w-fit">
                   <LazyImage
                     src={mostdnfs?.headshot_url ?? get_driver_headshot_template(data.graphics)}
@@ -442,7 +508,15 @@
               </div>
 
               <!-- Doohan Starts -->
-              <div class="mt-1 h-20 w-full border bg-surface-200 p-1 px-1 py-2 leading-3 lg:px-2">
+              <div
+                class="mt-1 h-20 w-full border bg-surface-200 p-1 px-1 py-2 leading-3 lg:px-2 {Math.abs(
+                  (seasonpickresult?.doohanstarts ?? 0) - pick?.doohanstarts,
+                ) === correct_doohanstarts
+                  ? '!bg-tertiary-500'
+                  : seasonpickresult
+                    ? '!bg-primary-500'
+                    : ''}"
+              >
                 <div class="mx-auto w-fit text-xs lg:text-sm">
                   Jack Doohan startet <span class="font-bold">{pick?.doohanstarts ?? "?"}</span> mal.
                 </div>
@@ -466,7 +540,16 @@
                             style="color: {color}; background-color: {color};"
                           >
                           </span>
-                          <span class="w-7 align-middle" style="line-height: 20px;">
+                          <span
+                            class="w-7 rounded-md align-middle {pick.teamwinners.includes(
+                              driver.id,
+                            ) && seasonpickresult?.teamwinners.includes(driver.id)
+                              ? '!bg-tertiary-500'
+                              : seasonpickresult
+                                ? '!bg-primary-500'
+                                : ''}"
+                            style="line-height: 20px;"
+                          >
                             {driver?.code}
                           </span>
                         </div>
@@ -495,7 +578,15 @@
                             style="color: {color}; background-color: {color};"
                           >
                           </span>
-                          <span class="w-7 align-middle" style="line-height: 20px;">
+                          <span
+                            class="w-7 rounded-md align-middle {pick.podiums.includes(driver.id) &&
+                            seasonpickresult?.podiums.includes(driver.id)
+                              ? '!bg-tertiary-500'
+                              : seasonpickresult
+                                ? '!bg-primary-500'
+                                : ''}"
+                            style="line-height: 20px;"
+                          >
                             {driver?.code}
                           </span>
                         </div>
