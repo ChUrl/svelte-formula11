@@ -327,6 +327,7 @@
       "raceresults",
       "races",
       "seasonpicks",
+      "seasonpickresults",
       "substitutions",
       "teams",
       "scraped_startinggrids",
@@ -346,6 +347,7 @@
       "raceresults",
       "races",
       "seasonpicks",
+      "seasonpickresults",
       "substitutions",
       "teams",
       "scraped_startinggrids",
@@ -402,6 +404,15 @@
     <div class="flex flex-col gap-2 p-2 pt-3">
       <Button href="/data/raceresults" onclick={close_drawer} color="surface" width="w-full" shadow>
         Race Results
+      </Button>
+      <Button
+        href="/data/seasonpickresults"
+        onclick={close_drawer}
+        color="surface"
+        width="w-full"
+        shadow
+      >
+        Season Pick Results
       </Button>
       <Button
         href="/data/season/teams"
