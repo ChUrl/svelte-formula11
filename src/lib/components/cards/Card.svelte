@@ -21,6 +21,9 @@
     /** Hide the header image element. It can be shown by removing the "hidden" property using JS and the imgid. */
     imghidden?: boolean;
 
+    /** If the header image is positioned at the left of the card */
+    imgleft?: boolean;
+
     /** The width class for the card, defaults to [w-auto] */
     width?: string;
 
@@ -35,6 +38,7 @@
     imgheight = undefined,
     imgid = undefined,
     imghidden = false,
+    imgleft = false,
     width = "w-auto",
     imgonclick = undefined,
     ...restProps
@@ -45,7 +49,7 @@
   }
 </script>
 
-<div class="card {width} overflow-hidden bg-white shadow">
+<div class="card {width} overflow-hidden bg-white shadow {imgleft ? 'flex' : ''}">
   <!-- Allow empty strings for images that only appear after user action -->
   {#if imgsrc !== undefined}
     <LazyImage
