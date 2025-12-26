@@ -2,8 +2,9 @@
   import type { Snippet } from "svelte";
   import { LazyImage } from "$lib/components";
   import { error } from "@sveltejs/kit";
+  import type { HTMLAttributes } from "svelte/elements";
 
-  interface CardProps {
+  interface CardProps extends HTMLAttributes<HTMLDivElement> {
     children: Snippet;
 
     /** The URL for a possible header image. Leave undefined for no header image. Set to empty string for an image not yet loaded. */
@@ -24,6 +25,15 @@
     /** If the header image is positioned at the left of the card */
     imgleft?: boolean;
 
+    /** If the header image has a shadow */
+    imgshadow?: boolean;
+
+    /** Extra classes to pass to the card header image */
+    extraimgclass?: string;
+
+    /** Extra classes to pass to the card content div */
+    extraclass?: string;
+
     /** The width class for the card, defaults to [w-auto] */
     width?: string;
 
@@ -39,6 +49,9 @@
     imgid = undefined,
     imghidden = false,
     imgleft = false,
+    imgshadow = true,
+    extraimgclass = "",
+    extraclass = "",
     width = "w-auto",
     imgonclick = undefined,
     ...restProps
@@ -57,7 +70,7 @@
       src={imgsrc}
       alt="Card header"
       draggable="false"
-      class="select-none shadow"
+      class="select-none {imgshadow ? 'shadow' : ''} {extraimgclass}"
       hidden={imghidden}
       imgwidth={imgwidth ?? 0}
       imgheight={imgheight ?? 0}
@@ -65,7 +78,7 @@
     />
   {/if}
 
-  <div class="p-2" {...restProps}>
+  <div class="p-2 {extraclass}" {...restProps}>
     {@render children()}
   </div>
 </div>
