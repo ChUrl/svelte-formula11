@@ -2,7 +2,7 @@
   import { make_chart_options } from "$lib/chart";
   import { Table, type TableColumn } from "$lib/components";
   import { get_by_value } from "$lib/database";
-  import type { RacePickPoints, RacePickPointsAcc, User } from "$lib/schema";
+  import type { RacePickPoints, RacePickPointsAcc, SeasonPickPoints, User } from "$lib/schema";
   import type { PageData } from "./$types";
   import {
     LineChart,
@@ -24,6 +24,22 @@
   let racepickpointsacc: RacePickPointsAcc[] | undefined = $state(undefined);
   data.racepickpointsacc.then((r: RacePickPointsAcc[]) => (racepickpointsacc = r));
 
+  let seasonpickpoints: SeasonPickPoints[] | undefined = $state(undefined);
+  data.seasonpickpoints.then((p: SeasonPickPoints[]) => (seasonpickpoints = p));
+
+  const calc_season_points = (p: SeasonPickPoints): number => {
+    return (
+      p.hottake_points +
+      p.wdc_points +
+      p.wcc_points +
+      p.overtakes_points +
+      p.dnfs_points +
+      p.teamwinner_points +
+      p.podium_points +
+      p.doohan_points
+    );
+  };
+
   const leaderboard_columns: TableColumn[] = $derived([
     {
       data_value_name: "user",
@@ -32,10 +48,18 @@
         `<span class='badge variant-filled-surface'>${get_by_value(await data.users, "id", value)?.firstname ?? "Invalid"}</span>`,
     },
     {
-      data_value_name: "total_points",
+      data_value_name: "user",
       label: "Total",
-      valuefun: async (value: string): Promise<string> =>
-        `<span class='badge variant-filled-surface'>${value}</span>`,
+      valuefun: async (value: string): Promise<string> => {
+        let seasonpoints = await data.seasonpickpoints;
+        let points = get_by_value(await data.racepickpointstotal, "user", value)?.total_points ?? 0;
+        if (!seasonpoints) {
+          return `<span class='badge variant-filled-surface'>${points}</span>`;
+        }
+
+        points += calc_season_points(get_by_value(seasonpoints, "user", value)!);
+        return `<span class='badge variant-filled-surface'>${points}</span>`;
+      },
     },
     {
       data_value_name: "total_pxx_points",
@@ -44,6 +68,18 @@
     {
       data_value_name: "total_dnf_points",
       label: "DNF",
+    },
+    {
+      data_value_name: "user",
+      label: "Season",
+      valuefun: async (value: string): Promise<string> => {
+        if (!seasonpickpoints) {
+          return "";
+        }
+
+        let p = seasonpickpoints.filter((p: SeasonPickPoints) => p.user === value)[0];
+        return calc_season_points(p).toString();
+      },
     },
     {
       data_value_name: "total_points_per_pick",
