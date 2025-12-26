@@ -169,6 +169,19 @@ export interface RacePickPointsTotal {
   total_points_per_pick: number;
 }
 
+export interface SeasonPickPoints {
+  id: string;
+  user: string;
+  hottake_points: number;
+  wdc_points: number;
+  wcc_points: number;
+  doohan_points: number;
+  overtakes_points: number;
+  dnfs_points: number;
+  teamwinner_points: number;
+  podium_points: number;
+}
+
 // Scraped Data
 
 export interface ScrapedStartingGrid {

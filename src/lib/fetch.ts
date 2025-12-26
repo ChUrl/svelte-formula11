@@ -18,6 +18,7 @@ import type {
   ScrapedTeamStanding,
   SeasonPick,
   SeasonPickedUser,
+  SeasonPickPoints,
   SeasonPickResult,
   Substitution,
   Team,
@@ -321,6 +322,19 @@ export const fetch_racepickpointstotal = async (
     .getFullList({ fetch: fetch });
 
   return racepickpointstotal;
+};
+
+/**
+ * Fetch all [SeasonPickPoints] from the database.
+ */
+export const fetch_seasonpickpoints = async (
+  fetch: (_: any) => Promise<Response>,
+): Promise<SeasonPickPoints[]> => {
+  const seasonpickpoints: SeasonPickPoints[] = await pb
+    .collection("seasonpickpoints")
+    .getFullList({ fetch: fetch });
+
+  return seasonpickpoints;
 };
 
 /**
